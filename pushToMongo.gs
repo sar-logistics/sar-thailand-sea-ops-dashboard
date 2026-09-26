@@ -70,6 +70,16 @@ function processTab(sheet, direction) {
       }
     });
 
+    // Derived: jobDept fallback based on trans and direction
+    if (!rec.jobDept) {
+      const t = (rec.trans || '').toUpperCase();
+      if (t === 'SEA') {
+        rec.jobDept = direction === 'Export' ? 'FES' : 'FIS';
+      } else if (t === 'AIR') {
+        rec.jobDept = direction === 'Export' ? 'FEA' : 'FIA';
+      }
+    }
+
     records.push(rec);
   });
 
