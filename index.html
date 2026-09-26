@@ -117,7 +117,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text1);font-size:1
 .body-row{flex:1;display:flex;overflow:hidden}
 
 /* SIDEBAR */
-.sidebar{width:var(--sidebar);background:var(--navy-900);border-right:1px solid var(--navy-900);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;transition:width .2s ease,opacity .2s ease}
+.sidebar{width:var(--sidebar);background:var(--navy-900);border-right:1px solid var(--navy-900);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;transition:width .2s ease,opacity .2s ease;overflow-y:auto}
 .sidebar.collapsed{width:0;opacity:0;overflow:hidden}
 .sidebar-reveal{position:fixed;left:0;top:50%;transform:translateY(-50%);width:16px;height:48px;background:var(--navy-900);border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;box-shadow:2px 0 8px rgba(0,0,0,.3)}
 .sidebar-reveal i{font-size:12px;color:#B5D4F4}
@@ -228,7 +228,7 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 
 
 /* System section — matches Sales dashboard style */
-.sys-section{flex-shrink:0;border-top:1px solid rgba(255,255,255,.06);padding:6px 0 8px;position:relative}
+.sys-section{flex-shrink:0;border-top:1px solid rgba(255,255,255,.06);padding:6px 0 8px;position:relative;overflow:visible}
 .sys-item{display:flex;align-items:center;gap:10px;padding:6px 14px;cursor:pointer;font-size:12px;transition:background .15s,color .12s,transform .12s,padding-left .2s;color:rgba(220,232,245,.7);border-radius:8px;margin:1px 6px;font-weight:400;overflow:visible}
 .sys-item:hover{padding-left:18px}
 .sys-item:active{transform:scale(.98)}
@@ -761,8 +761,8 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
       </div><!-- /sidebar-nav-scroll -->
 
       <!-- System items -->
-      <div class="sys-section expanded">
-        <div class="sys-section-label" onclick="this.closest('.sys-section').classList.toggle('expanded')">System <i class="ti ti-chevron-up"></i></div>
+      <div class="sys-section">
+        <div class="sys-section-label">System <i class="ti ti-chevron-up"></i></div>
         <div class="sys-items-wrap">
         <div class="sys-item usage" id="sys-usage" onclick="setPage('usage','Usage Analytics','System',this)">
           <i class="ti ti-chart-bar"></i>Usage Analytics
