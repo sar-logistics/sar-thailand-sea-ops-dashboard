@@ -825,6 +825,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
             <button id="cur-thb" onclick="setCurrency('THB');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:#2a78d6;color:#fff;transition:all .15s">฿ THB</button>
             <button id="cur-usd" onclick="setCurrency('USD');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .15s">$ USD</button>
           </div>
+          <div id="cur-rate-label" style="font-size:10px;color:rgba(181,212,244,.5);margin-top:2px">1 USD = ฿—</div>
         </div>
         <div class="tb-ud-divider"></div>
         <button class="tb-ud-item tb-ud-btn" id="feedbackBtn" onclick="openFeedback();toggleUserMenu()">
@@ -6331,6 +6332,7 @@ async function refreshData(pageId) {
     const resp = await fetch(BATCH_API + '?t=' + Date.now() + '&forceRefresh=1', { method:'GET', headers:{'Cache-Control':'no-cache, no-store'} });
     const data = await resp.json();
     rawSRR    = data.records    || [];
+    updateRateLabel();
     rawJPA    = [];
     allUsers  = data.users      || [];
     opsMapping = [];
@@ -6547,6 +6549,14 @@ function getExchangeRate() {
 }
 
 function getCurrencySymbol() { return currentCurrency === 'USD' ? '$' : '฿'; }
+
+function updateRateLabel() {
+  const el = document.getElementById('cur-rate-label');
+  if (!el) return;
+  const rates = (rawSRR || []).map(r => r.todayExchangeRate).filter(r => r && r > 0);
+  const avg = rates.length ? (rates.reduce((a,b) => a+b, 0) / rates.length).toFixed(2) : '—';
+  el.textContent = '1 USD = ฿' + avg;
+}
 
 function fmtIndian(n) {
   const rate = getExchangeRate();
@@ -8652,6 +8662,7 @@ function renderSummary() {
     const usdBtn = document.getElementById('cur-usd');
     if (thbBtn) { thbBtn.style.background = cur === 'THB' ? '#2a78d6' : 'transparent'; thbBtn.style.color = cur === 'THB' ? '#fff' : 'rgba(255,255,255,.5)'; }
     if (usdBtn) { usdBtn.style.background = cur === 'USD' ? '#2a78d6' : 'transparent'; usdBtn.style.color = cur === 'USD' ? '#fff' : 'rgba(255,255,255,.5)'; }
+    updateRateLabel();
     const activeEl = document.querySelector('.page.active');
     const divId = activeEl ? activeEl.id.replace('page-', '') : 'summary';
     renderPage(divId);
