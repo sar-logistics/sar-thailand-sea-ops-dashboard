@@ -6536,6 +6536,30 @@ const DV_COLS_SRR = [
   { key:'preAlertDate',        label:'Pre-Alert Date',     date:true       },
   { key:'vendorPaymentDate',   label:'Vendor Payment',     date:true       },
 ];
+
+const DV_COLS_WIP = [
+  { key:'shipmentId',   label:'Job #'                              },
+  { key:'localRef',     label:'Job Local Ref'                      },
+  { key:'trans',        label:'Trans'                              },
+  { key:'cont',         label:'Cont'                               },
+  { key:'jobBranch',    label:'Job Branch'                         },
+  { key:'jobDept',      label:'Job Dept'                           },
+  { key:'jobStatus',    label:'Job Status'                         },
+  { key:'localClient',  label:'Local Client'                       },
+  { key:'chargeType',   label:'Type'                               },
+  { key:'chargeCode',   label:'Charge'                             },
+  { key:'recognized',   label:'Recognized'                         },
+  { key:'revenue',      label:'Revenue',      num:true             },
+  { key:'wip',          label:'WIP',          num:true             },
+  { key:'cost',         label:'Cost',         num:true             },
+  { key:'accrual',      label:'Accrual',      num:true             },
+  { key:'jobProfit',    label:'Job Profit',   num:true             },
+  { key:'etd',          label:'ETD'                                },
+  { key:'eta',          label:'ETA'                                },
+  { key:'lob',          label:'LOB'                                },
+  { key:'etdEta',       label:'ETD/ETA'                            },
+  { key:'operator',     label:'Job Operator'                       },
+];
 const DV_COLS_JPA = [
   { key:'shipmentNo',          label:'Shipment No'                        },
   { key:'jobDate',             label:'ETD Loading Port (Job Date)', date:true },
@@ -6728,7 +6752,7 @@ function openDrill(records, title, sub) {
     });
     dvCols = DV_COLS_JPA_ENRICHED;
   } else {
-    dvCols = DV_COLS_SRR;
+    dvCols = (dvAllRecords[0] && dvAllRecords[0].chargeType !== undefined) ? DV_COLS_WIP : DV_COLS_SRR;
   }
 
   dvAllRecords = records;
