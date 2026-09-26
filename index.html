@@ -5886,23 +5886,9 @@ function openDrillWip(shipRecs, wipByShipment, title, sub, isWipLines) {
     lines = shipRecs.flatMap(r => (wipByShipment[r.shipmentId] || []));
   }
 
-  // Build drill records from WIP lines
-  const drillRecs = lines.map(w => ({
-    shipmentId:  w.shipmentId,
-    chargeType:  w.chargeType  || '',
-    chargeCode:  w.chargeCode  || '',
-    localClient: w.localClient || '',
-    jobBranch:   w.jobBranch   || '',
-    operator:    w.operator    || w.localClient || '',
-    wip:         w.wip         || 0,
-    revenue:     w.revenue     || 0,
-    cost:        w.cost        || 0,
-    accrual:     w.accrual     || 0,
-    etd:         w.etd         || '',
-    eta:         w.eta         || '',
-    lob:         w.lob         || '',
-    etdEta:      w.etdEta      || '',
-    direction:   w.lob && (w.lob === 'FES' || w.lob === 'FEA') ? 'Export' : 'Import',
+  // Pass ALL WIP fields directly — no field picking
+  const drillRecs = lines.map(w => Object.assign({}, w, {
+    direction: (w.lob === 'FES' || w.lob === 'FEA') ? 'Export' : 'Import',
   }));
 
   openDrill(drillRecs, title, sub);
