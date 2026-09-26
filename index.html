@@ -7883,42 +7883,6 @@ const SUMMARY_REPORTS = [
       return (profit / rev) < 0.03;
     },
   },
-  {
-    id:      'hbl-release',
-    title:   'HBL Not Released > 7 Days of SOB',
-    color:   '#dc2626',
-    okColor: '#16a34a',
-    flag:    r => {
-      const sob = r.etdDate ? new Date(r.etdDate) : null;
-      if (!sob) return false;
-      const days = (Date.now() - sob) / 86400000;
-      return days > 7 && !r.hblReleasedDate;
-    },
-  },
-  {
-    id:      'mbl-release',
-    title:   'MBL Not Released > 7 Days of SOB',
-    color:   '#dc2626',
-    okColor: '#16a34a',
-    flag:    r => {
-      const sob = r.etdDate ? new Date(r.etdDate) : null;
-      if (!sob) return false;
-      const days = (Date.now() - sob) / 86400000;
-      return days > 7 && !r.mblReleasedDate;
-    },
-  },
-  {
-    id:      'invoice-not-raised',
-    title:   'Invoice Not Raised within 3 Days of SOB',
-    color:   '#dc2626',
-    okColor: '#16a34a',
-    flag:    r => {
-      const sob = r.etdDate ? new Date(r.etdDate) : null;
-      if (!sob) return false;
-      const days = (Date.now() - sob) / 86400000;
-      return days > 3 && !r.invoiceDate;
-    },
-  },
 ];
 
 // ── PERFORMANCE METRICS ──────────────────────────────────────
