@@ -404,16 +404,16 @@ function pushWip() {
       localClient:   String(row[CLIENT]    || '').trim(),
       chargeType:    String(row[TYPE]      || '').trim(),
       chargeCode:    String(row[CHARGE]    || '').trim(),
-      recognized:    String(row[RECOG]     || '').trim(),
+      recognized:    _fmtDate(row[RECOG]),
       revenue,
       wip,
       cost,
       accrual,
       jobProfit:     profit,
-      etd:           String(row[ETD]       || '').trim(),
-      eta:           String(row[ETA]       || '').trim(),
+      etd:           _fmtDate(row[ETD]),
+      eta:           _fmtDate(row[ETA]),
       lob:           String(row[LOB]       || '').trim(),
-      etdEta:        String(row[ETDETA]    || '').trim(),
+      etdEta:        _fmtDate(row[ETDETA]),
     });
   });
 
