@@ -4921,8 +4921,8 @@ function getDateRange(pageId) {
       to    = new Date(toState.selected.year, toState.selected.month + 1, 0, 23, 59, 59);
       label = MONTHS[fromState.selected.month] + ' ' + fromState.selected.year + ' → ' + MONTHS[toState.selected.month] + ' ' + toState.selected.year;
     } else {
-      // Auto-detect from actual data
-      const dates = allSRR.map(r => { const raw = r.etdDate || r.etd || r.shipmentDate; return raw ? new Date(raw) : null; }).filter(Boolean);
+      // Auto-detect from actual data (ignore invalid pre-2000 dates)
+      const dates = allSRR.map(r => { const raw = r.etdDate || r.etd || r.shipmentDate; return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
       if (dates.length) {
         const minD = new Date(Math.min(...dates.map(d => d.getTime())));
         const maxD = new Date(Math.max(...dates.map(d => d.getTime())));
@@ -4958,7 +4958,7 @@ function getDateRange(pageId) {
   } else if (view === 'quarterly') {
     const qVal = Number(document.getElementById('quarter-' + pageId).value || 1);
     // Span all data so all FY columns are shown
-    const dates = allSRR.map(r => { const raw = r.etdDate || r.etd || r.shipmentDate; return raw ? new Date(raw) : null; }).filter(Boolean);
+    const dates = allSRR.map(r => { const raw = r.etdDate || r.etd || r.shipmentDate; return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
     if (dates.length) {
       const minD = new Date(Math.min(...dates.map(d => d.getTime())));
       const maxD = new Date(Math.max(...dates.map(d => d.getTime())));
@@ -4975,7 +4975,7 @@ function getDateRange(pageId) {
     label = qNames[qVal-1];
   } else if (view === 'yearly') {
     // Auto-detect FY range from actual data
-    const dates = allSRR.map(r => { const raw = r.etdDate || r.etd || r.shipmentDate; return raw ? new Date(raw) : null; }).filter(Boolean);
+    const dates = allSRR.map(r => { const raw = r.etdDate || r.etd || r.shipmentDate; return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
     if (dates.length) {
       const minD = new Date(Math.min(...dates.map(d => d.getTime())));
       const maxD = new Date(Math.max(...dates.map(d => d.getTime())));
@@ -6624,7 +6624,7 @@ function openDrill(records, title, sub) {
 }
 
 function dvBackdropClose(e) {
-  if (e.target === document.getElementById('detailPanel')) closeDetailPanel();
+  if (e.target === document.getElementById('detailPanel')) { setTimeout(closeDetailPanel, 0); }
 }
 function closeDetailPanel() {
   document.getElementById('detailPanel').style.display = 'none';
