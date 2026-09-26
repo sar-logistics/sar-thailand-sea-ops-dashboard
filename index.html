@@ -760,21 +760,22 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
 
       </div><!-- /sidebar-nav-scroll -->
 
-      <!-- System items -->
-      <div class="sys-section">
-        <div class="sys-section-label">System <i class="ti ti-chevron-up"></i></div>
-        <div class="sys-items-wrap">
-        <div class="sys-item usage" id="sys-usage" onclick="setPage('usage','Usage Analytics','System',this)">
-          <i class="ti ti-chart-bar"></i>Usage Analytics
-        </div>
-        <div class="sys-item teams" id="sys-teams" onclick="setPage('teams','Teams','System',this)">
-          <i class="ti ti-users"></i>Teams
-        </div>
-        <div class="sys-item admin" id="sys-admin" onclick="setPage('admin','Admin Panel','System',this)">
-          <i class="ti ti-shield-lock"></i>Admin Panel
-        </div>
-        </div><!-- /sys-items-wrap -->
+    </div><!-- /sidebar-inner -->
+
+    <!-- System items — outside sidebar-inner so hover is not clipped -->
+    <div class="sys-section">
+      <div class="sys-section-label">System <i class="ti ti-chevron-up"></i></div>
+      <div class="sys-items-wrap">
+      <div class="sys-item usage" id="sys-usage" onclick="setPage('usage','Usage Analytics','System',this)">
+        <i class="ti ti-chart-bar"></i>Usage Analytics
       </div>
+      <div class="sys-item teams" id="sys-teams" onclick="setPage('teams','Teams','System',this)">
+        <i class="ti ti-users"></i>Teams
+      </div>
+      <div class="sys-item admin" id="sys-admin" onclick="setPage('admin','Admin Panel','System',this)">
+        <i class="ti ti-shield-lock"></i>Admin Panel
+      </div>
+      </div><!-- /sys-items-wrap -->
     </div>
   </div>
 
