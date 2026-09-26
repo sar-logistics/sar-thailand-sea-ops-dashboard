@@ -5000,7 +5000,7 @@ function initFilters(pageId) {
   // Monthly FROM = April of current FY, TO = current month
   const fromId = 'mp-from-' + pageId;
   const toId   = 'mp-to-' + pageId;
-  pickerState[fromId] = { year: fyStartYear, selected: { year: fyStartYear, month: 3 } }; // month 3 = April
+  pickerState[fromId] = { year: fyStartYear, selected: { year: fyStartYear, month: 0 } }; // month 0 = January
   pickerState[toId]   = { year: now.getFullYear(), selected: { year: now.getFullYear(), month: now.getMonth() } };
   const fromLbl = document.getElementById(fromId + '-lbl');
   const toLbl   = document.getElementById(toId + '-lbl');
