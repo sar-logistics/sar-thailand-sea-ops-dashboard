@@ -729,32 +729,11 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
 
       <div class="nav-section-divider"></div>
 
-      <!-- Milestone Pendency Reports -->
-      <div class="nav-section-hdr pendency" id="sec-milestone-hdr" onclick="toggleSection('milestone')">
-        <i class="ti ti-file-certificate" style="font-size:10px"></i>Milestone Pendency Reports
-        <i class="ti ti-chevron-down sec-chev"></i>
-      </div>
-      <div class="nav-section-body" id="sec-milestone-body">
-        <div class="nav-item" data-tooltip="HBL pending release beyond 7 days from SOB" onclick="setPage('hbl-release','HBL Not Released &gt; 7 Days of SOB','Milestone Pendency Reports',this)">
-          <i class="ti ti-file-certificate"></i><span class="nav-item-label">HBL Not Released &gt; 7 Days of SOB</span><span class="nav-badge hidden" id="badge-hbl-release-2">0</span>
-        </div>
-        <div class="nav-item" data-tooltip="MBL pending release beyond 7 days from SOB" onclick="setPage('mbl-release','MBL Not Released &gt; 7 Days of SOB','Milestone Pendency Reports',this)">
-          <i class="ti ti-file-certificate"></i><span class="nav-item-label">MBL Not Released &gt; 7 Days of SOB</span><span class="nav-badge hidden" id="badge-mbl-release-2">0</span>
-        </div>
-      </div><!-- /sec-milestone-body -->
+
 
       <div class="nav-section-divider"></div>
 
-      <!-- Invoice & Credit Note -->
-      <div class="nav-section-hdr pendency" id="sec-invoice-hdr" onclick="toggleSection('invoice')">
-        <i class="ti ti-file-invoice" style="font-size:10px"></i>Invoice &amp; Credit Note
-        <i class="ti ti-chevron-down sec-chev"></i>
-      </div>
-      <div class="nav-section-body" id="sec-invoice-body">
-        <div class="nav-item" data-tooltip="Invoice not raised within 3 days of SOB" onclick="setPage('invoice-not-raised','Invoice Not Raised within 3 Days of SOB','Invoice &amp; Credit Note',this)">
-          <i class="ti ti-file-invoice"></i><span class="nav-item-label">Invoice Not Raised within 3 Days of SOB</span><span class="nav-badge hidden" id="badge-invoice-not-raised-2">0</span>
-        </div>
-      </div><!-- /sec-invoice-body -->
+
 
       <div class="nav-section-divider"></div>
 
@@ -4696,9 +4675,6 @@ function setPage(pageId, title, group, el) {
     'revenue-not-billed': 'unbilled-rev',
     'cost-not-posted':    'unposted-cost',
     'job-profit':         'low-profit',
-    'hbl-release':        'hbl-not-released',
-    'mbl-release':        'mbl-not-released',
-    'invoice-not-raised': 'inv-delay',
   };
   document.querySelectorAll('.nav-item,.sys-item,.reports-label').forEach(n => n.classList.remove('active'));
   if (el) el.classList.add('active');
@@ -5383,9 +5359,6 @@ function renderPage(pageId) {
   if (pageId === 'revenue-not-billed') renderUnbilledRev();
   if (pageId === 'cost-not-posted')    renderUnpostedCost();
   if (pageId === 'job-profit')         renderLowProfit();
-  if (pageId === 'hbl-release')        renderHblNotReleased();
-  if (pageId === 'mbl-release')        renderMblNotReleased();
-  if (pageId === 'invoice-not-raised') renderInvDelay();
 }
 
 // ── RENDER: Total Jobs Created ────────────────────────────────
