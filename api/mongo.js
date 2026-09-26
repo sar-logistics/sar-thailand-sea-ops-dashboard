@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   try {
     const { action, collection, filter = {}, update, document, documents, limit = 2000, skip = 0 } = req.body;
     const c   = await getClient();
-    const db  = c.db('sar-th-ops');
+    const db  = c.db('sar-id-ops');
     const col = db.collection(collection);
     if (action === 'find')      { const docs = await col.find(filter).skip(skip).limit(limit).toArray(); return res.status(200).json({ documents: docs }); }
     if (action === 'findOne')   { const doc  = await col.findOne(filter); return res.status(200).json({ document: doc }); }
