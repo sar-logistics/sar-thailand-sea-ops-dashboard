@@ -17,9 +17,9 @@ async function getClient() {
 let cache = { data: null, builtAt: null };
 
 async function buildCache(db) {
-  console.log('[ID-OPS] Building cache...');
-  const allDocs = await db.collection('id_ops_shipments').find({}).toArray();
-  console.log(`[ID-OPS] Total docs: ${allDocs.length}`);
+  console.log('[TH-OPS] Building cache...');
+  const allDocs = await db.collection('th_ops_shipments').find({}).toArray();
+  console.log(`[TH-OPS] Total docs: ${allDocs.length}`);
   cache = { data: allDocs, builtAt: new Date().toISOString() };
   return cache;
 }
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     if (action === 'wipe') {
       const c   = await getClient();
       const db  = c.db(DB);
-      const col = db.collection('id_ops_shipments');
+      const col = db.collection('th_ops_shipments');
       const result = await col.deleteMany(direction ? { direction } : {});
       cache = { data: null, builtAt: null };
       return res.status(200).json({ deleted: result.deletedCount, direction: direction || 'all' });
@@ -50,8 +50,7 @@ export default async function handler(req, res) {
       if (!records || !records.length) return res.status(400).json({ error: 'No records' });
       const c   = await getClient();
       const db  = c.db(DB);
-      const col = db.collection('id_ops_shipments');
-      await col.deleteMany({ direction }); // wipe this direction before inserting
+      const col = db.collection('th_ops_shipments');
       const result = await col.insertMany(records, { ordered: false });
       cache = { data: null, builtAt: null }; // bust cache
       return res.status(200).json({ inserted: result.insertedCount, direction });
