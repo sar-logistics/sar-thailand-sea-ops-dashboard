@@ -818,6 +818,15 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           </div>
         </div>
         <div class="tb-ud-divider"></div>
+        <!-- Currency Toggle -->
+        <div class="tb-ud-item" style="flex-direction:column;align-items:flex-start;gap:8px;padding:12px 16px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:rgba(94,187,190,.6);text-transform:uppercase">Currency</div>
+          <div style="display:flex;background:rgba(255,255,255,.06);border-radius:8px;padding:2px;gap:2px;width:100%">
+            <button id="cur-thb" onclick="setCurrency('THB');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:#2a78d6;color:#fff;transition:all .15s">฿ THB</button>
+            <button id="cur-usd" onclick="setCurrency('USD');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .15s">$ USD</button>
+          </div>
+        </div>
+        <div class="tb-ud-divider"></div>
         <button class="tb-ud-item tb-ud-btn" id="feedbackBtn" onclick="openFeedback();toggleUserMenu()">
           <i class="ti ti-message-circle"></i>Send Feedback
         </button>
@@ -6525,13 +6534,35 @@ let dvActiveLob   = 'ALL';
 
 const DV_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+let currentCurrency = 'THB'; // THB or USD
+
+function getExchangeRate() {
+  // Use average exchange rate from data, fallback to 1
+  if (currentCurrency === 'USD' && rawSRR && rawSRR.length) {
+    const rates = rawSRR.map(r => r.todayExchangeRate).filter(r => r && r > 0);
+    if (rates.length) return rates.reduce((a, b) => a + b, 0) / rates.length;
+    return 34; // fallback THB to USD rate
+  }
+  return 1;
+}
+
+function getCurrencySymbol() { return currentCurrency === 'USD' ? '$' : '฿'; }
+
 function fmtIndian(n) {
-  const abs = Math.abs(n);
-  const sign = n < 0 ? '-' : '';
-  if (abs >= 1e7)  return sign + '₹' + (abs/1e7).toFixed(2)  + 'Cr';
-  if (abs >= 1e5)  return sign + '₹' + (abs/1e5).toFixed(2)  + 'L';
-  if (abs >= 1e3)  return sign + '₹' + (abs/1e3).toFixed(2)  + 'K';
-  return sign + '₹' + abs.toFixed(0);
+  const rate = getExchangeRate();
+  const converted = n / rate;
+  const abs = Math.abs(converted);
+  const sign = converted < 0 ? '-' : '';
+  const sym = getCurrencySymbol();
+  if (currentCurrency === 'USD') {
+    if (abs >= 1e6) return sign + sym + (abs/1e6).toFixed(2) + 'M';
+    if (abs >= 1e3) return sign + sym + (abs/1e3).toFixed(2) + 'K';
+    return sign + sym + abs.toFixed(0);
+  }
+  if (abs >= 1e7)  return sign + sym + (abs/1e7).toFixed(2) + 'Cr';
+  if (abs >= 1e5)  return sign + sym + (abs/1e5).toFixed(2) + 'L';
+  if (abs >= 1e3)  return sign + sym + (abs/1e3).toFixed(2) + 'K';
+  return sign + sym + abs.toFixed(0);
 }
 
 function formatDvDate(v) {
@@ -8615,6 +8646,17 @@ function renderSummary() {
 
   // ── Master-detail: show monthly breakdown on left when log row clicked ────
   // ── EXPORT / IMPORT DIRECTION TOGGLE ─────────────────────
+  window.setCurrency = function(cur) {
+    currentCurrency = cur;
+    const thbBtn = document.getElementById('cur-thb');
+    const usdBtn = document.getElementById('cur-usd');
+    if (thbBtn) { thbBtn.style.background = cur === 'THB' ? '#2a78d6' : 'transparent'; thbBtn.style.color = cur === 'THB' ? '#fff' : 'rgba(255,255,255,.5)'; }
+    if (usdBtn) { usdBtn.style.background = cur === 'USD' ? '#2a78d6' : 'transparent'; usdBtn.style.color = cur === 'USD' ? '#fff' : 'rgba(255,255,255,.5)'; }
+    const activeEl = document.querySelector('.page.active');
+    const divId = activeEl ? activeEl.id.replace('page-', '') : 'summary';
+    renderPage(divId);
+  };
+
   window.setDirection = function(dir) {
     currentDirection = dir;
     // Update subtitle label
