@@ -340,6 +340,14 @@ function _addLob(sheet, direction) {
 // ── WIP/Accrual Push ──────────────────────────────────────────────────────
 const WIP_BATCH_URL = 'https://sar-thailand-sea-ops-dashboard.vercel.app/api/wip';
 
+function _fmtDate(val) {
+  if (!val) return '';
+  if (val instanceof Date && !isNaN(val)) {
+    return Utilities.formatDate(val, Session.getScriptTimeZone(), 'dd-MMM-yyyy');
+  }
+  return String(val).trim();
+}
+
 function pushWip() {
   Logger.log('=== WIP Push Starting ===');
   const ss  = SpreadsheetApp.openById(OPS_SHEET_ID);
