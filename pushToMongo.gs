@@ -1,9 +1,9 @@
-// ── SAR Indonesia Sea Ops — Apps Script Data Push ──────────────────────────
+// ── SAR Thailand Sea Ops — Apps Script Data Push ──────────────────────────
 // Sheet ID: 1x1WEhIxCPJamtDnKNyGvF6R3H88cwuDDK2ud1OemV2c
 // Verified column mapping: 25-Sep-2026
 // Run pushAll() manually or set trigger Mon & Thu 9:00 AM
 
-const OPS_BATCH_URL    = 'https://sar-indonesia-sea-ops-dashboard.vercel.app/api/mongo-batch';
+const OPS_BATCH_URL    = 'https://sar-thailand-sea-ops-dashboard.vercel.app/api/mongo-batch';
 const OPS_BATCH_SECRET = 'Harsh@2644';
 const OPS_SHEET_ID     = '1x1WEhIxCPJamtDnKNyGvF6R3H88cwuDDK2ud1OemV2c';
 const TAB_EXPORT       = 'Shipment Profile Export';
@@ -253,7 +253,7 @@ function pushRecords(records, direction) {
 }
 
 function pushAll() {
-  Logger.log('=== SAR ID Ops Push Starting ===');
+  Logger.log('=== SAR TH Ops Push Starting ===');
   const ss = SpreadsheetApp.openById(OPS_SHEET_ID);
 
   const expSheet = ss.getSheetByName(TAB_EXPORT);
@@ -272,7 +272,7 @@ function pushAll() {
     pushRecords(impRecords, 'Import');
   }
 
-  Logger.log('=== SAR ID Ops Push Done ===');
+  Logger.log('=== SAR TH Ops Push Done ===');
 }
 
 // ── WIPE ALL — clears both Export and Import from MongoDB ──────────────────
