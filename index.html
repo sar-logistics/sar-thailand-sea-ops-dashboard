@@ -4079,6 +4079,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
 const CLIENT_ID = '268233630464-jiaugmv6onv7mpchikpbm2d5oal9tjb5.apps.googleusercontent.com';
 const MONGO_API = '/api/mongo';
 const BATCH_API = '/api/mongo-batch';
+const WIP_API   = '/api/wip';
 
 // ── PRE-CALCULATE MAIN METRICS BADGES ───────────────────────
 function updateMainMetricsBadges() {
@@ -4253,6 +4254,7 @@ function toggleSidebar() {
 let currentRole = null;
 let allSRR = [];
 let rawSRR = [];
+let rawWIP  = [];
 let currentDirection = 'Export'; // 'Export' or 'Import' 
 let allJPA = [];
 let rawJPA = [];
@@ -5793,6 +5795,119 @@ function renderInvDelay() {
 
 // ── RENDER: Job profit < 3% ──────────────────────────────────
 // ── RENDER: Revenue not billed within 3 days of SOB ─────────────────────
+
+// ── WIP-based flagged renderer (charge code breakdown in drill) ──────────
+function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredDD, flaggedDD, wipByShipment) {
+  const totalJobs    = filteredDD.length;
+  const flaggedCount = flaggedDD.length;
+  const pct = totalJobs > 0 ? ((flaggedCount / totalJobs) * 100).toFixed(1) : '0.0';
+
+  const kTotal = document.getElementById('kv-' + s + '-total');
+  if (kTotal) { kTotal.textContent = totalJobs.toLocaleString(); kTotal.style.cursor='pointer'; kTotal.onclick=()=>openDrill(filteredDD,'Total Jobs',label); }
+  const kFlagged = document.getElementById('kv-' + s + '-flagged');
+  if (kFlagged) { kFlagged.textContent = flaggedCount.toLocaleString(); kFlagged.style.cursor='pointer'; kFlagged.onclick=()=>openDrillWip(flaggedDD, wipByShipment, flagLabel, label); }
+  const kPct = document.getElementById('kv-' + s + '-pct');
+  if (kPct) { kPct.textContent = pct+'%'; kPct.style.cursor='pointer'; kPct.onclick=()=>openDrillWip(flaggedDD, wipByShipment, flagLabel, label); }
+  const kPeriod = document.getElementById('kv-' + s + '-period'); if (kPeriod) kPeriod.textContent = label;
+  const kSub = document.getElementById('kv-' + s + '-pct-sub'); if (kSub) kSub.textContent = flaggedCount + ' of ' + totalJobs + ' jobs';
+  const sc = document.getElementById('sc-' + pageId); if (sc) sc.textContent = totalJobs.toLocaleString() + ' total · ' + flaggedCount.toLocaleString() + ' flagged';
+  setBadge(pageId, flaggedCount);
+
+  // Build table same as _renderSRRFlagged but drill opens WIP breakdown
+  const flaggedMap = {};
+  flaggedDD.forEach(r => {
+    const br = r.jobBranch || r.branch || '(No Branch)';
+    const ow = r.operator || r.jobOwner || '(Unknown)';
+    const ck = getColKey(r, view) || 'other';
+    if (!flaggedMap[br]) flaggedMap[br] = {};
+    if (!flaggedMap[br][ow]) flaggedMap[br][ow] = {};
+    flaggedMap[br][ow][ck] = (flaggedMap[br][ow][ck] || 0) + 1;
+  });
+
+  const gtFl = {}; cols.forEach(c => { gtFl[c.key] = 0; }); let gtFlGrand = 0;
+  const colKeyFn = r => getColKey(r, view) || 'other';
+  const cRFl = {};
+  flaggedDD.forEach(r => { const ck = colKeyFn(r); if (gtFl[ck] !== undefined) gtFl[ck]++; gtFlGrand++; if (!cRFl[ck]) cRFl[ck] = []; cRFl[ck].push(r); });
+
+  const isSingle = cols.length === 1 && cols[0].single;
+  const tblId = 'tbl-' + pageId;
+  const tbl = document.getElementById(tblId); if (tbl) tbl.classList.toggle('single-col', isSingle);
+  const thead = document.getElementById('thead-' + pageId);
+  if (thead) thead.innerHTML = '<th style="min-width:260px">Branch / Job Owner</th>' + (isSingle ? '' : '<th class="col-grand">Grand Total</th>') + cols.map(c => `<th style="min-width:${isSingle?'300':'100'}px;text-align:right">${c.label}</th>`).join('');
+
+  const gtWipRecs = flaggedDD.flatMap(r => (wipByShipment[r.shipmentId] || []));
+  const gtWipId = dvReg(gtWipRecs);
+  const gFTd = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${gtWipId}','Grand Total — ${flagLabel}','${label}')">${gtFlGrand > 0 ? gtFlGrand.toLocaleString() : '<span class="dash">—</span>'}</td>`;
+
+  let h = `<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-${s}" onclick="toggleRows('gt-${s}',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl, flaggedDD, cols, colKeyFn, 'Grand Total — ' + flagLabel, label)}</tr>
+  <tr class="gt-sep"><td colspan="${cols.length + (isSingle ? 1 : 2)}"></td></tr>`;
+
+  Object.keys(flaggedMap).sort().forEach((br, bi) => {
+    const bKey = s + bi, owMap = flaggedMap[br] || {};
+    const brFlagRecs = flaggedDD.filter(r => (r.jobBranch || r.branch || '(No Branch)') === br);
+    const brWipRecs  = brFlagRecs.flatMap(r => (wipByShipment[r.shipmentId] || []));
+    const brWipId    = dvReg(brWipRecs);
+    const safeBr = br.replace(/'/g, "\'");
+    const brFl = {}; cols.forEach(c => { brFl[c.key] = 0; }); let bFG = 0;
+    Object.values(owMap).forEach(oc => { cols.forEach(c => { brFl[c.key] += (oc[c.key] || 0); }); bFG += Object.values(oc).reduce((a, b) => a + b, 0); });
+    const av = `<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
+    const bF = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${brWipId}','${safeBr} — ${flagLabel}','${label}')">${bFG > 0 ? bFG.toLocaleString() : '<span class="dash">—</span>'}</td>`;
+    h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl, brFlagRecs, cols, colKeyFn, safeBr + ' — ' + flagLabel, label)}</tr>`;
+    Object.keys(owMap).sort().forEach((ow, oi) => {
+      const owKey = bKey + 'o' + oi, owC = owMap[ow] || {};
+      const owFRecs = brFlagRecs.filter(r => (r.operator || r.jobOwner || '(Unknown)') === ow);
+      const owWipRecs = owFRecs.flatMap(r => (wipByShipment[r.shipmentId] || []));
+      const owWipId   = dvReg(owWipRecs);
+      const safeOw = ow.replace(/'/g, "\'");
+      let oFG = 0; cols.forEach(c => { oFG += (owC[c.key] || 0); });
+      const oav = `<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
+      const jF = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${owWipId}','${safeOw} — ${flagLabel}','${label}')">${oFG > 0 ? oFG.toLocaleString() : '<span class="dash">—</span>'}</td>`;
+      h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jF}${colCells(owC, owFRecs, cols, colKeyFn, safeOw + ' — ' + flagLabel, label)}</tr>`;
+    });
+  });
+
+  if (!Object.keys(flaggedMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No unbilled revenue for this period. ✅</td></tr>';
+  const tbody = document.getElementById('tbody-' + pageId); if (tbody) tbody.innerHTML = h;
+}
+
+// Open WIP drill from dvStore id
+function openDrillWipById(id, title, sub) {
+  openDrillWip(dvStore[id] || [], {}, title, sub, true);
+}
+
+// Open drill showing WIP charge code breakdown
+function openDrillWip(shipRecs, wipByShipment, title, sub, isWipLines) {
+  let lines;
+  if (isWipLines) {
+    // Already WIP lines
+    lines = shipRecs;
+  } else {
+    // Convert shipment records to WIP lines
+    lines = shipRecs.flatMap(r => (wipByShipment[r.shipmentId] || []));
+  }
+
+  // Build drill records from WIP lines
+  const drillRecs = lines.map(w => ({
+    shipmentId:  w.shipmentId,
+    chargeType:  w.chargeType  || '',
+    chargeCode:  w.chargeCode  || '',
+    localClient: w.localClient || '',
+    jobBranch:   w.jobBranch   || '',
+    operator:    w.operator    || w.localClient || '',
+    wip:         w.wip         || 0,
+    revenue:     w.revenue     || 0,
+    cost:        w.cost        || 0,
+    accrual:     w.accrual     || 0,
+    etd:         w.etd         || '',
+    eta:         w.eta         || '',
+    lob:         w.lob         || '',
+    etdEta:      w.etdEta      || '',
+    direction:   w.lob && (w.lob === 'FES' || w.lob === 'FEA') ? 'Export' : 'Import',
+  }));
+
+  openDrill(drillRecs, title, sub);
+}
+
 function renderUnbilledRev() {
   const pageId = 'unbilled-rev';
   const { cols, label, view } = getColumns(pageId);
@@ -5801,14 +5916,22 @@ function renderUnbilledRev() {
   const filtered   = filterByDate(allSRR, pageId);
   populateFilters(pageId, filtered);
   const filteredDD = applyAdditionalFilters(applyDropdownFilters(filtered, pageId), pageId);
-  const today = Date.now();
-  const flaggedDD  = filteredDD.filter(r => {
-    const sob = r.etdDate ? new Date(r.etdDate) : null;
-    if (!sob) return false;
-    const diffDays = (today - sob.getTime()) / 86400000;
-    return diffDays > 3 && (!r.recognizedRevenue || r.recognizedRevenue === 0);
+
+  // Use WIP data — flag shipments that have any WIP line > 0
+  // Group WIP lines by shipmentId
+  const wipByShipment = {};
+  (rawWIP || []).forEach(w => {
+    if (w.wip > 0) {
+      if (!wipByShipment[w.shipmentId]) wipByShipment[w.shipmentId] = [];
+      wipByShipment[w.shipmentId].push(w);
+    }
   });
-  _renderSRRFlagged(pageId, 'ur', 'Revenue Not Billed', label, view, cols, filteredDD, flaggedDD);
+
+  // Flag shipments that have WIP > 0
+  const flaggedDD = filteredDD.filter(r => wipByShipment[r.shipmentId] && wipByShipment[r.shipmentId].length > 0);
+
+  // Override drill-through to show WIP charge code breakdown
+  _renderSRRFlaggedWip(pageId, 'ur', 'Revenue Not Billed', label, view, cols, filteredDD, flaggedDD, wipByShipment);
 }
 
 // ── RENDER: Cost not posted within 7 days of SOB ────────────────────────
@@ -6297,6 +6420,12 @@ async function refreshData(pageId) {
     opsMapping = [];
     allSRR   = rawSRR.filter(r => (r.direction||'').toLowerCase() === currentDirection.toLowerCase());
     allJPA   = [];
+    // Load WIP data
+    try {
+      const wipResp = await fetch(WIP_API + '?t=' + Date.now(), { method:'GET' });
+      const wipData = await wipResp.json();
+      rawWIP = wipData.records || [];
+    } catch(e) { console.warn('WIP load error:', e); rawWIP = []; }
     applyRLS();
     initFilters(pageId);
     renderPage(pageId);
@@ -7039,6 +7168,13 @@ async function loadData() {
     // Filter by current direction
     allSRR = rawSRR.filter(r => (r.direction || '').toLowerCase() === currentDirection.toLowerCase());
     allJPA = [...rawJPA];
+    // Load WIP data
+    try {
+      const wipResp = await fetch(WIP_API + '?t=' + Date.now(), { method:'GET' });
+      const wipData = await wipResp.json();
+      rawWIP = wipData.records || [];
+      console.log('[loadData] WIP records:', rawWIP.length);
+    } catch(e) { console.warn('WIP load error:', e); rawWIP = []; }
     applyRLS();
     setTimeout(updateMainMetricsBadges, 500);
     setTimeout(markDataUpdated, 500);
