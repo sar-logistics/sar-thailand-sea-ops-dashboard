@@ -5330,7 +5330,7 @@ function renderJobUnlinked() {
     Object.keys(owMap).sort().forEach((ow, oi) => {
       const owKey    = bKey + 'o' + oi;
       const owCols   = owMap[ow] || {};
-      const owFlagRecs = brFlagRecs.filter(r => (r.jobOwner||'(Unknown)') === ow);
+      const owFlagRecs = brFlagRecs.filter(r => (r.operator||r.jobOwner||'(Unknown)') === ow);
       const owFlId   = dvReg(owFlagRecs);
       const safeOw   = ow.replace(/'/g, "\\'");
       let owFlGrand  = 0; cols.forEach(c => { owFlGrand += (owCols[c.key] || 0); });
@@ -5439,7 +5439,7 @@ function renderTotalJobs() {
     Object.keys(owMap).sort().forEach((ow, oi) => {
       const owKey  = bKey + 'o' + oi;
       const owCols = owMap[ow] || {};
-      const owRecs = brRecs.filter(r => (r.jobOwner || '(Unknown)') === ow);
+      const owRecs = brRecs.filter(r => (r.operator || r.jobOwner || '(Unknown)') === ow);
       const owId   = dvReg(owRecs);
       const safeOw = ow.replace(/'/g, "\\'");
       let owGrand  = 0; cols.forEach(c => { owGrand += (owCols[c.key]||0); });
@@ -5912,7 +5912,7 @@ function _renderJPAFlaggedReport(pageId, s, flagLabel, label, view, cols, filter
     h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bFtd}${colCells(brFl, brFlagRecs, cols, colKeyFn, safeBr + ' — ' + flagLabel, label)}</tr>`;
     Object.keys(owMap).sort().forEach((ow, oi) => {
       const owKey = bKey + 'o' + oi, owCols = owMap[ow] || {};
-      const owFRecs = brFlagRecs.filter(r => (r.jobOwner||'(Unknown)') === ow);
+      const owFRecs = brFlagRecs.filter(r => (r.operator||r.jobOwner||'(Unknown)') === ow);
       const owFlId = dvReg(owFRecs), safeOw = ow.replace(/'/g, "\\'");
       let owFlGrand = 0; cols.forEach(c => { owFlGrand += (owCols[c.key]||0); });
       const oav = `<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
@@ -8394,7 +8394,7 @@ function _renderMblHbl(pageId, title, mblVal, hblVal) {
     h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bTd}${colCells(brTo, brRecs, cols, colKeyFn, safeBr, label)}</tr>`;
     Object.keys(owMap).sort().forEach((ow, oi) => {
       const owKey = bKey+'o'+oi, owCols = owMap[ow]||{};
-      const owRecs = brRecs.filter(r => (r.jobOwner||'(Unknown)') === ow);
+      const owRecs = brRecs.filter(r => (r.operator||r.jobOwner||'(Unknown)') === ow);
       const owId = dvReg(owRecs), safeOw = ow.replace(/'/g,"\\'");
       let owGrand = 0; cols.forEach(c => { owGrand += (owCols[c.key]||0); });
       const oav = `<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
