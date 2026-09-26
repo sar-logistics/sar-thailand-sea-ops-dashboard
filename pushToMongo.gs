@@ -414,6 +414,7 @@ function pushWip() {
       eta:           _fmtDate(row[ETA]),
       lob:           String(row[LOB]       || '').trim(),
       etdEta:        _fmtDate(row[ETDETA]),
+      operator:      String(row[h('Job Operator')] || '').trim(),
     });
   });
 
