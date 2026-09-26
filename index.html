@@ -8663,9 +8663,26 @@ function renderSummary() {
     const usdBtn = document.getElementById('cur-usd');
     if (thbBtn) { thbBtn.style.background = cur === 'THB' ? '#2a78d6' : 'transparent'; thbBtn.style.color = cur === 'THB' ? '#fff' : 'rgba(255,255,255,.5)'; }
     if (usdBtn) { usdBtn.style.background = cur === 'USD' ? '#2a78d6' : 'transparent'; usdBtn.style.color = cur === 'USD' ? '#fff' : 'rgba(255,255,255,.5)'; }
+    // Save expanded rows before re-render
+    const openKeys = new Set();
+    document.querySelectorAll('.rc.open').forEach(rc => { if (rc.id) openKeys.add(rc.id); });
     const activeEl = document.querySelector('.page.active');
     const divId = activeEl ? activeEl.id.replace('page-', '') : 'summary';
     renderPage(divId);
+    // Restore expanded rows after re-render
+    requestAnimationFrame(() => {
+      openKeys.forEach(rcId => {
+        const rc = document.getElementById(rcId);
+        if (rc && !rc.classList.contains('open')) {
+          const key = rcId.replace('rc-', '');
+          const tbl = rc.closest('table');
+          if (tbl) {
+            rc.classList.add('open'); rc.textContent = '▼';
+            tbl.querySelectorAll('.r-br-' + key).forEach(r => r.classList.remove('r-hidden'));
+          }
+        }
+      });
+    });
   };
 
   window.setDirection = function(dir) {
