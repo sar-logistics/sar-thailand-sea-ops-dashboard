@@ -307,6 +307,8 @@ function wipeAndPushAll() {
   wipeAll();
   Utilities.sleep(1000);
   pushAll();
+  Utilities.sleep(1000);
+  pushWip();
 }
 
 function addLobColumn() {
@@ -334,3 +336,107 @@ function _addLob(sheet, direction) {
   }
   Logger.log(direction + ': Lob filled ' + filled + ' rows');
 }
+
+// ── WIP/Accrual Push ──────────────────────────────────────────────────────
+const WIP_BATCH_URL = 'https://sar-thailand-sea-ops-dashboard.vercel.app/api/wip';
+
+function pushWip() {
+  Logger.log('=== WIP Push Starting ===');
+  const ss  = SpreadsheetApp.openById(OPS_SHEET_ID);
+  const sheet = ss.getSheetByName('WIP, ACCURAL');
+  if (!sheet) { Logger.log('ERROR: WIP, ACCURAL tab not found'); return; }
+
+  const data    = sheet.getDataRange().getValues();
+  const headers = data[0].map(h => String(h).trim());
+  const rows    = data.slice(1);
+
+  // Map headers to keys
+  const h = (name) => headers.indexOf(name);
+  const JOB_NO    = h('Job #');
+  const LOCAL_REF = h('Job Local Ref');
+  const TRANS     = h('Trans');
+  const CONT      = h('Cont');
+  const OPENED    = h('Opened');
+  const JOB_BR    = h('Job Branch');
+  const JOB_DEPT  = h('Job Dept');
+  const JOB_STAT  = h('Job Stat');
+  const CLIENT    = h('Local Client');
+  const TYPE      = h('Type');
+  const CHARGE    = h('Charge');
+  const RECOG     = h('Recognized');
+  const REVENUE   = h('Revenue');
+  const WIP       = h('WIP');
+  const COST      = h('Cost');
+  const ACCRUAL   = h('Accrual');
+  const PROFIT    = h('Job Profit');
+  const ETD       = h('ETD');
+  const ETA       = h('ETA');
+  const LOB       = h('LOB');
+  const ETDETA    = h('ETD/ETA');
+
+  const records = [];
+  rows.forEach(row => {
+    const jobNo = String(row[JOB_NO] || '').trim();
+    if (!jobNo || jobNo === 'Job #') return;
+
+    const wip     = parseFloat(row[WIP])     || 0;
+    const revenue = parseFloat(row[REVENUE]) || 0;
+    const cost    = parseFloat(row[COST])    || 0;
+    const accrual = parseFloat(row[ACCRUAL]) || 0;
+    const profit  = parseFloat(row[PROFIT])  || 0;
+
+    records.push({
+      shipmentId:    jobNo,
+      localRef:      String(row[LOCAL_REF] || '').trim(),
+      trans:         String(row[TRANS]     || '').trim(),
+      cont:          String(row[CONT]      || '').trim(),
+      jobBranch:     String(row[JOB_BR]    || '').trim(),
+      jobDept:       String(row[JOB_DEPT]  || '').trim(),
+      jobStatus:     String(row[JOB_STAT]  || '').trim(),
+      localClient:   String(row[CLIENT]    || '').trim(),
+      chargeType:    String(row[TYPE]      || '').trim(),
+      chargeCode:    String(row[CHARGE]    || '').trim(),
+      recognized:    String(row[RECOG]     || '').trim(),
+      revenue,
+      wip,
+      cost,
+      accrual,
+      jobProfit:     profit,
+      etd:           String(row[ETD]       || '').trim(),
+      eta:           String(row[ETA]       || '').trim(),
+      lob:           String(row[LOB]       || '').trim(),
+      etdEta:        String(row[ETDETA]    || '').trim(),
+    });
+  });
+
+  Logger.log('WIP records: ' + records.length);
+
+  // Wipe then push in chunks
+  UrlFetchApp.fetch(WIP_BATCH_URL, {
+    method: 'POST', contentType: 'application/json',
+    headers: { 'x-batch-secret': OPS_BATCH_SECRET },
+    payload: JSON.stringify({ action: 'wipe' }),
+    muteHttpExceptions: true,
+  });
+  Logger.log('WIP wiped');
+
+  const CHUNK = 500;
+  let pushed = 0;
+  for (let i = 0; i < records.length; i += CHUNK) {
+    const chunk = records.slice(i, i + CHUNK);
+    const resp = UrlFetchApp.fetch(WIP_BATCH_URL, {
+      method: 'POST', contentType: 'application/json',
+      headers: { 'x-batch-secret': OPS_BATCH_SECRET },
+      payload: JSON.stringify({ action: 'push', records: chunk }),
+      muteHttpExceptions: true,
+    });
+    const code = resp.getResponseCode();
+    Logger.log('WIP chunk ' + (Math.floor(i/CHUNK)+1) + ': HTTP ' + code + ' — ' + resp.getContentText().slice(0,80));
+    if (code === 200) pushed += chunk.length;
+    Utilities.sleep(300);
+  }
+
+  Logger.log('=== WIP Push Done: ' + pushed + '/' + records.length + ' ===');
+}
+
+
