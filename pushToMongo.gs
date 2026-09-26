@@ -371,6 +371,7 @@ function pushWip() {
   const CLIENT    = h('Local Client');
   const TYPE      = h('Type');
   const CHARGE    = h('Charge');
+  const INVOICE   = h('Invoice Number');
   const RECOG     = h('Recognized');
   const REVENUE   = h('Revenue');
   const WIP       = h('WIP');
@@ -404,6 +405,7 @@ function pushWip() {
       localClient:   String(row[CLIENT]    || '').trim(),
       chargeType:    String(row[TYPE]      || '').trim(),
       chargeCode:    String(row[CHARGE]    || '').trim(),
+      invoiceNumber: String(row[INVOICE]   || '').trim(),
       recognized:    _fmtDate(row[RECOG]),
       revenue,
       wip,
