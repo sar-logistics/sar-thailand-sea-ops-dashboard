@@ -70,6 +70,11 @@ function processTab(sheet, direction) {
       }
     });
 
+    // Derived: lob from trans + direction
+    const t = (rec.trans || '').toUpperCase();
+    if (t === 'SEA') rec.lob = direction === 'Export' ? 'FES' : 'FIS';
+    else if (t === 'AIR') rec.lob = direction === 'Export' ? 'FEA' : 'FIA';
+
     records.push(rec);
   });
 
