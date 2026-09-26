@@ -219,12 +219,12 @@ function headerToKey(header, idx) {
 
 // Date column indices
 function isDateCol(i) {
-  return [2,3,4,5,7,27,29,62,73,74,80,81,109,110,125,129,130,131,132,133,134,136,137].indexOf(i) >= 0;
+  return [2,5,7,27,29,62,73,74,80,81,109,110,125,129,130,131,132,133,134,136,137].indexOf(i) >= 0;
 }
 
 // Numeric column indices
 function isNumCol(i) {
-  return [31,33,35,36,38,40,63,64,65,66,67,68,69,90,91,93,94,95,96,97,98,99,100,126,127,135].indexOf(i) >= 0;
+  return [3,4,31,33,35,36,38,40,63,64,65,66,67,68,69,90,91,93,94,95,96,97,98,99,100,126,127,135].indexOf(i) >= 0;
 }
 
 function pushRecords(records, direction) {
