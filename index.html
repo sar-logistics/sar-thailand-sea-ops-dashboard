@@ -4702,6 +4702,9 @@ function setPage(pageId, title, group, el) {
   document.querySelectorAll('.nav-item,.sys-item,.reports-label').forEach(n => n.classList.remove('active'));
   if (el) el.classList.add('active');
   clearSidebarSearch();
+  // Keep System section expanded when a sys-item is active
+  const sysSection = document.querySelector('.sys-section');
+  if (sysSection) sysSection.classList.toggle('expanded', group === 'System');
 
   // Move active filter bar to topbar — restore previous one first
   const filterRow = document.getElementById('tb-filter-row');
