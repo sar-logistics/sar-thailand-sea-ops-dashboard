@@ -825,7 +825,12 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
             <button id="cur-thb" onclick="setCurrency('THB');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:#2a78d6;color:#fff;transition:all .15s">฿ THB</button>
             <button id="cur-usd" onclick="setCurrency('USD');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .15s">$ USD</button>
           </div>
-          <div id="cur-rate-label" style="font-size:10px;color:rgba(181,212,244,.5);margin-top:2px">1 USD = ฿—</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+            <span style="font-size:10px;color:rgba(181,212,244,.5)">1 USD = ฿</span>
+            <input id="usd-rate-input" type="number" value="34" min="1" step="0.01"
+              style="width:70px;font-size:11px;padding:3px 6px;border-radius:5px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;outline:none"
+              oninput="manualRate=parseFloat(this.value)||34;renderPage(document.querySelector('.page.active')?.id.replace('page-',''))" />
+          </div>
         </div>
         <div class="tb-ud-divider"></div>
         <button class="tb-ud-item tb-ud-btn" id="feedbackBtn" onclick="openFeedback();toggleUserMenu()">
@@ -6537,14 +6542,10 @@ let dvActiveLob   = 'ALL';
 const DV_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 let currentCurrency = 'THB'; // THB or USD
+let manualRate = 34; // manual USD rate set by user
 
 function getExchangeRate() {
-  // Use average exchange rate from data, fallback to 1
-  if (currentCurrency === 'USD' && rawSRR && rawSRR.length) {
-    const rates = rawSRR.map(r => r.todayExchangeRate).filter(r => r && r > 0);
-    if (rates.length) return rates.reduce((a, b) => a + b, 0) / rates.length;
-    return 34; // fallback THB to USD rate
-  }
+  if (currentCurrency === 'USD') return manualRate || 34;
   return 1;
 }
 
@@ -8662,7 +8663,6 @@ function renderSummary() {
     const usdBtn = document.getElementById('cur-usd');
     if (thbBtn) { thbBtn.style.background = cur === 'THB' ? '#2a78d6' : 'transparent'; thbBtn.style.color = cur === 'THB' ? '#fff' : 'rgba(255,255,255,.5)'; }
     if (usdBtn) { usdBtn.style.background = cur === 'USD' ? '#2a78d6' : 'transparent'; usdBtn.style.color = cur === 'USD' ? '#fff' : 'rgba(255,255,255,.5)'; }
-    updateRateLabel();
     const activeEl = document.querySelector('.page.active');
     const divId = activeEl ? activeEl.id.replace('page-', '') : 'summary';
     renderPage(divId);
