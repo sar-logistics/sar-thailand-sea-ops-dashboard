@@ -266,160 +266,121 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 
 /* ── LOB Navigation System ───────────────────────────────────────────────── */
 
-/* State 1: LOB full screen */
-.lob-screen{
+.lob-nav-zone{
   display:flex;flex-direction:column;
   flex-shrink:0;
-  transform:translateX(0);
-  opacity:1;
-  transition:transform .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, max-height .4s cubic-bezier(.4,0,.2,1);
-  max-height:600px;
-  overflow:hidden;
-}
-.lob-screen.slide-out{
-  transform:translateX(-40px);
-  opacity:0;
-  max-height:0;
-  pointer-events:none;
+  border-bottom:1px solid rgba(255,255,255,.07);
 }
 
-/* LOB screen header */
-.lob-screen-hdr{
-  padding:16px 16px 12px;
-  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(181,212,244,.4);
-  border-bottom:1px solid rgba(255,255,255,.06);
-  flex-shrink:0;
-}
-
-/* LOB tile grid */
-.lob-tile-grid{
-  display:flex;flex-direction:column;gap:8px;
-  padding:12px;flex:1;
-}
-.lob-tile{
-  display:flex;flex-direction:row;align-items:center;
-  gap:12px;padding:14px 16px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.07);
-  background:rgba(255,255,255,.03);
-  cursor:pointer;
-  transition:all .2s ease;
-  color:rgba(181,212,244,.55);
-  user-select:none;
-  position:relative;
-  overflow:hidden;
-}
-.lob-tile::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 0%, rgba(59,130,246,.08), transparent 70%);
-  opacity:0;transition:opacity .2s;
-}
-.lob-tile:hover::before{opacity:1}
-.lob-tile:hover{
-  background:rgba(255,255,255,.07);
-  border-color:rgba(255,255,255,.15);
-  color:rgba(181,212,244,.9);
-  transform:translateY(-1px);
-  box-shadow:0 4px 16px rgba(0,0,0,.3);
-}
-.lob-tile.disabled{
-  opacity:.3;cursor:not-allowed;
-}
-.lob-tile.disabled:hover{
-  transform:none;box-shadow:none;
-  background:rgba(255,255,255,.03);
-  border-color:rgba(255,255,255,.07);
-  color:rgba(181,212,244,.55);
-}
-.lob-tile i{font-size:20px;line-height:1;width:24px;text-align:center;flex-shrink:0}
-.lob-tile-text{display:flex;flex-direction:column;gap:2px;flex:1;text-align:left}
-.lob-tile-name{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
-.lob-tile-sub{font-size:10px;color:rgba(181,212,244,.3);font-weight:500}
-.lob-tile-soon{
-  font-size:8px;background:rgba(255,255,255,.06);
-  color:rgba(181,212,244,.4);padding:2px 7px;
-  border-radius:10px;flex-shrink:0;
-}
-
-/* Mini LOB bar (State 2+) */
+/* Mini LOB strip (hidden in State 1, shown State 2+) */
 .lob-mini-bar{
   display:flex;align-items:center;gap:0;
   background:rgba(255,255,255,.03);
   border-bottom:1px solid rgba(255,255,255,.06);
   flex-shrink:0;
   overflow:hidden;
-  transform:translateX(30px);
-  opacity:0;
-  transition:transform .4s cubic-bezier(.4,0,.2,1) .1s, opacity .35s ease .1s;
-}
-.lob-mini-bar.visible{
-  transform:translateX(0);
-  opacity:1;
 }
 .lob-mini-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:2px;padding:8px 6px;flex:1;
   cursor:pointer;transition:all .15s ease;
-  color:rgba(181,212,244,.35);font-size:8px;
+  color:rgba(224,236,250,.4);font-size:8px;
   font-weight:700;letter-spacing:.05em;text-transform:uppercase;
   border-right:1px solid rgba(255,255,255,.05);
   user-select:none;
 }
 .lob-mini-btn:last-child{border-right:none}
 .lob-mini-btn i{font-size:13px;margin-bottom:1px}
-.lob-mini-btn:hover{color:rgba(181,212,244,.7);background:rgba(255,255,255,.04)}
+.lob-mini-btn:hover{color:rgba(224,236,250,.75);background:rgba(255,255,255,.04)}
 .lob-mini-btn.active{
   color:#60a5fa;
-  background:rgba(59,130,246,.12);
+  background:rgba(59,130,246,.14);
 }
-.lob-mini-btn.disabled{opacity:.25;cursor:not-allowed}
+.lob-mini-btn.disabled{opacity:.3;cursor:not-allowed}
 
-/* Direction screen (State 2) */
-.dir-screen{
-  display:flex;flex-direction:column;
-  flex-shrink:0;
+/* Swap panel — holds either LOB tiles or direction tiles, same footprint */
+.lob-swap-panel{
+  position:relative;
+  min-height:230px;
   overflow:hidden;
-  max-height:0;
-  transform:translateX(30px);
-  transition:max-height .4s cubic-bezier(.4,0,.2,1) .15s, opacity .3s ease .15s, transform .4s cubic-bezier(.4,0,.2,1) .15s;
-  opacity:0;
 }
-.dir-screen.visible{
-  max-height:200px;
-  opacity:1;
-  transform:translateX(0);
-}
-.dir-card-wrap{
-  display:flex;gap:8px;padding:10px 10px 0;
-}
-.dir-card{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;padding:12px 8px;
-  border-radius:10px;border:1px solid rgba(255,255,255,.07);
-  background:rgba(255,255,255,.03);
-  cursor:pointer;transition:all .2s ease;
-  color:rgba(181,212,244,.5);
-  user-select:none;
-}
-.dir-card:hover{
-  background:rgba(255,255,255,.07);
-  border-color:rgba(255,255,255,.15);
-  color:rgba(181,212,244,.9);
-}
-.dir-card.active{
-  background:rgba(59,130,246,.15);
-  border-color:rgba(59,130,246,.4);
-  color:#93c5fd;
-}
-.dir-card i{font-size:18px}
-.dir-card-name{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-.dir-card-count{font-size:9px;color:rgba(181,212,244,.4);font-weight:500}
 
-.lob-nav-divider{
-  height:1px;background:rgba(255,255,255,.06);
-  margin:10px 10px 0;flex-shrink:0;
+.lob-tile-grid, .dir-tile-grid{
+  display:flex;flex-direction:column;gap:8px;
+  padding:0 12px 12px;
+  position:absolute;top:0;left:0;right:0;
+  transition:transform .38s cubic-bezier(.4,0,.2,1), opacity .3s ease;
 }
+.lob-screen-hdr{
+  padding:14px 4px 10px;
+  font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:rgba(224,236,250,.4);
+}
+
+/* State 1: LOB grid visible, dir grid off to the right */
+.lob-tile-grid{ transform:translateX(0); opacity:1; }
+.dir-tile-grid{ transform:translateX(24px); opacity:0; pointer-events:none; }
+
+/* State 2+: LOB grid slides out left, dir grid slides in from right */
+.lob-nav-zone.state-2 .lob-tile-grid{ transform:translateX(-24px); opacity:0; pointer-events:none; }
+.lob-nav-zone.state-2 .dir-tile-grid{ transform:translateX(0); opacity:1; pointer-events:auto; }
+
+.lob-tile{
+  display:flex;flex-direction:row;align-items:center;
+  gap:12px;padding:14px 16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
+  cursor:pointer;
+  transition:all .2s ease;
+  color:rgba(224,236,250,.85);
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+}
+.lob-tile::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(59,130,246,.1), transparent 70%);
+  opacity:0;transition:opacity .2s;
+}
+.lob-tile:hover::before{opacity:1}
+.lob-tile:hover{
+  background:rgba(255,255,255,.09);
+  border-color:rgba(255,255,255,.2);
+  color:#fff;
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+}
+.lob-tile.active{
+  background:rgba(59,130,246,.16);
+  border-color:rgba(59,130,246,.5);
+}
+.lob-tile.disabled{
+  opacity:.45;cursor:not-allowed;
+}
+.lob-tile.disabled:hover{
+  transform:none;box-shadow:none;
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.1);
+  color:rgba(224,236,250,.85);
+}
+.lob-tile i{font-size:20px;line-height:1;width:24px;text-align:center;flex-shrink:0;color:#93c5fd}
+.lob-tile-text{display:flex;flex-direction:column;gap:2px;flex:1;text-align:left}
+.lob-tile-name{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#fff}
+.lob-tile-sub{font-size:10px;color:rgba(224,236,250,.5);font-weight:500}
+.lob-tile-soon{
+  font-size:8px;background:rgba(255,255,255,.08);
+  color:rgba(224,236,250,.55);padding:2px 7px;
+  border-radius:10px;flex-shrink:0;
+}
+
+/* Coming soon state (Roadways/Warehouse clicked-through page) */
+.lob-coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;color:rgba(181,212,244,.3);text-align:center;gap:8px}
+.lob-coming-soon i{font-size:32px;opacity:.4}
+.lob-coming-soon .cs-title{font-size:13px;font-weight:600;color:rgba(181,212,244,.5)}
+.lob-coming-soon .cs-sub{font-size:11px;color:rgba(181,212,244,.3)}
+
+
 
 
 /* ── Skeleton placeholder ─────────────────────────────────────────────── */
@@ -895,75 +856,84 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <i class="ti ti-arrows-minimize" id="sb-toggle-icon" style="font-size:12px;color:rgba(181,212,244,.7)"></i>
         </button>
       </div>
-      <!-- LOB Screen (State 1 - full screen LOB selection) -->
-      <div class="lob-screen" id="lob-screen">
-        <div class="lob-screen-hdr">Select Line of Business</div>
-        <div class="lob-tile-grid">
-          <div class="lob-tile" id="lob-tile-sea" onclick="setLob('sea')">
-            <i class="ti ti-anchor"></i>
-            <div class="lob-tile-text">
-              <div class="lob-tile-name">Sea</div>
-              <div class="lob-tile-sub">Ocean Freight</div>
-            </div>
-          </div>
-          <div class="lob-tile disabled" id="lob-tile-air">
-            <i class="ti ti-plane"></i>
-            <div class="lob-tile-text">
-              <div class="lob-tile-name">Air</div>
-              <div class="lob-tile-sub">Air Freight</div>
-            </div>
-            <div class="lob-tile-soon">Soon</div>
-          </div>
-          <div class="lob-tile disabled" id="lob-tile-road">
-            <i class="ti ti-truck"></i>
-            <div class="lob-tile-text">
-              <div class="lob-tile-name">Roadways</div>
-              <div class="lob-tile-sub">Land Freight</div>
-            </div>
-            <div class="lob-tile-soon">Soon</div>
-          </div>
-          <div class="lob-tile disabled" id="lob-tile-wh">
-            <i class="ti ti-building-warehouse"></i>
-            <div class="lob-tile-text">
-              <div class="lob-tile-name">Warehouse</div>
-              <div class="lob-tile-sub">Storage & WMS</div>
-            </div>
-            <div class="lob-tile-soon">Soon</div>
-          </div>
-        </div>
-      </div>
+      <!-- LOB Nav Zone — single container, contents swap via JS -->
+      <div class="lob-nav-zone" id="lob-nav-zone">
 
-      <!-- Mini LOB bar (State 2+ — after LOB selected) -->
-      <div class="lob-mini-bar" id="lob-mini-bar" style="display:none">
-        <div class="lob-mini-btn active" id="lob-mini-sea" onclick="setLob('sea')">
-          <i class="ti ti-anchor"></i>Sea
+        <!-- Mini LOB strip — always in DOM, populated when a LOB is chosen -->
+        <div class="lob-mini-bar" id="lob-mini-bar" style="display:none">
+          <div class="lob-mini-btn active" id="lob-mini-sea" onclick="setLob('sea')">
+            <i class="ti ti-anchor"></i>Sea
+          </div>
+          <div class="lob-mini-btn disabled" id="lob-mini-air">
+            <i class="ti ti-plane"></i>Air
+          </div>
+          <div class="lob-mini-btn disabled" id="lob-mini-road">
+            <i class="ti ti-truck"></i>Road
+          </div>
+          <div class="lob-mini-btn disabled" id="lob-mini-wh">
+            <i class="ti ti-building-warehouse"></i>WH
+          </div>
         </div>
-        <div class="lob-mini-btn disabled" id="lob-mini-air">
-          <i class="ti ti-plane"></i>Air
-        </div>
-        <div class="lob-mini-btn disabled" id="lob-mini-road">
-          <i class="ti ti-truck"></i>Road
-        </div>
-        <div class="lob-mini-btn disabled" id="lob-mini-wh">
-          <i class="ti ti-building-warehouse"></i>WH
-        </div>
-      </div>
 
-      <!-- Direction Screen (State 2 — shown after LOB selected) -->
-      <div class="dir-screen" id="dir-screen">
-        <div class="dir-card-wrap">
-          <div class="dir-card active" id="dir-card-export" onclick="setDirection('Export')">
-            <i class="ti ti-ship"></i>
-            <div class="dir-card-name">Export</div>
-            <div class="dir-card-count" id="dir-exp-count">— jobs</div>
+        <!-- Swap panel: LOB tiles OR direction cards render here, same footprint -->
+        <div class="lob-swap-panel" id="lob-swap-panel">
+
+          <!-- State 1 content -->
+          <div class="lob-tile-grid" id="lob-tile-grid">
+            <div class="lob-screen-hdr">Select Line of Business</div>
+            <div class="lob-tile" id="lob-tile-sea" onclick="setLob('sea')">
+              <i class="ti ti-anchor"></i>
+              <div class="lob-tile-text">
+                <div class="lob-tile-name">Sea</div>
+                <div class="lob-tile-sub">Ocean Freight</div>
+              </div>
+            </div>
+            <div class="lob-tile disabled" id="lob-tile-air">
+              <i class="ti ti-plane"></i>
+              <div class="lob-tile-text">
+                <div class="lob-tile-name">Air</div>
+                <div class="lob-tile-sub">Air Freight</div>
+              </div>
+              <div class="lob-tile-soon">Soon</div>
+            </div>
+            <div class="lob-tile disabled" id="lob-tile-road">
+              <i class="ti ti-truck"></i>
+              <div class="lob-tile-text">
+                <div class="lob-tile-name">Roadways</div>
+                <div class="lob-tile-sub">Land Freight</div>
+              </div>
+              <div class="lob-tile-soon">Soon</div>
+            </div>
+            <div class="lob-tile disabled" id="lob-tile-wh">
+              <i class="ti ti-building-warehouse"></i>
+              <div class="lob-tile-text">
+                <div class="lob-tile-name">Warehouse</div>
+                <div class="lob-tile-sub">Storage & WMS</div>
+              </div>
+              <div class="lob-tile-soon">Soon</div>
+            </div>
           </div>
-          <div class="dir-card" id="dir-card-import" onclick="setDirection('Import')">
-            <i class="ti ti-ship" style="transform:scaleX(-1)"></i>
-            <div class="dir-card-name">Import</div>
-            <div class="dir-card-count" id="dir-imp-count">— jobs</div>
+
+          <!-- State 2 content (Export/Import) — same panel, slides in from right -->
+          <div class="dir-tile-grid" id="dir-tile-grid">
+            <div class="lob-screen-hdr" id="dir-screen-hdr">Sea — Select Direction</div>
+            <div class="lob-tile" id="dir-tile-export" onclick="setDirection('Export')">
+              <i class="ti ti-arrow-up"></i>
+              <div class="lob-tile-text">
+                <div class="lob-tile-name">Export</div>
+                <div class="lob-tile-sub" id="dir-exp-count">— jobs</div>
+              </div>
+            </div>
+            <div class="lob-tile" id="dir-tile-import" onclick="setDirection('Import')">
+              <i class="ti ti-arrow-down"></i>
+              <div class="lob-tile-text">
+                <div class="lob-tile-name">Import</div>
+                <div class="lob-tile-sub" id="dir-imp-count">— jobs</div>
+              </div>
+            </div>
           </div>
+
         </div>
-        <div class="lob-nav-divider"></div>
       </div>
 
       <div class="sidebar-nav-scroll" id="main-nav-scroll" style="display:none">
@@ -4562,44 +4532,29 @@ function setLob(lob) {
   const wasNull = currentLob === null;
   currentLob = lob;
 
-  // State 1 → State 2: slide out LOB screen, show mini bar + dir cards
-  const lobScreen = document.getElementById('lob-screen');
+  const navZone = document.getElementById('lob-nav-zone');
   const lobMiniBar = document.getElementById('lob-mini-bar');
-  const dirScreen = document.getElementById('dir-screen');
-  const navScroll = document.getElementById('main-nav-scroll');
+  const dirHdr = document.getElementById('dir-screen-hdr');
 
-  // Animate LOB screen out
-  if (lobScreen) lobScreen.classList.add('slide-out');
-  setTimeout(() => {
-    if (lobScreen) lobScreen.style.display = 'none';
-  }, 350);
+  // Switch to state-2 (slides LOB grid out, dir grid in)
+  if (navZone) navZone.classList.add('state-2');
 
-  // Show mini LOB bar with slide-in animation
-  if (lobMiniBar) {
-    lobMiniBar.style.display = 'flex';
-    requestAnimationFrame(() => lobMiniBar.classList.add('visible'));
-  }
-
-  // Update mini bar active state
+  // Show + populate mini LOB bar
+  if (lobMiniBar) lobMiniBar.style.display = 'flex';
   ['sea','air','road','wh'].forEach(l => {
     document.getElementById('lob-mini-' + l)?.classList.toggle('active', l === lob);
   });
 
-  // Show direction screen with animation
-  if (dirScreen) {
-    dirScreen.style.display = 'flex';
-    requestAnimationFrame(() => dirScreen.classList.add('visible'));
-  }
+  // Update direction screen header
+  const lobLabels = {sea:'Sea', air:'Air'};
+  if (dirHdr) dirHdr.textContent = (lobLabels[lob] || lob) + ' — Select Direction';
 
-  // Update direction counts
   updateDirCounts();
 
-  // If direction already selected, show pages too
+  // If direction already selected, show pages too (switching LOB while on a page)
   if (!wasNull) {
-    // Already in state 3 — just re-filter
     refreshForDirection(currentDirection);
   } else {
-    // First time LOB selected — show skeleton placeholder
     const skPlaceholder = document.getElementById('sk-lob-placeholder');
     if (skPlaceholder) skPlaceholder.classList.add('visible');
   }
@@ -4610,9 +4565,9 @@ function setLob(lob) {
 function setDirection(dir) {
   currentDirection = dir;
 
-  // Update direction card states
-  document.getElementById('dir-card-export')?.classList.toggle('active', dir === 'Export');
-  document.getElementById('dir-card-import')?.classList.toggle('active', dir === 'Import');
+  // Update direction tile active states
+  document.getElementById('dir-tile-export')?.classList.toggle('active', dir === 'Export');
+  document.getElementById('dir-tile-import')?.classList.toggle('active', dir === 'Import');
 
   // Hide skeleton, show nav pages (State 3)
   const skPlaceholder = document.getElementById('sk-lob-placeholder');
@@ -4621,16 +4576,13 @@ function setDirection(dir) {
   const navScroll = document.getElementById('main-nav-scroll');
   if (navScroll) navScroll.style.display = '';
 
-  // Show all pages
   document.querySelectorAll('.page').forEach(p => {
     if (p.id !== 'sk-lob-placeholder') p.style.display = '';
   });
 
-  // Re-filter and render
   refreshForDirection(dir);
   updateTopbarLabel();
 
-  // Navigate to summary
   const summaryNav = document.getElementById('nav-summary');
   if (summaryNav) setPage('summary', 'Summary', 'Summary', summaryNav);
 }
