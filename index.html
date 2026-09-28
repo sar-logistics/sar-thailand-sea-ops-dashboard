@@ -292,13 +292,13 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 
 /* LOB tile grid */
 .lob-tile-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-  padding:16px;flex:1;align-content:start;
+  display:flex;flex-direction:column;gap:8px;
+  padding:12px;flex:1;
 }
 .lob-tile{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:8px;padding:20px 10px;
-  border-radius:14px;
+  display:flex;flex-direction:row;align-items:center;
+  gap:12px;padding:14px 16px;
+  border-radius:12px;
   border:1px solid rgba(255,255,255,.07);
   background:rgba(255,255,255,.03);
   cursor:pointer;
@@ -330,13 +330,14 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   border-color:rgba(255,255,255,.07);
   color:rgba(181,212,244,.55);
 }
-.lob-tile i{font-size:24px;line-height:1}
-.lob-tile-name{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-.lob-tile-sub{font-size:9px;color:rgba(181,212,244,.3);font-weight:500}
+.lob-tile i{font-size:20px;line-height:1;width:24px;text-align:center;flex-shrink:0}
+.lob-tile-text{display:flex;flex-direction:column;gap:2px;flex:1;text-align:left}
+.lob-tile-name{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.lob-tile-sub{font-size:10px;color:rgba(181,212,244,.3);font-weight:500}
 .lob-tile-soon{
   font-size:8px;background:rgba(255,255,255,.06);
-  color:rgba(181,212,244,.4);padding:2px 6px;
-  border-radius:4px;margin-top:2px;
+  color:rgba(181,212,244,.4);padding:2px 7px;
+  border-radius:10px;flex-shrink:0;
 }
 
 /* Mini LOB bar (State 2+) */
@@ -889,26 +890,34 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="lob-tile-grid">
           <div class="lob-tile" id="lob-tile-sea" onclick="setLob('sea')">
             <i class="ti ti-anchor"></i>
-            <div class="lob-tile-name">Sea</div>
-            <div class="lob-tile-sub">Ocean Freight</div>
+            <div class="lob-tile-text">
+              <div class="lob-tile-name">Sea</div>
+              <div class="lob-tile-sub">Ocean Freight</div>
+            </div>
           </div>
           <div class="lob-tile disabled" id="lob-tile-air">
             <i class="ti ti-plane"></i>
-            <div class="lob-tile-name">Air</div>
-            <div class="lob-tile-sub">Air Freight</div>
-            <div class="lob-tile-soon">Coming Soon</div>
+            <div class="lob-tile-text">
+              <div class="lob-tile-name">Air</div>
+              <div class="lob-tile-sub">Air Freight</div>
+            </div>
+            <div class="lob-tile-soon">Soon</div>
           </div>
           <div class="lob-tile disabled" id="lob-tile-road">
             <i class="ti ti-truck"></i>
-            <div class="lob-tile-name">Roadways</div>
-            <div class="lob-tile-sub">Land Freight</div>
-            <div class="lob-tile-soon">Coming Soon</div>
+            <div class="lob-tile-text">
+              <div class="lob-tile-name">Roadways</div>
+              <div class="lob-tile-sub">Land Freight</div>
+            </div>
+            <div class="lob-tile-soon">Soon</div>
           </div>
           <div class="lob-tile disabled" id="lob-tile-wh">
             <i class="ti ti-building-warehouse"></i>
-            <div class="lob-tile-name">Warehouse</div>
-            <div class="lob-tile-sub">Storage & WMS</div>
-            <div class="lob-tile-soon">Coming Soon</div>
+            <div class="lob-tile-text">
+              <div class="lob-tile-name">Warehouse</div>
+              <div class="lob-tile-sub">Storage & WMS</div>
+            </div>
+            <div class="lob-tile-soon">Soon</div>
           </div>
         </div>
       </div>
@@ -4530,6 +4539,10 @@ let currentLob = null; // null = state 1, 'sea'|'air' = state 2/3
   // Hide nav scroll initially
   const navScroll = document.getElementById('main-nav-scroll');
   if (navScroll) navScroll.style.display = 'none';
+  // Hide all pages, show skeleton instead
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+  });
 })();
 
 function setLob(lob) {
@@ -7806,8 +7819,13 @@ async function loadData() {
     renderSummary();
     _renderedPages = { summary: true };
 
-    // Default to summary page on load
-    setPage('summary', 'Summary', 'Summary', document.querySelector('#sec-summary-body .nav-item'));
+    // Only auto-navigate to summary if LOB+direction already selected (currentLob set)
+    // Otherwise stay on LOB selection screen
+    if (currentLob && ['sea','air'].includes(currentLob)) {
+      setPage('summary', 'Summary', 'Summary', document.querySelector('#sec-summary-body .nav-item'));
+    } else {
+      document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+    }
     logUsage('login');
 
     // Record when data was last loaded
