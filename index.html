@@ -7890,10 +7890,7 @@ const ROLE_GROUPS = [
 ];
 
 async function loadAdminPanel() {
-  const resp  = await fetch(MONGO_API, { method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ action:'find', collection:'users', filter:{} }) });
-  const data  = await resp.json();
-  const users = (data.documents || []);
+  const users = allUsers || [];
 
   const allZones    = [...new Set(rawSRR.map(r => r.zone).filter(Boolean))].sort();
   const allBranches = [...new Set(rawSRR.map(r => r.jobBranch || r.branch).filter(Boolean))].sort();
