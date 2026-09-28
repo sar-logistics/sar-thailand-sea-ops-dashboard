@@ -298,11 +298,28 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 }
 .lob-mini-btn.disabled{opacity:.3;cursor:not-allowed}
 
+.dir-mini-bar{
+  display:flex;align-items:center;gap:0;
+  background:rgba(255,255,255,.03);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+  overflow:hidden;
+}
+
 /* Swap panel — holds either LOB tiles or direction tiles, same footprint */
 .lob-swap-panel{
   position:relative;
   min-height:230px;
   overflow:hidden;
+  transition:min-height .35s cubic-bezier(.4,0,.2,1), max-height .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+  max-height:600px;
+  opacity:1;
+}
+.lob-nav-zone.state-3 .lob-swap-panel{
+  min-height:0;
+  max-height:0;
+  opacity:0;
+  pointer-events:none;
 }
 
 .lob-tile-grid, .dir-tile-grid{
@@ -872,6 +889,16 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           </div>
           <div class="lob-mini-btn disabled" id="lob-mini-wh">
             <i class="ti ti-building-warehouse"></i>WH
+          </div>
+        </div>
+
+        <!-- Mini Direction strip — shown after a direction is chosen -->
+        <div class="dir-mini-bar" id="dir-mini-bar" style="display:none">
+          <div class="lob-mini-btn active" id="dir-mini-export" onclick="setDirection('Export')">
+            <i class="ti ti-arrow-up"></i>Export
+          </div>
+          <div class="lob-mini-btn" id="dir-mini-import" onclick="setDirection('Import')">
+            <i class="ti ti-arrow-down"></i>Import
           </div>
         </div>
 
@@ -4536,8 +4563,8 @@ function setLob(lob) {
   const lobMiniBar = document.getElementById('lob-mini-bar');
   const dirHdr = document.getElementById('dir-screen-hdr');
 
-  // Switch to state-2 (slides LOB grid out, dir grid in)
-  if (navZone) navZone.classList.add('state-2');
+  // Switch to state-2 (slides LOB grid out, dir grid in) — revert state-3 if switching LOB
+  if (navZone) { navZone.classList.add('state-2'); navZone.classList.remove('state-3'); }
 
   // Show + populate mini LOB bar
   if (lobMiniBar) lobMiniBar.style.display = 'flex';
@@ -4565,11 +4592,18 @@ function setLob(lob) {
 function setDirection(dir) {
   currentDirection = dir;
 
-  // Update direction tile active states
-  document.getElementById('dir-tile-export')?.classList.toggle('active', dir === 'Export');
-  document.getElementById('dir-tile-import')?.classList.toggle('active', dir === 'Import');
+  const navZone = document.getElementById('lob-nav-zone');
+  const dirMiniBar = document.getElementById('dir-mini-bar');
 
-  // Hide skeleton, show nav pages (State 3)
+  // Switch to state-3 (collapses swap panel, shows dir mini bar)
+  if (navZone) navZone.classList.add('state-3');
+  if (dirMiniBar) dirMiniBar.style.display = 'flex';
+
+  // Update dir mini bar active state
+  document.getElementById('dir-mini-export')?.classList.toggle('active', dir === 'Export');
+  document.getElementById('dir-mini-import')?.classList.toggle('active', dir === 'Import');
+
+  // Hide skeleton, show nav pages
   const skPlaceholder = document.getElementById('sk-lob-placeholder');
   if (skPlaceholder) skPlaceholder.classList.remove('visible');
 
