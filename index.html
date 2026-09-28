@@ -262,6 +262,33 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 
 .sys-section-label{padding:6px 16px 4px;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;border-left:3px solid #3B82F6;margin-bottom:2px;cursor:pointer;display:flex;align-items:center;gap:6px}
 .sys-section-label i{font-size:10px;color:rgba(255,255,255,.35);transition:transform .25s}
+
+/* ── LOB Navigation ────────────────────────────────────────────────────── */
+.lob-nav{padding:10px 10px 0;flex-shrink:0}
+.lob-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.lob-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);cursor:pointer;transition:all .2s ease;color:rgba(181,212,244,.6);font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;user-select:none}
+.lob-btn:hover{background:rgba(255,255,255,.09);color:rgba(181,212,244,.9);border-color:rgba(255,255,255,.15)}
+.lob-btn.active{background:rgba(59,130,246,.18);border-color:rgba(59,130,246,.5);color:#60a5fa}
+.lob-btn.disabled{opacity:.35;cursor:not-allowed}
+.lob-btn i{font-size:16px;margin-bottom:1px}
+.lob-badge{font-size:8px;background:rgba(59,130,246,.25);color:#93c5fd;padding:1px 5px;border-radius:4px;margin-top:1px}
+
+/* Direction sub-toggle */
+.dir-toggle{display:flex;margin:8px 10px 0;background:rgba(255,255,255,.05);border-radius:8px;padding:3px;gap:3px;flex-shrink:0}
+.dir-btn{flex:1;text-align:center;padding:5px 8px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all .18s ease;color:rgba(181,212,244,.55);letter-spacing:.04em;user-select:none}
+.dir-btn:hover{color:rgba(181,212,244,.85)}
+.dir-btn.active{background:rgba(59,130,246,.25);color:#93c5fd;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.dir-sep{width:1px;background:rgba(255,255,255,.08);align-self:stretch;flex-shrink:0}
+
+/* LOB divider */
+.lob-divider{height:1px;background:rgba(255,255,255,.07);margin:8px 10px 0;flex-shrink:0}
+
+/* Coming soon state */
+.lob-coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;color:rgba(181,212,244,.3);text-align:center;gap:8px}
+.lob-coming-soon i{font-size:32px;opacity:.4}
+.lob-coming-soon .cs-title{font-size:13px;font-weight:600;color:rgba(181,212,244,.5)}
+.lob-coming-soon .cs-sub{font-size:11px;color:rgba(181,212,244,.3)}
+
 .sys-items-wrap{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;opacity:0}
 .sys-section:hover .sys-items-wrap,.sys-section.expanded .sys-items-wrap{max-height:200px;opacity:1}
 .sys-section:hover .sys-section-label i,.sys-section.expanded .sys-section-label i{transform:rotate(180deg)}
@@ -689,6 +716,37 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <i class="ti ti-arrows-minimize" id="sb-toggle-icon" style="font-size:12px;color:rgba(181,212,244,.7)"></i>
         </button>
       </div>
+      <!-- LOB Navigation -->
+      <div class="lob-nav">
+        <div class="lob-grid">
+          <div class="lob-btn active" id="lob-sea" onclick="setLob('sea')">
+            <i class="ti ti-anchor"></i>
+            Sea
+          </div>
+          <div class="lob-btn disabled" id="lob-air" onclick="setLob('air')">
+            <i class="ti ti-plane"></i>
+            Air
+          </div>
+          <div class="lob-btn disabled" id="lob-road" onclick="setLob('road')">
+            <i class="ti ti-truck"></i>
+            Roadways
+          </div>
+          <div class="lob-btn disabled" id="lob-wh" onclick="setLob('wh')">
+            <i class="ti ti-building-warehouse"></i>
+            Warehouse
+          </div>
+        </div>
+      </div>
+
+      <!-- Direction Toggle (Sea/Air only) -->
+      <div class="dir-toggle" id="dir-toggle">
+        <div class="dir-btn active" id="dir-export" onclick="setDirection('Export')">⬆ Export</div>
+        <div class="dir-sep"></div>
+        <div class="dir-btn" id="dir-import" onclick="setDirection('Import')">⬇ Import</div>
+      </div>
+
+      <div class="lob-divider"></div>
+
       <div class="sidebar-nav-scroll">
       <!-- Summary at top -->
       <div id="sec-summary-body" style="display:block;max-height:none!important">
@@ -782,15 +840,6 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tb-ud-item" style="flex-direction:column;align-items:flex-start;gap:2px">
           <div class="tb-live-inner"><span class="tb-live-dot"></span>Live Data Connected</div>
           <div id="tb-last-updated" style="font-size:10px;color:rgba(181,212,244,.4);padding-left:15px">—</div>
-        </div>
-        <div class="tb-ud-divider"></div>
-        <!-- Direction Toggle -->
-        <div class="tb-ud-item" style="flex-direction:column;align-items:flex-start;gap:8px;padding:12px 16px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:rgba(94,187,190,.6);text-transform:uppercase">Direction</div>
-          <div style="display:flex;background:rgba(255,255,255,.06);border-radius:8px;padding:2px;gap:2px;width:100%">
-            <button id="dir-export" onclick="setDirection('Export');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:#2a78d6;color:#fff;transition:all .15s">Export</button>
-            <button id="dir-import" onclick="setDirection('Import');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .15s">Import</button>
-          </div>
         </div>
         <div class="tb-ud-divider"></div>
         <!-- Currency Toggle -->
@@ -4260,7 +4309,84 @@ let currentRole = null;
 let allSRR = [];
 let rawSRR = [];
 let rawWIP  = [];
-let currentDirection = 'Export'; // 'Export' or 'Import' 
+let currentDirection = 'Export'; // 'Export' or 'Import'
+
+// ── LOB Navigation ────────────────────────────────────────────────────────
+let currentLob = 'sea'; // sea | air | road | wh
+
+function setLob(lob) {
+  if (['road','wh'].includes(lob)) return; // disabled for now
+
+  currentLob = lob;
+
+  // Update LOB button states
+  ['sea','air','road','wh'].forEach(l => {
+    const btn = document.getElementById('lob-' + l);
+    if (!btn) return;
+    btn.classList.toggle('active', l === lob);
+  });
+
+  // Show/hide direction toggle (only for sea and air)
+  const dirToggle = document.getElementById('dir-toggle');
+  if (dirToggle) dirToggle.style.display = ['sea','air'].includes(lob) ? 'flex' : 'none';
+
+  // Show/hide sidebar nav vs coming soon
+  const navScroll = document.querySelector('.sidebar-nav-scroll');
+  let comingSoon = document.getElementById('lob-coming-soon');
+
+  if (['road','wh'].includes(lob)) {
+    if (navScroll) navScroll.style.display = 'none';
+    if (!comingSoon) {
+      comingSoon = document.createElement('div');
+      comingSoon.id = 'lob-coming-soon';
+      comingSoon.className = 'lob-coming-soon';
+      comingSoon.innerHTML = `<i class="ti ti-tools"></i><div class="cs-title">Coming Soon</div><div class="cs-sub">This LOB is being set up</div>`;
+      navScroll.parentNode.insertBefore(comingSoon, navScroll.nextSibling);
+    }
+    comingSoon.style.display = 'flex';
+  } else {
+    if (navScroll) navScroll.style.display = '';
+    if (comingSoon) comingSoon.style.display = 'none';
+    // Re-filter data for the selected direction
+    refreshForDirection(currentDirection);
+  }
+
+  // Update topbar subtitle
+  updateTopbarLabel();
+}
+
+function setDirection(dir) {
+  currentDirection = dir;
+
+  // Update direction button states
+  document.getElementById('dir-export')?.classList.toggle('active', dir === 'Export');
+  document.getElementById('dir-import')?.classList.toggle('active', dir === 'Import');
+
+  // Re-filter data
+  refreshForDirection(dir);
+  updateTopbarLabel();
+}
+
+function refreshForDirection(dir) {
+  allSRR = rawSRR.filter(r => (r.direction || '').toLowerCase() === dir.toLowerCase());
+  applyRLS();
+  const activePage = document.querySelector('.nav-item.active, .sys-item.active');
+  const pageId = activePage ? (activePage.id?.replace('nav-','') || 'summary') : 'summary';
+  initFilters(pageId);
+  renderPage(pageId);
+}
+
+function updateTopbarLabel() {
+  const lobNames = {sea:'Sea Ops', air:'Air Ops', road:'Roadways', wh:'Warehousing'};
+  const label = document.getElementById('tb-direction-label') || document.querySelector('.tb-subtitle');
+  if (label) {
+    const lobName = lobNames[currentLob] || 'Sea Ops';
+    const hasDir = ['sea','air'].includes(currentLob);
+    label.textContent = lobName + (hasDir ? ' · ' + currentDirection : '');
+  }
+}
+
+ 
 let allJPA = [];
 let rawJPA = [];
 let opsMapping = [];
@@ -8977,33 +9103,7 @@ function renderSummary() {
     });
   };
 
-  window.setDirection = function(dir) {
-    currentDirection = dir;
-    // Update subtitle label
-    const lbl = document.getElementById('tb-direction-label');
-    if (lbl) lbl.textContent = 'Sea Ops · ' + dir;
-    // Update button styles
-    const expBtn = document.getElementById('dir-export');
-    const impBtn = document.getElementById('dir-import');
-    if (expBtn) { expBtn.style.background = dir==='Export' ? '#2a78d6' : 'transparent'; expBtn.style.color = dir==='Export' ? '#fff' : 'rgba(255,255,255,.5)'; }
-    if (impBtn) { impBtn.style.background = dir==='Import' ? '#2a78d6' : 'transparent'; impBtn.style.color = dir==='Import' ? '#fff' : 'rgba(255,255,255,.5)'; }
-    // Filter rawSRR by direction
-    allSRR = rawSRR.filter(r => (r.direction || '').toLowerCase() === dir.toLowerCase());
-    // Re-render current page
-    const activeEl = document.querySelector('.page.active');
-    const divId = activeEl ? activeEl.id.replace('page-', '') : 'summary';
-    // Map div ID back to renderPage ID
-    const divToRenderMap = {
-      'unbilled-rev':    'revenue-not-billed',
-      'unposted-cost':   'cost-not-posted',
-      'low-profit':      'job-profit',
-      'hbl-not-released':'hbl-release',
-      'mbl-not-released':'mbl-release',
-      'inv-delay':       'invoice-not-raised',
-    };
-    const renderId = divToRenderMap[divId] || divId;
-    renderPage(renderId);
-  };
+
 
   if (!window._sumSort) window._sumSort = 'high'; // init only once
   window.setSumSort = function(val) {
