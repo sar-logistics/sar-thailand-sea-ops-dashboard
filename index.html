@@ -6729,7 +6729,7 @@ const DV_COLS_SRR = [
   { key:'carrierName',         label:'Carrier'                            },
   { key:'mblNumber',           label:'MBL No.'                            },
   { key:'containerNo',         label:'Container No.'                      },
-  { key:'teu',                 label:'TEU',                num:true        },
+  { key:'teu',                 label:'TEU',                num:true, plain:true },
   { key:'consigneeName',       label:'Consignee'                          },
   { key:'consignorName',       label:'Consignor'                          },
   { key:'incoterm',            label:'Incoterm'                           },
@@ -6919,6 +6919,9 @@ function formatDvCell(r, c) {
                      c.key === 'provisionalProfit' || c.key === 'unbilledRevenue' ||
                      c.key === 'unpostedCost';
     const color = isProfit ? (n >= 0 ? '#16a34a' : '#dc2626') : '#1d4ed8';
+    if (c.plain) {
+      return `<span style="color:#1e3a5f;font-weight:500">${n.toLocaleString('en-US', { maximumFractionDigits: 2 })}</span>`;
+    }
     if (c.full) {
       // Show full number with commas — no abbreviation
       const formatted = n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
