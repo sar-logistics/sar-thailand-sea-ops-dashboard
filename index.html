@@ -5855,7 +5855,9 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
   const gtWipId = dvReg(gtWipRecs);
   const gFTd = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${gtWipId}','Grand Total — ${flagLabel}','${label}','${colSet ? "colSet" : ""}')">${gtFlGrand > 0 ? gtFlGrand.toLocaleString() : '<span class="dash">—</span>'}</td>`;
 
-  let h = `<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-${s}" onclick="toggleRows('gt-${s}',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl, flaggedDD, cols, colKeyFn, 'Grand Total — ' + flagLabel, label)}</tr>
+  // For WIP pages, bucket by WIP lines (which have dd-MMM-yyyy dates) not SRR records
+  const gtBucketRecs = gtWipRecs.length ? gtWipRecs : flaggedDD;
+  let h = `<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-${s}" onclick="toggleRows('gt-${s}',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl, gtBucketRecs, cols, colKeyFn, 'Grand Total — ' + flagLabel, label)}</tr>
   <tr class="gt-sep"><td colspan="${cols.length + (isSingle ? 1 : 2)}"></td></tr>`;
 
   Object.keys(flaggedMap).sort().forEach((br, bi) => {
@@ -5868,7 +5870,8 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
     Object.values(owMap).forEach(oc => { cols.forEach(c => { brFl[c.key] += (oc[c.key] || 0); }); bFG += Object.values(oc).reduce((a, b) => a + b, 0); });
     const av = `<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
     const bF = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${brWipId}','${safeBr} — ${flagLabel}','${label}')">${bFG > 0 ? bFG.toLocaleString() : '<span class="dash">—</span>'}</td>`;
-    h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl, brFlagRecs, cols, colKeyFn, safeBr + ' — ' + flagLabel, label)}</tr>`;
+    const brBucketRecs = brWipRecs.length ? brWipRecs : brFlagRecs;
+    h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl, brBucketRecs, cols, colKeyFn, safeBr + ' — ' + flagLabel, label)}</tr>`;
     Object.keys(owMap).sort().forEach((ow, oi) => {
       const owKey = bKey + 'o' + oi, owC = owMap[ow] || {};
       const owFRecs = brFlagRecs.filter(r => (r.operator || r.jobOwner || '(Unknown)') === ow);
@@ -5878,7 +5881,8 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
       let oFG = 0; cols.forEach(c => { oFG += (owC[c.key] || 0); });
       const oav = `<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
       const jF = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${owWipId}','${safeOw} — ${flagLabel}','${label}')">${oFG > 0 ? oFG.toLocaleString() : '<span class="dash">—</span>'}</td>`;
-      h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jF}${colCells(owC, owFRecs, cols, colKeyFn, safeOw + ' — ' + flagLabel, label)}</tr>`;
+      const owBucketRecs = owWipRecs.length ? owWipRecs : owFRecs;
+      h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jF}${colCells(owC, owBucketRecs, cols, colKeyFn, safeOw + ' — ' + flagLabel, label)}</tr>`;
     });
   });
 
