@@ -272,8 +272,10 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   background:rgba(0,0,0,.15);
   border-right:1px solid rgba(255,255,255,.06);
   overflow-y:auto;
+  opacity:0;
+  transition:opacity .3s ease .1s;
 }
-.lob-icon-rail.visible{display:flex}
+.lob-icon-rail.visible{display:flex;opacity:1}
 .rail-btn{
   width:34px;height:34px;border-radius:9px;
   display:flex;align-items:center;justify-content:center;
