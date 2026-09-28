@@ -5348,8 +5348,7 @@ function renderTotalJobs() {
   // Hide/show scorecards and grand total based on view
   const _kpiRow = document.querySelector('#page-total-jobs .kpi-row');
   if (_kpiRow) _kpiRow.style.display = showScorecards(view) ? '' : 'none';
-  // Use rawSRR (all directions) since LOB toggle handles FES/FIS/FEA/FIA breakdown
-  const filtered = applyAdditionalFilters(applyDropdownFilters(filterByDate(rawSRR, pageId), pageId), pageId);
+  const filtered = applyAdditionalFilters(applyDropdownFilters(filterByDate(allSRR, pageId), pageId), pageId);
 
   populateFilters(pageId, filtered);
 
