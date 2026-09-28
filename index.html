@@ -268,16 +268,17 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 
 /* State 1: LOB full screen */
 .lob-screen{
-  position:absolute;inset:0;
   display:flex;flex-direction:column;
-  background:var(--sidebar-bg,#0f1f2e);
-  z-index:10;
-  transition:transform .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+  flex:1;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+  max-height:600px;
+  opacity:1;
 }
 .lob-screen.slide-out{
-  transform:translateX(-100%);
+  max-height:0;
   opacity:0;
   pointer-events:none;
+  overflow:hidden;
 }
 
 /* LOB screen header */
@@ -407,6 +408,53 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   height:1px;background:rgba(255,255,255,.06);
   margin:10px 10px 0;flex-shrink:0;
 }
+
+
+/* ── Skeleton placeholder ─────────────────────────────────────────────── */
+@keyframes shimmer{0%{background-position:-700px 0}100%{background-position:700px 0}}
+.sk-wrap{
+  display:none;flex-direction:column;gap:16px;padding:28px 28px;
+  flex:1;overflow:hidden;
+}
+.sk-wrap.visible{display:flex}
+.sk-line{
+  border-radius:8px;height:14px;
+  background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 100%);
+  background-size:700px 100%;
+  animation:shimmer 1.4s infinite linear;
+}
+.sk-card{
+  border-radius:12px;padding:20px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.05);
+  display:flex;flex-direction:column;gap:12px;
+}
+.sk-kpi-row{display:flex;gap:12px}
+.sk-kpi{
+  flex:1;border-radius:12px;height:90px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.05);
+  background:linear-gradient(90deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.03) 100%);
+  background-size:700px 100%;
+  animation:shimmer 1.4s infinite linear;
+}
+.sk-table{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.05)}
+.sk-thead{height:36px;background:rgba(255,255,255,.04)}
+.sk-row{
+  height:44px;border-top:1px solid rgba(255,255,255,.04);
+  background:linear-gradient(90deg,rgba(255,255,255,.02) 0%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.02) 100%);
+  background-size:700px 100%;
+  animation:shimmer 1.4s infinite linear;
+}
+.sk-title{font-size:13px;font-weight:600;color:rgba(181,212,244,.35);margin-bottom:4px}
+.sk-subtitle{font-size:11px;color:rgba(181,212,244,.2)}
+.sk-lob-hint{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex:1;gap:12px;color:rgba(181,212,244,.2);text-align:center;padding:40px;
+}
+.sk-lob-hint i{font-size:40px;opacity:.2}
+.sk-lob-hint .sh-title{font-size:15px;font-weight:600;color:rgba(181,212,244,.3)}
+.sk-lob-hint .sh-sub{font-size:12px;color:rgba(181,212,244,.18);line-height:1.5}
 
 .sys-items-wrap{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;opacity:0}
 .sys-section:hover .sys-items-wrap,.sys-section.expanded .sys-items-wrap{max-height:200px;opacity:1}
@@ -1028,6 +1076,15 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
     <div class="content">
 
       <!-- PAGE: Summary -->
+      <!-- LOB skeleton placeholder — shown before direction is selected -->
+      <div class="sk-wrap" id="sk-lob-placeholder">
+        <div class="sk-lob-hint">
+          <i class="ti ti-anchor"></i>
+          <div class="sh-title">Select a direction to get started</div>
+          <div class="sh-sub">Choose Export or Import<br>from the left panel</div>
+        </div>
+      </div>
+
       <div class="page active" id="page-summary">
         <!-- Filter bar (same structure as other pages) -->
         <div class="filter-bar" id="filterbar-summary">
@@ -4468,6 +4525,13 @@ let rawWIP  = [];
 
 let currentLob = null; // null = state 1, 'sea'|'air' = state 2/3
 
+// Hide main content until LOB + direction selected
+(function initLobState() {
+  // Hide nav scroll initially
+  const navScroll = document.getElementById('main-nav-scroll');
+  if (navScroll) navScroll.style.display = 'none';
+})();
+
 function setLob(lob) {
   if (['road','wh'].includes(lob)) return; // disabled
 
@@ -4507,6 +4571,10 @@ function setLob(lob) {
   if (!wasNull) {
     // Already in state 3 — just re-filter
     refreshForDirection(currentDirection);
+  } else {
+    // First time LOB selected — show skeleton placeholder
+    const skPlaceholder = document.getElementById('sk-lob-placeholder');
+    if (skPlaceholder) skPlaceholder.classList.add('visible');
   }
 
   updateTopbarLabel();
@@ -4519,9 +4587,17 @@ function setDirection(dir) {
   document.getElementById('dir-card-export')?.classList.toggle('active', dir === 'Export');
   document.getElementById('dir-card-import')?.classList.toggle('active', dir === 'Import');
 
-  // Show nav pages (State 3)
+  // Hide skeleton, show nav pages (State 3)
+  const skPlaceholder = document.getElementById('sk-lob-placeholder');
+  if (skPlaceholder) skPlaceholder.classList.remove('visible');
+
   const navScroll = document.getElementById('main-nav-scroll');
   if (navScroll) navScroll.style.display = '';
+
+  // Show all pages
+  document.querySelectorAll('.page').forEach(p => {
+    if (p.id !== 'sk-lob-placeholder') p.style.display = '';
+  });
 
   // Re-filter and render
   refreshForDirection(dir);
