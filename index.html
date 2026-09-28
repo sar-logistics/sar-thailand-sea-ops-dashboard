@@ -7300,7 +7300,7 @@ function updateDvFoot() {
     const align = (c.num || c.pct) ? ' style="text-align:right"' : '';
     if (i === 0) {
       // For WIP pages show unique shipment count
-      const isWip = dvCols === DV_COLS_WIP_REVENUE || dvCols === DV_COLS_WIP_COST;
+      const isWip = rows.length > 0 && rows[0].chargeType !== undefined;
       const count = isWip ? new Set(rows.map(r => r.shipmentId)).size : rows.length;
       const label = isWip ? count + ' shipment' + (count !== 1 ? 's' : '') : count.toLocaleString();
       return `<td>TOTAL (${label})</td>`;
