@@ -5301,7 +5301,7 @@ function renderJobUnlinked() {
   const gtFlagId = dvReg(flaggedDD);
   h += `<tr class="gt-block">
     <td style="padding-left:10px"><i class="rc open" id="rc-gt" onclick="toggleRows('gt',event)">▼</i> <strong>GRAND TOTAL</strong></td>
-    ${isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}')">${gtFlaggedGrand > 0 ? gtFlaggedGrand.toLocaleString() : '<span class="dash">—</span>'}</td>`}
+    ${isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}','DV_COLS_LOW_PROFIT')">${gtFlaggedGrand > 0 ? gtFlaggedGrand.toLocaleString() : '<span class="dash">—</span>'}</td>`}
     ${colCells(gtFlagged, flaggedDD, cols, colKeyFn, 'Grand Total — Flagged', label)}
   </tr>
   <tr class="gt-sep"><td colspan="${cols.length + (isSingle?1:2)}"></td></tr>`;
@@ -5588,7 +5588,7 @@ function renderOLDelay() {
   const gtFlagId = dvReg(flaggedDD);
   h += `<tr class="gt-block">
     <td style="padding-left:10px"><i class="rc open" id="rc-gt-ol" onclick="toggleRows('gt-ol',event)">▼</i> <strong>GRAND TOTAL</strong></td>
-    ${isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}')">${gtFlaggedGrand>0?gtFlaggedGrand.toLocaleString():'<span class="dash">—</span>'}</td>`}
+    ${isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}','DV_COLS_LOW_PROFIT')">${gtFlaggedGrand>0?gtFlaggedGrand.toLocaleString():'<span class="dash">—</span>'}</td>`}
     ${colCells(gtFlagged,flaggedDD,cols,colKeyFn,'Grand Total — Flagged',label)}
   </tr>
   <tr class="gt-sep"><td colspan="${cols.length+(isSingle?1:2)}"></td></tr>`;
@@ -5603,7 +5603,7 @@ function renderOLDelay() {
     h+=`<tr class="br-row">
       <td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>
       ${isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brFlId}','${safeBr} — Flagged','${label}')">${brFlGrand>0?brFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`}
-      ${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label)}
+      ${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label,'DV_COLS_LOW_PROFIT')}
     </tr>`;
     Object.keys(owMap).sort().forEach((ow,oi) => {
       const owKey=bKey+'o'+oi, owCols=owMap[ow]||{};
@@ -5614,7 +5614,7 @@ function renderOLDelay() {
       h+=`<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}">
         <td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>
         ${isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${owFlId}','${safeOw} — Flagged','${label}')">${owFlGrand>0?owFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`}
-        ${colCells(owCols,owFRecs,cols,colKeyFn,safeOw+' — Flagged',label)}
+        ${colCells(owCols,owFRecs,cols,colKeyFn,safeOw+' — Flagged',label,'DV_COLS_LOW_PROFIT')}
       </tr>`;
     });
   });
@@ -5713,9 +5713,9 @@ function renderAMS() {
   if(thead) thead.innerHTML='<th style="min-width:260px">Branch / Job Owner</th>'+(isSingle?'':`<th class="col-grand">Grand Total</th>`)+cols.map(c=>`<th style="min-width:${isSingle?'300':'100'}px;text-align:right">${c.label}</th>`).join('');
 
   const gtFlagId=dvReg(flaggedDD);
-  const gFTd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}')">${gtFlGrand>0?gtFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
+  const gFTd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}','DV_COLS_LOW_PROFIT')">${gtFlGrand>0?gtFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
 
-  let h=`<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-ams" onclick="toggleRows('gt-ams',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Flagged',label)}</tr>
+  let h=`<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-ams" onclick="toggleRows('gt-ams',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Flagged',label,'DV_COLS_LOW_PROFIT')}</tr>
   <tr class="gt-sep"><td colspan="${cols.length+(isSingle?1:2)}"></td></tr>`;
 
   Object.keys(flaggedMap).sort().forEach((br,bi)=>{
@@ -5726,7 +5726,7 @@ function renderAMS() {
     Object.values(owMap).forEach(oc=>{cols.forEach(c=>{brFl[c.key]+=(oc[c.key]||0);}); bFG+=Object.values(oc).reduce((a,b)=>a+b,0);});
     const av=`<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
     const bF=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brFlId}','${safeBr} — Flagged','${label}')">${bFG>0?bFG.toLocaleString():'<span class="dash">—</span>'}</td>`;
-    h+=`<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label)}</tr>`;
+    h+=`<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label,'DV_COLS_LOW_PROFIT')}</tr>`;
     Object.keys(owMap).sort().forEach((ow,oi)=>{
       const owKey=bKey+'o'+oi, owC=owMap[ow]||{};
       const owFRecs=brFlagRecs.filter(r=>(r.operator||r.jobOwner||'(Unknown)')===ow);
@@ -5793,9 +5793,9 @@ function renderInvDelay() {
   if(thead) thead.innerHTML='<th style="min-width:260px">Branch / Job Owner</th>'+(isSingle?'':`<th class="col-grand">Grand Total</th>`)+cols.map(c=>`<th style="min-width:${isSingle?'300':'100'}px;text-align:right">${c.label}</th>`).join('');
 
   const gtFlagId=dvReg(flaggedDD);
-  const gFTd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}')">${gtFlGrand>0?gtFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
+  const gFTd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}','DV_COLS_LOW_PROFIT')">${gtFlGrand>0?gtFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
 
-  let h=`<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-id" onclick="toggleRows('gt-id',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Flagged',label)}</tr>
+  let h=`<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-id" onclick="toggleRows('gt-id',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Flagged',label,'DV_COLS_LOW_PROFIT')}</tr>
   <tr class="gt-sep"><td colspan="${cols.length+(isSingle?1:2)}"></td></tr>`;
 
   Object.keys(flaggedMap).sort().forEach((br,bi)=>{
@@ -5806,7 +5806,7 @@ function renderInvDelay() {
     Object.values(owMap).forEach(oc=>{cols.forEach(c=>{brFl[c.key]+=(oc[c.key]||0);}); bFG+=Object.values(oc).reduce((a,b)=>a+b,0);});
     const av=`<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
     const bF=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brFlId}','${safeBr} — Flagged','${label}')">${bFG>0?bFG.toLocaleString():'<span class="dash">—</span>'}</td>`;
-    h+=`<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label)}</tr>`;
+    h+=`<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label,'DV_COLS_LOW_PROFIT')}</tr>`;
     Object.keys(owMap).sort().forEach((ow,oi)=>{
       const owKey=bKey+'o'+oi, owC=owMap[ow]||{};
       const owFRecs=brFlagRecs.filter(r=>(r.operator||r.jobOwner||'(Unknown)')===ow);
@@ -6132,12 +6132,12 @@ function renderLowProfit() {
   if(thead) thead.innerHTML='<th style="min-width:260px">Branch / Job Owner</th>'+(isSingle?'':`<th class="col-grand">Grand Total</th>`)+cols.map(c=>`<th style="min-width:${isSingle?'300':'100'}px;text-align:right">${c.label}</th>`).join('');
 
   const gtFlagId=dvReg(flaggedDD);
-  const flGrandTd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}')">${gtFlGrand>0?gtFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
+  const flGrandTd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Flagged','${label}','DV_COLS_LOW_PROFIT')">${gtFlGrand>0?gtFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
 
   let h=`<tr class="gt-block">
     <td style="padding-left:10px"><i class="rc open" id="rc-gt-lp" onclick="toggleRows('gt-lp',event)">▼</i> <strong>GRAND TOTAL</strong></td>
     ${flGrandTd}
-    ${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Flagged',label)}
+    ${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Flagged',label,'DV_COLS_LOW_PROFIT')}
   </tr>
   <tr class="gt-sep"><td colspan="${cols.length+(isSingle?1:2)}"></td></tr>`;
 
@@ -6148,10 +6148,10 @@ function renderLowProfit() {
     const brFl={}; cols.forEach(c=>{brFl[c.key]=0;}); let brFlGrand=0;
     Object.values(owMap).forEach(oc=>{cols.forEach(c=>{brFl[c.key]+=(oc[c.key]||0);}); brFlGrand+=Object.values(oc).reduce((a,b)=>a+b,0);});
     const av=`<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
-    const bFtd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brFlId}','${safeBr} — Low Profit','${label}')">${brFlGrand>0?brFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
+    const bFtd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brFlId}','${safeBr} — Low Profit','${label}','DV_COLS_LOW_PROFIT')">${brFlGrand>0?brFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
     h+=`<tr class="br-row">
       <td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bFtd}
-      ${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label)}
+      ${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Flagged',label,'DV_COLS_LOW_PROFIT')}
     </tr>`;
     Object.keys(owMap).sort().forEach((ow,oi) => {
       const owKey=bKey+'o'+oi, owCols=owMap[ow]||{};
@@ -6159,10 +6159,10 @@ function renderLowProfit() {
       const owFlId=dvReg(owFRecs), safeOw=ow.replace(/'/g,"\\'");
       let owFlGrand=0; cols.forEach(c=>{owFlGrand+=(owCols[c.key]||0);});
       const oav=`<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
-      const jFtd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${owFlId}','${safeOw} — Low Profit','${label}')">${owFlGrand>0?owFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
+      const jFtd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${owFlId}','${safeOw} — Low Profit','${label}','DV_COLS_LOW_PROFIT')">${owFlGrand>0?owFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
       h+=`<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}">
         <td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jFtd}
-        ${colCells(owCols,owFRecs,cols,colKeyFn,safeOw+' — Flagged',label)}
+        ${colCells(owCols,owFRecs,cols,colKeyFn,safeOw+' — Flagged',label,'DV_COLS_LOW_PROFIT')}
       </tr>`;
     });
   });
