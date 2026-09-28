@@ -145,6 +145,7 @@ const HEADER_MAP = {
   'Vendor Payment Date':                'vendorPaymentDate',
   'Vendor Payment Status':              'vendorPaymentStatus',
   'Lob':                                'lob',
+  'Derived Margin':                     'derivedMargin',
 };
 
 // Fields that are dates (by MongoDB key name)
@@ -157,7 +158,7 @@ const DATE_KEYS = new Set(['bookingReceived','bookingIssued','carrierConfirmed',
 const NUM_KEYS = new Set(['wip','accural','weight','volume','loadingMeters','chargeable','innerPkgs','outerPkgs',
   'recognizedRevenue','recognizedWip','totalRecognizedRevenue','recognizedCost','recognizedCost2',
   'totalRecognizedCost','jobProfit','teu','containerCount','cnt20F','cnt20R','cnt20H',
-  'cnt40F','cnt40R','cnt40H','cnt45F','cntGen','todayExchangeRate','jobProfitLocal','marginPct']);
+  'cnt40F','cnt40R','cnt40H','cnt45F','cntGen','todayExchangeRate','jobProfitLocal','marginPct','derivedMargin']);
 
 function parseDate(val) {
   if (!val) return null;
