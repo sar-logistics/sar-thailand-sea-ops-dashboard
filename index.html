@@ -7569,7 +7569,7 @@ function extendSession() {
 
 // ── RLS ──────────────────────────────────────────────────────
 function applyRLS() {
-  const isAdmin      = ['Admin','Co-Admin'].includes(currentRole);
+  const isAdmin      = ['Admin','Co-Admin','admin','co-admin'].includes(currentRole);
   const isHR         = currentRole === 'HR';
   const isOpsHead    = currentRole === 'Ops Head';
   const isManager    = currentRole === 'Manager';
@@ -7701,7 +7701,7 @@ async function loadUsageAnalytics() {
     });
 
     // RLS: determine which users this person can see
-    const isAdmin      = ['Admin','Co-Admin'].includes(currentRole);
+    const isAdmin      = ['Admin','Co-Admin','admin','co-admin'].includes(currentRole);
     const isHR         = currentRole === 'HR';
     const isOpsHead    = currentRole === 'Ops Head';
     const isManager    = currentRole === 'Manager';
