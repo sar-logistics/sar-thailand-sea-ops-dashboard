@@ -264,138 +264,110 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .sys-section-label i{font-size:10px;color:rgba(255,255,255,.35);transition:transform .25s}
 
 
-/* ── LOB Navigation System ───────────────────────────────────────────────── */
+/* ── LOB Navigation — Accordion List ─────────────────────────────────────── */
 
 .lob-nav-zone{
-  display:flex;flex-direction:column;
+  padding:10px 10px 8px;
   flex-shrink:0;
   border-bottom:1px solid rgba(255,255,255,.07);
 }
+.lob-nav-title{
+  display:flex;align-items:center;gap:8px;
+  padding:4px 6px 10px;
+  font-size:12px;font-weight:700;color:rgba(224,236,250,.5);
+}
+.lob-nav-title i{font-size:15px;color:#60a5fa}
 
-/* Mini LOB strip (hidden in State 1, shown State 2+) */
-.lob-mini-bar{
-  display:flex;align-items:center;gap:0;
-  background:rgba(255,255,255,.03);
-  border-bottom:1px solid rgba(255,255,255,.06);
-  flex-shrink:0;
+.lob-row-list{display:flex;flex-direction:column;gap:5px}
+
+.lob-row{
+  display:flex;flex-direction:column;
+  border-radius:10px;
   overflow:hidden;
+  transition:background .2s ease;
 }
-.lob-mini-btn{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2px;padding:8px 6px;flex:1;
-  cursor:pointer;transition:all .15s ease;
-  color:rgba(224,236,250,.4);font-size:8px;
-  font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  border-right:1px solid rgba(255,255,255,.05);
-  user-select:none;
-}
-.lob-mini-btn:last-child{border-right:none}
-.lob-mini-btn i{font-size:13px;margin-bottom:1px}
-.lob-mini-btn:hover{color:rgba(224,236,250,.75);background:rgba(255,255,255,.04)}
-.lob-mini-btn.active{
-  color:#60a5fa;
-  background:rgba(59,130,246,.14);
-}
-.lob-mini-btn.disabled{opacity:.3;cursor:not-allowed}
-
-.dir-mini-bar{
-  display:flex;align-items:center;gap:0;
-  background:rgba(255,255,255,.03);
-  border-bottom:1px solid rgba(255,255,255,.06);
-  flex-shrink:0;
-  overflow:hidden;
-}
-
-/* Swap panel — holds either LOB tiles or direction tiles, same footprint */
-.lob-swap-panel{
-  position:relative;
-  min-height:230px;
-  overflow:hidden;
-  transition:min-height .35s cubic-bezier(.4,0,.2,1), max-height .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
-  max-height:600px;
-  opacity:1;
-}
-.lob-nav-zone.state-3 .lob-swap-panel{
-  min-height:0;
-  max-height:0;
-  opacity:0;
-  pointer-events:none;
-}
-
-.lob-tile-grid, .dir-tile-grid{
-  display:flex;flex-direction:column;gap:8px;
-  padding:0 12px 12px;
-  position:absolute;top:0;left:0;right:0;
-  transition:transform .38s cubic-bezier(.4,0,.2,1), opacity .3s ease;
-}
-.lob-screen-hdr{
-  padding:14px 4px 10px;
-  font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:rgba(224,236,250,.4);
-}
-
-/* State 1: LOB grid visible, dir grid off to the right */
-.lob-tile-grid{ transform:translateX(0); opacity:1; }
-.dir-tile-grid{ transform:translateX(24px); opacity:0; pointer-events:none; }
-
-/* State 2+: LOB grid slides out left, dir grid slides in from right */
-.lob-nav-zone.state-2 .lob-tile-grid{ transform:translateX(-24px); opacity:0; pointer-events:none; }
-.lob-nav-zone.state-2 .dir-tile-grid{ transform:translateX(0); opacity:1; pointer-events:auto; }
-
-.lob-tile{
-  display:flex;flex-direction:row;align-items:center;
-  gap:12px;padding:14px 16px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.05);
+.lob-row-head{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
   cursor:pointer;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;
   transition:all .2s ease;
-  color:rgba(224,236,250,.85);
+  color:rgba(224,236,250,.7);
   user-select:none;
-  position:relative;
-  overflow:hidden;
 }
-.lob-tile::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 0%, rgba(59,130,246,.1), transparent 70%);
-  opacity:0;transition:opacity .2s;
-}
-.lob-tile:hover::before{opacity:1}
-.lob-tile:hover{
-  background:rgba(255,255,255,.09);
-  border-color:rgba(255,255,255,.2);
+.lob-row-head:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.14);
   color:#fff;
-  transform:translateY(-1px);
-  box-shadow:0 4px 16px rgba(0,0,0,.3);
 }
-.lob-tile.active{
-  background:rgba(59,130,246,.16);
-  border-color:rgba(59,130,246,.5);
+.lob-row-head i.lob-row-icon{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.lob-row-name{font-size:12px;font-weight:700;letter-spacing:.02em;flex:1}
+.lob-row-chev{font-size:13px;color:rgba(224,236,250,.35);transition:transform .3s ease}
+
+.lob-row.active .lob-row-head{
+  background:linear-gradient(135deg, rgba(59,130,246,.28), rgba(59,130,246,.14));
+  border-color:rgba(96,165,250,.5);
+  color:#fff;
+  box-shadow:0 2px 10px rgba(59,130,246,.15);
 }
-.lob-tile.disabled{
-  opacity:.45;cursor:not-allowed;
+.lob-row.active .lob-row-head i.lob-row-icon{color:#93c5fd}
+.lob-row.active .lob-row-chev{transform:rotate(180deg);color:#93c5fd}
+
+.lob-row.disabled .lob-row-head{cursor:not-allowed;opacity:.4}
+.lob-row.disabled .lob-row-head:hover{
+  background:rgba(255,255,255,.04);
+  border-color:rgba(255,255,255,.06);
+  color:rgba(224,236,250,.7);
 }
-.lob-tile.disabled:hover{
-  transform:none;box-shadow:none;
-  background:rgba(255,255,255,.05);
-  border-color:rgba(255,255,255,.1);
-  color:rgba(224,236,250,.85);
-}
-.lob-tile i{font-size:20px;line-height:1;width:24px;text-align:center;flex-shrink:0;color:#93c5fd}
-.lob-tile-text{display:flex;flex-direction:column;gap:2px;flex:1;text-align:left}
-.lob-tile-name{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#fff}
-.lob-tile-sub{font-size:10px;color:rgba(224,236,250,.5);font-weight:500}
-.lob-tile-soon{
+.lob-row-soon{
   font-size:8px;background:rgba(255,255,255,.08);
-  color:rgba(224,236,250,.55);padding:2px 7px;
-  border-radius:10px;flex-shrink:0;
+  color:rgba(224,236,250,.5);padding:2px 7px;
+  border-radius:10px;flex-shrink:0;font-weight:600;
 }
 
-/* Coming soon state (Roadways/Warehouse clicked-through page) */
+/* Sub-items (Export/Import) — accordion expand */
+.lob-sub-wrap{
+  max-height:0;overflow:hidden;
+  transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease, margin-top .3s ease;
+  opacity:0;
+  display:flex;flex-direction:column;gap:4px;
+  margin-top:0;
+}
+.lob-row.active .lob-sub-wrap{
+  max-height:120px;
+  opacity:1;
+  margin-top:5px;
+}
+.lob-sub-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px 9px 32px;
+  border-radius:8px;
+  cursor:pointer;
+  color:rgba(224,236,250,.55);
+  font-size:11.5px;font-weight:600;
+  transition:all .18s ease;
+  background:rgba(255,255,255,.02);
+  user-select:none;
+}
+.lob-sub-item:hover{
+  background:rgba(255,255,255,.06);
+  color:#fff;
+}
+.lob-sub-item.active{
+  background:rgba(96,165,250,.18);
+  color:#93c5fd;
+}
+.lob-sub-item i{font-size:13px;width:14px;text-align:center}
+.lob-sub-count{font-size:9px;color:rgba(224,236,250,.3);margin-left:auto;font-weight:500}
+.lob-sub-item.active .lob-sub-count{color:rgba(147,197,253,.6)}
+
 .lob-coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;color:rgba(181,212,244,.3);text-align:center;gap:8px}
 .lob-coming-soon i{font-size:32px;opacity:.4}
 .lob-coming-soon .cs-title{font-size:13px;font-weight:600;color:rgba(181,212,244,.5)}
 .lob-coming-soon .cs-sub{font-size:11px;color:rgba(181,212,244,.3)}
+
 
 
 
@@ -873,97 +845,57 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <i class="ti ti-arrows-minimize" id="sb-toggle-icon" style="font-size:12px;color:rgba(181,212,244,.7)"></i>
         </button>
       </div>
-      <!-- LOB Nav Zone — single container, contents swap via JS -->
+      <!-- LOB Navigation — Accordion List -->
       <div class="lob-nav-zone" id="lob-nav-zone">
+        <div class="lob-nav-title"><i class="ti ti-building-store"></i>Logistics</div>
+        <div class="lob-row-list">
 
-        <!-- Mini LOB strip — always in DOM, populated when a LOB is chosen -->
-        <div class="lob-mini-bar" id="lob-mini-bar" style="display:none">
-          <div class="lob-mini-btn active" id="lob-mini-sea" onclick="setLob('sea')">
-            <i class="ti ti-anchor"></i>Sea
-          </div>
-          <div class="lob-mini-btn disabled" id="lob-mini-air">
-            <i class="ti ti-plane"></i>Air
-          </div>
-          <div class="lob-mini-btn disabled" id="lob-mini-road">
-            <i class="ti ti-truck"></i>Road
-          </div>
-          <div class="lob-mini-btn disabled" id="lob-mini-wh">
-            <i class="ti ti-building-warehouse"></i>WH
-          </div>
-        </div>
-
-        <!-- Mini Direction strip — shown after a direction is chosen -->
-        <div class="dir-mini-bar" id="dir-mini-bar" style="display:none">
-          <div class="lob-mini-btn active" id="dir-mini-export" onclick="setDirection('Export')">
-            <i class="ti ti-arrow-up"></i>Export
-          </div>
-          <div class="lob-mini-btn" id="dir-mini-import" onclick="setDirection('Import')">
-            <i class="ti ti-arrow-down"></i>Import
-          </div>
-        </div>
-
-        <!-- Swap panel: LOB tiles OR direction cards render here, same footprint -->
-        <div class="lob-swap-panel" id="lob-swap-panel">
-
-          <!-- State 1 content -->
-          <div class="lob-tile-grid" id="lob-tile-grid">
-            <div class="lob-screen-hdr">Select Line of Business</div>
-            <div class="lob-tile" id="lob-tile-sea" onclick="setLob('sea')">
-              <i class="ti ti-anchor"></i>
-              <div class="lob-tile-text">
-                <div class="lob-tile-name">Sea</div>
-                <div class="lob-tile-sub">Ocean Freight</div>
-              </div>
+          <div class="lob-row" id="lob-row-sea">
+            <div class="lob-row-head" onclick="toggleLobRow('sea')">
+              <i class="ti ti-anchor lob-row-icon"></i>
+              <div class="lob-row-name">Sea</div>
+              <i class="ti ti-chevron-down lob-row-chev"></i>
             </div>
-            <div class="lob-tile disabled" id="lob-tile-air">
-              <i class="ti ti-plane"></i>
-              <div class="lob-tile-text">
-                <div class="lob-tile-name">Air</div>
-                <div class="lob-tile-sub">Air Freight</div>
+            <div class="lob-sub-wrap">
+              <div class="lob-sub-item" id="dir-sub-export" onclick="event.stopPropagation();setDirection('Export')">
+                <i class="ti ti-arrow-up"></i>Export
+                <span class="lob-sub-count" id="dir-exp-count">—</span>
               </div>
-              <div class="lob-tile-soon">Soon</div>
-            </div>
-            <div class="lob-tile disabled" id="lob-tile-road">
-              <i class="ti ti-truck"></i>
-              <div class="lob-tile-text">
-                <div class="lob-tile-name">Roadways</div>
-                <div class="lob-tile-sub">Land Freight</div>
+              <div class="lob-sub-item" id="dir-sub-import" onclick="event.stopPropagation();setDirection('Import')">
+                <i class="ti ti-arrow-down"></i>Import
+                <span class="lob-sub-count" id="dir-imp-count">—</span>
               </div>
-              <div class="lob-tile-soon">Soon</div>
-            </div>
-            <div class="lob-tile disabled" id="lob-tile-wh">
-              <i class="ti ti-building-warehouse"></i>
-              <div class="lob-tile-text">
-                <div class="lob-tile-name">Warehouse</div>
-                <div class="lob-tile-sub">Storage & WMS</div>
-              </div>
-              <div class="lob-tile-soon">Soon</div>
             </div>
           </div>
 
-          <!-- State 2 content (Export/Import) — same panel, slides in from right -->
-          <div class="dir-tile-grid" id="dir-tile-grid">
-            <div class="lob-screen-hdr" id="dir-screen-hdr">Sea — Select Direction</div>
-            <div class="lob-tile" id="dir-tile-export" onclick="setDirection('Export')">
-              <i class="ti ti-arrow-up"></i>
-              <div class="lob-tile-text">
-                <div class="lob-tile-name">Export</div>
-                <div class="lob-tile-sub" id="dir-exp-count">— jobs</div>
-              </div>
+          <div class="lob-row disabled" id="lob-row-air">
+            <div class="lob-row-head">
+              <i class="ti ti-plane lob-row-icon"></i>
+              <div class="lob-row-name">Air</div>
+              <div class="lob-row-soon">Soon</div>
             </div>
-            <div class="lob-tile" id="dir-tile-import" onclick="setDirection('Import')">
-              <i class="ti ti-arrow-down"></i>
-              <div class="lob-tile-text">
-                <div class="lob-tile-name">Import</div>
-                <div class="lob-tile-sub" id="dir-imp-count">— jobs</div>
-              </div>
+          </div>
+
+          <div class="lob-row disabled" id="lob-row-road">
+            <div class="lob-row-head">
+              <i class="ti ti-truck lob-row-icon"></i>
+              <div class="lob-row-name">Roadways</div>
+              <div class="lob-row-soon">Soon</div>
+            </div>
+          </div>
+
+          <div class="lob-row disabled" id="lob-row-wh">
+            <div class="lob-row-head">
+              <i class="ti ti-building-warehouse lob-row-icon"></i>
+              <div class="lob-row-name">Warehouse</div>
+              <div class="lob-row-soon">Soon</div>
             </div>
           </div>
 
         </div>
       </div>
 
-      <div class="sidebar-nav-scroll" id="main-nav-scroll" style="display:none">
+            <div class="sidebar-nav-scroll" id="main-nav-scroll" style="display:none">
       <!-- Summary at top -->
       <div id="sec-summary-body" style="display:block;max-height:none!important">
         <div class="nav-item" data-tooltip="Summary — Overall dashboard overview" onclick="setPage('summary','Summary','Summary',this)" id="nav-summary">
@@ -4553,55 +4485,32 @@ let currentLob = null; // null = state 1, 'sea'|'air' = state 2/3
   });
 })();
 
-function setLob(lob) {
+function toggleLobRow(lob) {
   if (['road','wh'].includes(lob)) return; // disabled
 
-  const wasNull = currentLob === null;
   currentLob = lob;
 
-  const navZone = document.getElementById('lob-nav-zone');
-  const lobMiniBar = document.getElementById('lob-mini-bar');
-  const dirHdr = document.getElementById('dir-screen-hdr');
-
-  // Switch to state-2 (slides LOB grid out, dir grid in) — revert state-3 if switching LOB
-  if (navZone) { navZone.classList.add('state-2'); navZone.classList.remove('state-3'); }
-
-  // Show + populate mini LOB bar
-  if (lobMiniBar) lobMiniBar.style.display = 'flex';
+  // Close all rows, open the clicked one (accordion behavior)
   ['sea','air','road','wh'].forEach(l => {
-    document.getElementById('lob-mini-' + l)?.classList.toggle('active', l === lob);
+    document.getElementById('lob-row-' + l)?.classList.toggle('active', l === lob);
   });
 
-  // Update direction screen header
-  const lobLabels = {sea:'Sea', air:'Air'};
-  if (dirHdr) dirHdr.textContent = (lobLabels[lob] || lob) + ' — Select Direction';
-
   updateDirCounts();
+  updateTopbarLabel();
 
-  // If direction already selected, show pages too (switching LOB while on a page)
-  if (!wasNull) {
-    refreshForDirection(currentDirection);
-  } else {
+  // Show skeleton hint if no direction chosen yet for this LOB
+  if (!currentDirection || !document.getElementById('main-nav-scroll') || document.getElementById('main-nav-scroll').style.display === 'none') {
     const skPlaceholder = document.getElementById('sk-lob-placeholder');
     if (skPlaceholder) skPlaceholder.classList.add('visible');
   }
-
-  updateTopbarLabel();
 }
 
 function setDirection(dir) {
   currentDirection = dir;
 
-  const navZone = document.getElementById('lob-nav-zone');
-  const dirMiniBar = document.getElementById('dir-mini-bar');
-
-  // Switch to state-3 (collapses swap panel, shows dir mini bar)
-  if (navZone) navZone.classList.add('state-3');
-  if (dirMiniBar) dirMiniBar.style.display = 'flex';
-
-  // Update dir mini bar active state
-  document.getElementById('dir-mini-export')?.classList.toggle('active', dir === 'Export');
-  document.getElementById('dir-mini-import')?.classList.toggle('active', dir === 'Import');
+  // Update sub-item active states
+  document.getElementById('dir-sub-export')?.classList.toggle('active', dir === 'Export');
+  document.getElementById('dir-sub-import')?.classList.toggle('active', dir === 'Import');
 
   // Hide skeleton, show nav pages
   const skPlaceholder = document.getElementById('sk-lob-placeholder');
