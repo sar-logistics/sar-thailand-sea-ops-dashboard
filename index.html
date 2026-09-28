@@ -1009,7 +1009,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
     </div><!-- /sidebar-inner -->
 
     <!-- System items — outside sidebar-inner so hover is not clipped -->
-    <div class="sys-section">
+    <div class="sys-section" id="sys-section" style="display:none">
       <div class="sys-section-label">System <i class="ti ti-chevron-up"></i></div>
       <div class="sys-items-wrap">
       <div class="sys-item usage" id="sys-usage" onclick="setPage('usage','Usage Analytics','System',this)">
@@ -4549,6 +4549,8 @@ let currentLob = null; // null = state 1, 'sea'|'air' = state 2/3
   // has likely already fired by the time this script executes (script is at page bottom)
   const hidePages = () => {
     document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+    const sysSec = document.getElementById('sys-section');
+    if (sysSec) sysSec.style.display = 'none';
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', hidePages);
@@ -4602,6 +4604,9 @@ function setDirection(dir) {
 
   const navScroll = document.getElementById('main-nav-scroll');
   if (navScroll) navScroll.style.display = '';
+
+  const sysSec = document.getElementById('sys-section');
+  if (sysSec) sysSec.style.display = '';
 
   document.querySelectorAll('.page').forEach(p => {
     if (p.id !== 'sk-lob-placeholder') p.style.display = '';
