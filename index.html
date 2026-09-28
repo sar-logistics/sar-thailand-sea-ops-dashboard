@@ -5358,9 +5358,9 @@ function renderPage(pageId) {
   if (pageId === 'summary')            renderSummary();
   if (pageId === 'total-jobs')         renderTotalJobs();
   if (pageId === 'open-jobs')          renderOpenJobs();
-  if (pageId === 'revenue-not-billed') renderUnbilledRev();
-  if (pageId === 'cost-not-posted')    renderUnpostedCost();
-  if (pageId === 'job-profit')         renderLowProfit();
+  if (pageId === 'revenue-not-billed' || pageId === 'unbilled-rev') renderUnbilledRev();
+  if (pageId === 'cost-not-posted'    || pageId === 'unposted-cost') renderUnpostedCost();
+  if (pageId === 'job-profit'         || pageId === 'low-profit') renderLowProfit();
 }
 
 // ── RENDER: Total Jobs Created ────────────────────────────────
