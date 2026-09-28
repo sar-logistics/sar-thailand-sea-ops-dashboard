@@ -7295,7 +7295,7 @@ function updateDvFoot() {
   const tfoot = document.getElementById('dvTfoot');
   const rows = dvFiltered;
   const sums = {};
-  dvCols.forEach(c => { if (c.num && !c.pct) sums[c.key] = rows.reduce((a, r) => a + (Number(r[c.key]) || 0), 0); });
+  dvCols.forEach(c => { if (c.num && !c.pct && !c.plain) sums[c.key] = rows.reduce((a, r) => a + (Number(r[c.key]) || 0), 0); });
   tfoot.innerHTML = `<tr>${dvCols.map((c, i) => {
     const align = (c.num || c.pct) ? ' style="text-align:right"' : '';
     if (i === 0) return `<td>TOTAL (${rows.length.toLocaleString()})</td>`;
