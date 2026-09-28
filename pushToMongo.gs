@@ -452,3 +452,15 @@ function pushWip() {
 }
 
 
+
+function masterPush() {
+  addLobCol();
+  fillWipCols();
+  wipeAndPushAll();
+}
+
+function checkDerivedMarginMap() {
+  const keys = Object.keys(HEADER_MAP);
+  Logger.log('Has Derived Margin: ' + keys.includes('Derived Margin'));
+  Logger.log('Has derivedMargin in NUM_KEYS: ' + NUM_KEYS.has('derivedMargin'));
+}
