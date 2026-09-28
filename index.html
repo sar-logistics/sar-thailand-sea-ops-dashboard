@@ -5170,7 +5170,7 @@ function fmtNum(n, records, title, sub) {
 
 // Build per-column clickable cells with their own record arrays
 // counts: { colKey: count }, recs: records for this scope, cols: column defs, colKeyFn: r→colKey
-function colCells(counts, recs, cols, colKeyFn, titlePfx, label) {
+function colCells(counts, recs, cols, colKeyFn, titlePfx, label, colSet) {
   // Bucket records by time-column key
   const bucket = {};
   cols.forEach(c => { bucket[c.key] = []; });
@@ -5186,7 +5186,8 @@ function colCells(counts, recs, cols, colKeyFn, titlePfx, label) {
     if (n === 0) return '<td style="text-align:right"><span class="dash">—</span></td>';
     if (rs.length) {
       const id = dvReg(rs);
-      return `<td style="text-align:right"><span style="cursor:pointer;font-weight:500;color:var(--accent)" onclick="dvOpen('${id}','${t}','${s}')">${n.toLocaleString()}</span></td>`;
+      const cs = colSet ? `,'${colSet}'` : '';
+      return `<td style="text-align:right"><span style="cursor:pointer;font-weight:500;color:var(--accent)" onclick="dvOpen('${id}','${t}','${s}'${cs})">${n.toLocaleString()}</span></td>`;
     }
     return `<td style="text-align:right">${n.toLocaleString()}</td>`;
   }).join('');
@@ -5391,7 +5392,7 @@ function renderTotalJobs() {
   let h = `<tr class="gt-block">
     <td style="padding-left:10px"><i class="rc open" id="rc-gt-tj" onclick="toggleRows('gt-tj',event)">▼</i> <strong>GRAND TOTAL</strong></td>
     ${gTd}
-    ${colCells(gtTotal, filtered, cols, colKeyFn, 'Grand Total', label)}
+    ${colCells(gtTotal, filtered, cols, colKeyFn, 'Grand Total', label, 'DV_COLS_TOTAL_JOBS')}
   </tr>
   <tr class="gt-sep"><td colspan="${cols.length + (isSingle?1:2)}"></td></tr>`;
 
@@ -5405,7 +5406,7 @@ function renderTotalJobs() {
     Object.values(owMap).forEach(oc => { cols.forEach(c => { brTo[c.key] += (oc[c.key]||0); }); brGrand += Object.values(oc).reduce((a,b)=>a+b,0); });
     const av  = `<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
     const bTd = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brId}','${safeBr} — All Jobs','${label}')">${brGrand.toLocaleString()}</td>`;
-    h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bTd}${colCells(brTo, brRecs, cols, colKeyFn, safeBr, label)}</tr>`;
+    h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bTd}${colCells(brTo, brRecs, cols, colKeyFn, safeBr, label, 'DV_COLS_TOTAL_JOBS')}</tr>`;
 
     Object.keys(owMap).sort().forEach((ow, oi) => {
       const owKey  = bKey + 'o' + oi;
@@ -5416,7 +5417,7 @@ function renderTotalJobs() {
       let owGrand  = 0; cols.forEach(c => { owGrand += (owCols[c.key]||0); });
       const oav  = `<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
       const oTd  = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${owId}','${safeOw} — All Jobs','${label}')">${owGrand.toLocaleString()}</td>`;
-      h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${oTd}${colCells(owCols, owRecs, cols, colKeyFn, safeOw, label)}</tr>`;
+      h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${oTd}${colCells(owCols, owRecs, cols, colKeyFn, safeOw, label, 'DV_COLS_TOTAL_JOBS')}</tr>`;
     });
   });
 
@@ -5474,7 +5475,7 @@ function renderOpenJobs() {
   const gtFlagId=dvReg(flaggedDD);
   const gFTd=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${gtFlagId}','Grand Total — Open Jobs','${label}')">${gtFlGrand>0?gtFlGrand.toLocaleString():'<span class="dash">—</span>'}</td>`;
 
-  let h=`<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-oj" onclick="toggleRows('gt-oj',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Open Jobs',label)}</tr>
+  let h=`<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-oj" onclick="toggleRows('gt-oj',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl,flaggedDD,cols,colKeyFn,'Grand Total — Open Jobs',label,'DV_COLS_OPEN_JOBS')}</tr>
   <tr class="gt-sep"><td colspan="${cols.length+(isSingle?1:2)}"></td></tr>`;
 
   Object.keys(flaggedMap).sort().forEach((br,bi)=>{
@@ -5485,7 +5486,7 @@ function renderOpenJobs() {
     Object.values(owMap).forEach(oc=>{cols.forEach(c=>{brFl[c.key]+=(oc[c.key]||0);}); bFG+=Object.values(oc).reduce((a,b)=>a+b,0);});
     const av=`<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
     const bF=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brFlId}','${safeBr} — Open Jobs','${label}')">${bFG>0?bFG.toLocaleString():'<span class="dash">—</span>'}</td>`;
-    h+=`<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Open Jobs',label)}</tr>`;
+    h+=`<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bF}${colCells(brFl,brFlagRecs,cols,colKeyFn,safeBr+' — Open Jobs',label,'DV_COLS_OPEN_JOBS')}</tr>`;
     Object.keys(owMap).sort().forEach((ow,oi)=>{
       const owKey=bKey+'o'+oi, owC=owMap[ow]||{};
       const owFRecs=brFlagRecs.filter(r=>(r.operator||r.jobOwner||'(Unknown)')===ow);
@@ -5493,7 +5494,7 @@ function renderOpenJobs() {
       let oFG=0; cols.forEach(c=>{oFG+=(owC[c.key]||0);});
       const oav=`<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
       const jF=isSingle?'':`<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${owFlId}','${safeOw} — Open Jobs','${label}')">${oFG>0?oFG.toLocaleString():'<span class="dash">—</span>'}</td>`;
-      h+=`<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jF}${colCells(owC,owFRecs,cols,colKeyFn,safeOw+' — Open Jobs',label)}</tr>`;
+      h+=`<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jF}${colCells(owC,owFRecs,cols,colKeyFn,safeOw+' — Open Jobs',label,'DV_COLS_OPEN_JOBS')}</tr>`;
     });
   });
 
@@ -5528,7 +5529,7 @@ function renderOLDelay() {
 
   // Scorecards
   const kTotal = document.getElementById('kv-ol-total');
-  if (kTotal) { kTotal.textContent = totalJobs.toLocaleString(); kTotal.style.cursor='pointer'; kTotal.onclick=()=>openDrill(filteredDD,'Total Jobs',label); }
+  if (kTotal) { kTotal.textContent = totalJobs.toLocaleString(); kTotal.style.cursor='pointer'; kTotal.onclick=()=>openDrill(filteredDD,'Total Jobs',label,DV_COLS_TOTAL_JOBS); }
   const kFlagged = document.getElementById('kv-ol-flagged');
   if (kFlagged) { kFlagged.textContent = flaggedCount.toLocaleString(); kFlagged.style.cursor='pointer'; kFlagged.onclick=()=>openDrill(flaggedDD,'Rev Not Recognized',label); }
   const kPct = document.getElementById('kv-ol-pct');
@@ -5797,7 +5798,7 @@ function renderInvDelay() {
 // ── RENDER: Revenue not billed within 3 days of SOB ─────────────────────
 
 // ── WIP-based flagged renderer (charge code breakdown in drill) ──────────
-function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredDD, flaggedDD, wipByShipment) {
+function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredDD, flaggedDD, wipByShipment, colSet) {
   const totalJobs    = filteredDD.length;
   const flaggedCount = flaggedDD.length;
   const pct = totalJobs > 0 ? ((flaggedCount / totalJobs) * 100).toFixed(1) : '0.0';
@@ -5805,9 +5806,9 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
   const kTotal = document.getElementById('kv-' + s + '-total');
   if (kTotal) { kTotal.textContent = totalJobs.toLocaleString(); kTotal.style.cursor='pointer'; kTotal.onclick=()=>openDrill(filteredDD,'Total Jobs',label); }
   const kFlagged = document.getElementById('kv-' + s + '-flagged');
-  if (kFlagged) { kFlagged.textContent = flaggedCount.toLocaleString(); kFlagged.style.cursor='pointer'; kFlagged.onclick=()=>openDrillWip(flaggedDD, wipByShipment, flagLabel, label); }
+  if (kFlagged) { kFlagged.textContent = flaggedCount.toLocaleString(); kFlagged.style.cursor='pointer'; kFlagged.onclick=()=>openDrillWip(flaggedDD, wipByShipment, flagLabel, label, false, colSet); }
   const kPct = document.getElementById('kv-' + s + '-pct');
-  if (kPct) { kPct.textContent = pct+'%'; kPct.style.cursor='pointer'; kPct.onclick=()=>openDrillWip(flaggedDD, wipByShipment, flagLabel, label); }
+  if (kPct) { kPct.textContent = pct+'%'; kPct.style.cursor='pointer'; kPct.onclick=()=>openDrillWip(flaggedDD, wipByShipment, flagLabel, label, false, colSet); }
   const kPeriod = document.getElementById('kv-' + s + '-period'); if (kPeriod) kPeriod.textContent = label;
   const kSub = document.getElementById('kv-' + s + '-pct-sub'); if (kSub) kSub.textContent = flaggedCount + ' of ' + totalJobs + ' jobs';
   const sc = document.getElementById('sc-' + pageId); if (sc) sc.textContent = totalJobs.toLocaleString() + ' total · ' + flaggedCount.toLocaleString() + ' flagged';
@@ -5837,7 +5838,7 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
 
   const gtWipRecs = flaggedDD.flatMap(r => (wipByShipment[r.shipmentId] || []));
   const gtWipId = dvReg(gtWipRecs);
-  const gFTd = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${gtWipId}','Grand Total — ${flagLabel}','${label}')">${gtFlGrand > 0 ? gtFlGrand.toLocaleString() : '<span class="dash">—</span>'}</td>`;
+  const gFTd = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="openDrillWipById('${gtWipId}','Grand Total — ${flagLabel}','${label}','${colSet ? "colSet" : ""}')">${gtFlGrand > 0 ? gtFlGrand.toLocaleString() : '<span class="dash">—</span>'}</td>`;
 
   let h = `<tr class="gt-block"><td style="padding-left:10px"><i class="rc open" id="rc-gt-${s}" onclick="toggleRows('gt-${s}',event)">▼</i> <strong>GRAND TOTAL</strong></td>${gFTd}${colCells(gtFl, flaggedDD, cols, colKeyFn, 'Grand Total — ' + flagLabel, label)}</tr>
   <tr class="gt-sep"><td colspan="${cols.length + (isSingle ? 1 : 2)}"></td></tr>`;
@@ -5876,7 +5877,7 @@ function openDrillWipById(id, title, sub) {
 }
 
 // Open drill showing WIP charge code breakdown
-function openDrillWip(shipRecs, wipByShipment, title, sub, isWipLines) {
+function openDrillWip(shipRecs, wipByShipment, title, sub, isWipLines, colSet) {
   let lines;
   if (isWipLines) {
     // Already WIP lines
@@ -5891,7 +5892,7 @@ function openDrillWip(shipRecs, wipByShipment, title, sub, isWipLines) {
     direction: (w.lob === 'FES' || w.lob === 'FEA') ? 'Export' : 'Import',
   }));
 
-  openDrill(drillRecs, title, sub);
+  openDrill(drillRecs, title, sub, colSet);
 }
 
 function renderUnbilledRev() {
@@ -5917,7 +5918,7 @@ function renderUnbilledRev() {
   const flaggedDD = filteredDD.filter(r => wipByShipment[r.shipmentId] && wipByShipment[r.shipmentId].length > 0);
 
   // Override drill-through to show WIP charge code breakdown
-  _renderSRRFlaggedWip(pageId, 'ur', 'Revenue Not Billed', label, view, cols, filteredDD, flaggedDD, wipByShipment);
+  _renderSRRFlaggedWip(pageId, 'ur', 'Revenue Not Billed', label, view, cols, filteredDD, flaggedDD, wipByShipment, DV_COLS_WIP_REVENUE);
 }
 
 // ── RENDER: Cost not posted within 7 days of SOB ────────────────────────
@@ -5942,7 +5943,7 @@ function renderUnpostedCost() {
   // Flag shipments that have accrual !== 0
   const flaggedDD = filteredDD.filter(r => accrualByShipment[r.shipmentId] && accrualByShipment[r.shipmentId].length > 0);
 
-  _renderSRRFlaggedWip(pageId, 'uc', 'Cost Not Posted', label, view, cols, filteredDD, flaggedDD, accrualByShipment);
+  _renderSRRFlaggedWip(pageId, 'uc', 'Cost Not Posted', label, view, cols, filteredDD, flaggedDD, accrualByShipment, DV_COLS_WIP_COST);
 }
 
 // ── Shared JPA flagged report renderer ───────────────────────
@@ -6032,11 +6033,11 @@ function renderLowProfit() {
 
   // Scorecards — clickable
   const kTotal = document.getElementById('kv-lp-total');
-  if (kTotal) { kTotal.textContent = totalJobs.toLocaleString(); kTotal.style.cursor='pointer'; kTotal.onclick=()=>openDrill(filteredDD,'Total Jobs',label); }
+  if (kTotal) { kTotal.textContent = totalJobs.toLocaleString(); kTotal.style.cursor='pointer'; kTotal.onclick=()=>openDrill(filteredDD,'Total Jobs',label,DV_COLS_LOW_PROFIT); }
   const kFlagged = document.getElementById('kv-lp-flagged');
-  if (kFlagged) { kFlagged.textContent = flaggedCount.toLocaleString(); kFlagged.style.cursor='pointer'; kFlagged.onclick=()=>openDrill(flaggedDD,'Job Profit < 3%',label); }
+  if (kFlagged) { kFlagged.textContent = flaggedCount.toLocaleString(); kFlagged.style.cursor='pointer'; kFlagged.onclick=()=>openDrill(flaggedDD,'Job Profit < 3%',label,DV_COLS_LOW_PROFIT); }
   const kPct = document.getElementById('kv-lp-pct');
-  if (kPct) { kPct.textContent = pct+'%'; kPct.style.cursor='pointer'; kPct.onclick=()=>openDrill(flaggedDD,'Job Profit < 3%',label); }
+  if (kPct) { kPct.textContent = pct+'%'; kPct.style.cursor='pointer'; kPct.onclick=()=>openDrill(flaggedDD,'Job Profit < 3%',label,DV_COLS_LOW_PROFIT); }
   const kPeriod = document.getElementById('kv-lp-period'); if (kPeriod) kPeriod.textContent = label;
   const kPctSub = document.getElementById('kv-lp-pct-sub'); if (kPctSub) kPctSub.textContent = flaggedCount+' of '+totalJobs+' jobs';
   const sc = document.getElementById('sc-low-profit'); if (sc) sc.textContent = totalJobs.toLocaleString()+' total · '+flaggedCount.toLocaleString()+' flagged';
@@ -6435,8 +6436,15 @@ function dvReg(records) {
   dvStore[id] = records;
   return id;
 }
-function dvOpen(id, title, sub) {
-  openDrill(dvStore[id] || [], title, sub);
+function dvOpen(id, title, sub, colSetName) {
+  const colSetMap = {
+    'DV_COLS_TOTAL_JOBS': DV_COLS_TOTAL_JOBS,
+    'DV_COLS_OPEN_JOBS':  DV_COLS_OPEN_JOBS,
+    'DV_COLS_LOW_PROFIT': DV_COLS_LOW_PROFIT,
+    'DV_COLS_WIP_REVENUE': DV_COLS_WIP_REVENUE,
+    'DV_COLS_WIP_COST':   DV_COLS_WIP_COST,
+  };
+  openDrill(dvStore[id] || [], title, sub, colSetName ? colSetMap[colSetName] : null);
 }
 
 // Build per-col dvReg ids from a record array, keyed by getColKey
@@ -6478,6 +6486,140 @@ function collapseAll(pageId) {
     }
   });
 }
+
+
+// ── Page-specific drill column sets ──────────────────────────────────────
+
+const DV_COLS_TOTAL_JOBS = [
+  { key:'shipmentId',        label:'Shipment ID'                        },
+  { key:'jobStatus',         label:'Job Status'                         },
+  { key:'jobBranch',         label:'Branch'                             },
+  { key:'jobDept',           label:'Department'                         },
+  { key:'operator',          label:'Job Operator'                       },
+  { key:'salesRep',          label:'Sales Rep'                          },
+  { key:'localClientName',   label:'Client'                             },
+  { key:'mode',              label:'Mode'                               },
+  { key:'direction',         label:'Direction'                          },
+  { key:'lob',               label:'LOB'                                },
+  { key:'originEtd',         label:'ETD',            date:true          },
+  { key:'destinationEta',    label:'ETA',            date:true          },
+  { key:'jobOpenedDate',     label:'Job Opened',     date:true          },
+  { key:'origin',            label:'Origin'                             },
+  { key:'originCtry',        label:'Origin Country'                     },
+  { key:'destination',       label:'Destination'                        },
+  { key:'destCtry',          label:'Dest. Country'                      },
+  { key:'houseRef',          label:'House Ref'                          },
+  { key:'consolId',          label:'Consol ID'                          },
+  { key:'vessel',            label:'Vessel'                             },
+  { key:'carrierName',       label:'Carrier'                            },
+  { key:'mblNumber',         label:'MBL No.'                            },
+  { key:'containerNo',       label:'Container No.'                      },
+  { key:'consigneeName',     label:'Consignee'                          },
+  { key:'consignorName',     label:'Consignor'                          },
+  { key:'incoterm',          label:'Incoterm'                           },
+];
+
+const DV_COLS_OPEN_JOBS = [
+  { key:'shipmentId',        label:'Shipment ID'                        },
+  { key:'jobStatus',         label:'Job Status'                         },
+  { key:'jobBranch',         label:'Branch'                             },
+  { key:'jobDept',           label:'Department'                         },
+  { key:'operator',          label:'Job Operator'                       },
+  { key:'localClientName',   label:'Client'                             },
+  { key:'originEtd',         label:'ETD',            date:true          },
+  { key:'jobOpenedDate',     label:'Job Opened',     date:true          },
+  { key:'mode',              label:'Mode'                               },
+  { key:'direction',         label:'Direction'                          },
+  { key:'lob',               label:'LOB'                                },
+  { key:'origin',            label:'Origin'                             },
+  { key:'destination',       label:'Destination'                        },
+  { key:'consolId',          label:'Consol ID'                          },
+  { key:'vessel',            label:'Vessel'                             },
+  { key:'mblNumber',         label:'MBL No.'                            },
+  { key:'houseRef',          label:'House Ref'                          },
+  { key:'consigneeName',     label:'Consignee'                          },
+  { key:'consignorName',     label:'Consignor'                          },
+];
+
+const DV_COLS_LOW_PROFIT = [
+  { key:'shipmentId',          label:'Shipment ID'                        },
+  { key:'marginPct',           label:'Margin %',         num:true          },
+  { key:'jobProfit',           label:'Job Profit',       num:true          },
+  { key:'recognizedRevenue',   label:'Revenue',          num:true          },
+  { key:'recognizedCost',      label:'Cost',             num:true          },
+  { key:'wip',                 label:'WIP',              num:true          },
+  { key:'accural',             label:'Accrual',          num:true          },
+  { key:'jobBranch',           label:'Branch'                             },
+  { key:'jobDept',             label:'Department'                         },
+  { key:'operator',            label:'Job Operator'                       },
+  { key:'localClientName',     label:'Client'                             },
+  { key:'jobStatus',           label:'Job Status'                         },
+  { key:'mode',                label:'Mode'                               },
+  { key:'direction',           label:'Direction'                          },
+  { key:'lob',                 label:'LOB'                                },
+  { key:'originEtd',           label:'ETD',              date:true         },
+  { key:'destinationEta',      label:'ETA',              date:true         },
+  { key:'origin',              label:'Origin'                             },
+  { key:'destination',         label:'Destination'                        },
+  { key:'consolId',            label:'Consol ID'                          },
+  { key:'vessel',              label:'Vessel'                             },
+  { key:'mblNumber',           label:'MBL No.'                            },
+  { key:'houseRef',            label:'House Ref'                          },
+  { key:'consigneeName',       label:'Consignee'                          },
+  { key:'consignorName',       label:'Consignor'                          },
+];
+
+// WIP cols reordered for Revenue Not Billed
+const DV_COLS_WIP_REVENUE = [
+  { key:'shipmentId',    label:'Job #'                              },
+  { key:'chargeCode',    label:'Charge'                             },
+  { key:'wip',           label:'WIP',          num:true             },
+  { key:'revenue',       label:'Revenue',      num:true             },
+  { key:'accrual',       label:'Accrual',      num:true             },
+  { key:'invoiceNumber', label:'Invoice Number'                     },
+  { key:'recognized',    label:'Recognized',   date:true            },
+  { key:'chargeType',    label:'Type'                               },
+  { key:'cost',          label:'Cost',         num:true             },
+  { key:'jobProfit',     label:'Job Profit',   num:true             },
+  { key:'lob',           label:'LOB'                                },
+  { key:'etdEta',        label:'ETD/ETA',      date:true            },
+  { key:'etd',           label:'ETD',          date:true            },
+  { key:'eta',           label:'ETA',          date:true            },
+  { key:'localRef',      label:'Job Local Ref'                      },
+  { key:'trans',         label:'Trans'                              },
+  { key:'cont',          label:'Cont'                               },
+  { key:'jobBranch',     label:'Job Branch'                         },
+  { key:'jobDept',       label:'Job Dept'                           },
+  { key:'jobStatus',     label:'Job Status'                         },
+  { key:'localClient',   label:'Local Client'                       },
+  { key:'operator',      label:'Job Operator'                       },
+];
+
+// WIP cols reordered for Cost Not Posted
+const DV_COLS_WIP_COST = [
+  { key:'shipmentId',    label:'Job #'                              },
+  { key:'chargeCode',    label:'Charge'                             },
+  { key:'accrual',       label:'Accrual',      num:true             },
+  { key:'cost',          label:'Cost',         num:true             },
+  { key:'wip',           label:'WIP',          num:true             },
+  { key:'revenue',       label:'Revenue',      num:true             },
+  { key:'invoiceNumber', label:'Invoice Number'                     },
+  { key:'recognized',    label:'Recognized',   date:true            },
+  { key:'chargeType',    label:'Type'                               },
+  { key:'jobProfit',     label:'Job Profit',   num:true             },
+  { key:'lob',           label:'LOB'                                },
+  { key:'etdEta',        label:'ETD/ETA',      date:true            },
+  { key:'etd',           label:'ETD',          date:true            },
+  { key:'eta',           label:'ETA',          date:true            },
+  { key:'localRef',      label:'Job Local Ref'                      },
+  { key:'trans',         label:'Trans'                              },
+  { key:'cont',          label:'Cont'                               },
+  { key:'jobBranch',     label:'Job Branch'                         },
+  { key:'jobDept',       label:'Job Dept'                           },
+  { key:'jobStatus',     label:'Job Status'                         },
+  { key:'localClient',   label:'Local Client'                       },
+  { key:'operator',      label:'Job Operator'                       },
+];
 
 // ── DETAIL VIEW ENGINE ────────────────────────────────────────
 // SRR columns
@@ -6730,7 +6872,7 @@ function formatDvCell(r, c) {
 const dvColFilters = {};
 let dvOpenFilterKey = null; // which column's dropdown is open
 
-function openDrill(records, title, sub) {
+function openDrill(records, title, sub, colSet) {
   const isJPA = records.length && records[0].billedRevenue !== undefined;
 
   if (isJPA) {
@@ -6744,7 +6886,7 @@ function openDrill(records, title, sub) {
     });
     dvCols = DV_COLS_JPA_ENRICHED;
   } else {
-    dvCols = (records[0] && records[0].chargeType !== undefined) ? DV_COLS_WIP : DV_COLS_SRR;
+    dvCols = colSet || ((records[0] && records[0].chargeType !== undefined) ? DV_COLS_WIP : DV_COLS_SRR);
   }
 
   dvAllRecords = records;
@@ -8503,7 +8645,7 @@ function _renderMblHbl(pageId, title, mblVal, hblVal) {
     Object.values(owMap).forEach(oc => { cols.forEach(c => { brTo[c.key] += (oc[c.key]||0); }); brGrand += Object.values(oc).reduce((a,b)=>a+b,0); });
     const av = `<span class="av" style="background:${avColor(br)}">${avInitials(br)}</span>`;
     const bTd = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${brId}','${safeBr}','${label}')">${brGrand.toLocaleString()}</td>`;
-    h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bTd}${colCells(brTo, brRecs, cols, colKeyFn, safeBr, label)}</tr>`;
+    h += `<tr class="br-row"><td>${av}<i class="rc" id="rc-${bKey}" onclick="toggleRows('${bKey}',event)">▶</i> ${br}</td>${bTd}${colCells(brTo, brRecs, cols, colKeyFn, safeBr, label, 'DV_COLS_TOTAL_JOBS')}</tr>`;
     Object.keys(owMap).sort().forEach((ow, oi) => {
       const owKey = bKey+'o'+oi, owCols = owMap[ow]||{};
       const owRecs = brRecs.filter(r => (r.operator||r.jobOwner||'(Unknown)') === ow);
@@ -8511,7 +8653,7 @@ function _renderMblHbl(pageId, title, mblVal, hblVal) {
       let owGrand = 0; cols.forEach(c => { owGrand += (owCols[c.key]||0); });
       const oav = `<span class="av" style="background:${avColor(ow)}">${avInitials(ow)}</span>`;
       const oTd = isSingle ? '' : `<td class="col-grand" style="cursor:pointer" onclick="dvOpen('${owId}','${safeOw}','${label}')">${owGrand.toLocaleString()}</td>`;
-      h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${oTd}${colCells(owCols, owRecs, cols, colKeyFn, safeOw, label)}</tr>`;
+      h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${oTd}${colCells(owCols, owRecs, cols, colKeyFn, safeOw, label, 'DV_COLS_TOTAL_JOBS')}</tr>`;
     });
   });
   if (!Object.keys(totalMap).length) h = `<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No shipments with ${title} for this period.</td></tr>`;
