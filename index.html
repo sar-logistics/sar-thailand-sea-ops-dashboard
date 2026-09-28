@@ -7290,7 +7290,7 @@ async function loadData() {
           if (s2 === 'HIT') {
             // Full cache ready — update data, re-render only the currently visible page
             rawSRR = d2.records || []; rawJPA = [];
-            allSRR = [...rawSRR]; allJPA = [...rawJPA];
+            allSRR = rawSRR.filter(r => (r.direction||'').toLowerCase() === currentDirection.toLowerCase()); allJPA = [...rawJPA];
             applyRLS();
             try { renderPage(getActivePage()); } catch(e) {}
             updateMainMetricsBadges();
@@ -7308,7 +7308,7 @@ async function loadData() {
               if (!r3.ok) return;
               const d3 = await r3.json();
               rawSRR = d3.records || []; rawJPA = [];
-              allSRR = [...rawSRR]; allJPA = [...rawJPA];
+              allSRR = rawSRR.filter(r => (r.direction||'').toLowerCase() === currentDirection.toLowerCase()); allJPA = [...rawJPA];
               applyRLS();
               try { renderPage(getActivePage()); } catch(e) {}
               updateMainMetricsBadges();
@@ -7498,7 +7498,7 @@ function applyRLS() {
   document.getElementById('sys-usage').style.display  = (isAdmin || isHR || isOpsHead || isManager || isTeamLeader) ? 'flex' : 'none';
 
   if (isAdmin || isHR || isOpsHead) {
-    allSRR = [...rawSRR];
+    allSRR = rawSRR.filter(r => (r.direction||'').toLowerCase() === currentDirection.toLowerCase());
     allJPA = [...rawJPA];
     return;
   }
@@ -7508,7 +7508,7 @@ function applyRLS() {
   const visibleJobOwners = getVisibleJobOwners(email);
 
   if (visibleJobOwners === 'ALL') {
-    allSRR = [...rawSRR];
+    allSRR = rawSRR.filter(r => (r.direction||'').toLowerCase() === currentDirection.toLowerCase());
     allJPA = [...rawJPA];
   } else if (visibleJobOwners.size > 0) {
     allSRR = rawSRR.filter(r => visibleJobOwners.has((r.jobOwner || '').toLowerCase().trim()));
