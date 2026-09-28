@@ -5856,8 +5856,15 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
   const gtFl = {}; cols.forEach(c => { gtFl[c.key] = 0; }); let gtFlGrand = 0;
   const colKeyFn = r => getColKey(r, view) || 'other';
   const cRFl = {};
-  // Use WIP lines for column bucketing
-  (allFlaggedWipLines.length ? allFlaggedWipLines : flaggedDD).forEach(r => { const ck = colKeyFn(r); if (gtFl[ck] !== undefined) gtFl[ck]++; gtFlGrand++; if (!cRFl[ck]) cRFl[ck] = []; cRFl[ck].push(r); });
+  // Count unique shipments per column (use first WIP line date for bucketing)
+  flaggedDD.forEach(r => {
+    const wipLines = wipByShipment[r.shipmentId] || [];
+    const ck = wipLines.length ? (colKeyFn(wipLines[0]) || 'other') : (colKeyFn(r) || 'other');
+    if (gtFl[ck] !== undefined) gtFl[ck]++;
+    gtFlGrand++;
+    if (!cRFl[ck]) cRFl[ck] = [];
+    cRFl[ck].push(r);
+  });
 
   const isSingle = cols.length === 1 && cols[0].single;
   const tblId = 'tbl-' + pageId;
