@@ -4996,6 +4996,12 @@ function fmtDate(d) {
 
 function initFilters(pageId) {
   const now = new Date();
+  // Reset view dropdown to monthly on init
+  const viewEl = document.getElementById('view-' + pageId);
+  if (viewEl && viewEl.value !== 'monthly') {
+    viewEl.value = 'monthly';
+    onViewChange(pageId);
+  }
   // Indian FY starts April — determine FY start year
   const fyStartYear = now.getFullYear();
 
