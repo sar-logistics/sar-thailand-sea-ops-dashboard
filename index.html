@@ -6090,7 +6090,7 @@ function renderLowProfit() {
   populateFilters(pageId, filtered);
   const filteredDD = applyAdditionalFilters(applyDropdownFilters(filtered, pageId), pageId);
   const flaggedDD  = filteredDD.filter(r => {
-    const margin = r.marginPct;
+    const margin = r.derivedMargin !== undefined ? r.derivedMargin : r.marginPct;
     if (margin === undefined || margin === null || margin === 0) return false;
     return margin < 3;
   });
@@ -6611,6 +6611,7 @@ const DV_COLS_OPEN_JOBS = [
 
 const DV_COLS_LOW_PROFIT = [
   { key:'shipmentId',          label:'Shipment ID'                        },
+  { key:'derivedMargin',       label:'Derived Margin %', num:true          },
   { key:'marginPct',           label:'Margin %',         num:true          },
   { key:'jobProfit',           label:'Job Profit',       num:true          },
   { key:'recognizedRevenue',   label:'Revenue',          num:true          },
