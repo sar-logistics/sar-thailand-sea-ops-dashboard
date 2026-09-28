@@ -5040,8 +5040,15 @@ function showGrandTotal(view)  { return view !== 'yearly' && view !== 'quarterly
 function filterByDate(data, pageId) {
   const { from, to } = getDateRange(pageId);
   return data.filter(r => {
-    const raw = r.direction === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate);
-    const d = raw ? new Date(raw) : null;
+    let d;
+    if (r.chargeType !== undefined) {
+      // WIP record — dates are dd-MMM-yyyy strings
+      const raw = r.etdEta || r.etd || r.eta;
+      d = raw ? parseDdMmmYyyy(raw) : null;
+    } else {
+      const raw = r.direction === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate);
+      d = raw ? new Date(raw) : null;
+    }
     return d && d >= from && d <= to;
   });
 }
@@ -5835,12 +5842,18 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
   const sc = document.getElementById('sc-' + pageId); if (sc) sc.textContent = totalJobs.toLocaleString() + ' total · ' + flaggedCount.toLocaleString() + ' flagged';
   setBadge(pageId, flaggedCount);
 
-  // Build table same as _renderSRRFlagged but drill opens WIP breakdown
+  // Build table using WIP lines for date bucketing (WIP lines have dd-MMM-yyyy dates)
+  // Get all WIP lines for flagged shipments
+  const allFlaggedWipLines = flaggedDD.flatMap(r => (wipByShipment[r.shipmentId] || []));
+
   const flaggedMap = {};
+  // Use SRR records for branch/owner structure, WIP lines for date bucketing
   flaggedDD.forEach(r => {
     const br = r.jobBranch || r.branch || '(No Branch)';
     const ow = r.operator || r.jobOwner || '(Unknown)';
-    const ck = getColKey(r, view) || 'other';
+    // Use WIP lines for this shipment to get the date key
+    const wipLines = wipByShipment[r.shipmentId] || [];
+    const ck = wipLines.length ? (getColKey(wipLines[0], view) || 'other') : (getColKey(r, view) || 'other');
     if (!flaggedMap[br]) flaggedMap[br] = {};
     if (!flaggedMap[br][ow]) flaggedMap[br][ow] = {};
     flaggedMap[br][ow][ck] = (flaggedMap[br][ow][ck] || 0) + 1;
@@ -5849,7 +5862,8 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
   const gtFl = {}; cols.forEach(c => { gtFl[c.key] = 0; }); let gtFlGrand = 0;
   const colKeyFn = r => getColKey(r, view) || 'other';
   const cRFl = {};
-  flaggedDD.forEach(r => { const ck = colKeyFn(r); if (gtFl[ck] !== undefined) gtFl[ck]++; gtFlGrand++; if (!cRFl[ck]) cRFl[ck] = []; cRFl[ck].push(r); });
+  // Use WIP lines for column bucketing
+  (allFlaggedWipLines.length ? allFlaggedWipLines : flaggedDD).forEach(r => { const ck = colKeyFn(r); if (gtFl[ck] !== undefined) gtFl[ck]++; gtFlGrand++; if (!cRFl[ck]) cRFl[ck] = []; cRFl[ck].push(r); });
 
   const isSingle = cols.length === 1 && cols[0].single;
   const tblId = 'tbl-' + pageId;
