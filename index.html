@@ -5864,6 +5864,7 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
   const cRFl = {};
   // Use WIP lines for column bucketing
   (allFlaggedWipLines.length ? allFlaggedWipLines : flaggedDD).forEach(r => { const ck = colKeyFn(r); if (gtFl[ck] !== undefined) gtFl[ck]++; gtFlGrand++; if (!cRFl[ck]) cRFl[ck] = []; cRFl[ck].push(r); });
+  console.log('[WIP DEBUG] cols:', cols.map(c=>c.key), 'gtFl:', JSON.stringify(gtFl), 'gtFlGrand:', gtFlGrand, 'wipLines:', allFlaggedWipLines.length);
 
   const isSingle = cols.length === 1 && cols[0].single;
   const tblId = 'tbl-' + pageId;
