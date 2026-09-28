@@ -18,11 +18,12 @@ let cache = { data: null, builtAt: null };
 
 async function buildCache(db) {
   console.log('[TH-OPS] Building cache...');
-  const expDocs = await db.collection('th_ops_export').find({}).toArray();
-  const impDocs = await db.collection('th_ops_import').find({}).toArray();
-  const allDocs = [...expDocs, ...impDocs];
-  console.log(`[TH-OPS] Total docs: ${allDocs.length}`);
-  cache = { data: allDocs, builtAt: new Date().toISOString() };
+  const expDocs  = await db.collection('th_ops_export').find({}).toArray();
+  const impDocs  = await db.collection('th_ops_import').find({}).toArray();
+  const userDocs = await db.collection('users').find({}).toArray();
+  const allDocs  = [...expDocs, ...impDocs];
+  console.log(`[TH-OPS] Total docs: ${allDocs.length}, users: ${userDocs.length}`);
+  cache = { data: allDocs, users: userDocs, builtAt: new Date().toISOString() };
   return cache;
 }
 
@@ -71,7 +72,7 @@ export default async function handler(req, res) {
       }
       res.setHeader('X-Cache', 'HIT');
       res.setHeader('X-Cache-Age', Math.floor((new Date() - new Date(cache.builtAt)) / 1000));
-      return res.status(200).json({ records: cache.data, builtAt: cache.builtAt });
+      return res.status(200).json({ records: cache.data, users: cache.users || [], builtAt: cache.builtAt });
     } catch (e) {
       console.error(e);
       return res.status(500).json({ error: e.message });
