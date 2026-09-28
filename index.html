@@ -5034,15 +5034,8 @@ function showGrandTotal(view)  { return view !== 'yearly' && view !== 'quarterly
 function filterByDate(data, pageId) {
   const { from, to } = getDateRange(pageId);
   return data.filter(r => {
-    let d;
-    if (r.chargeType !== undefined) {
-      // WIP record — dates are dd-MMM-yyyy strings
-      const raw = r.etdEta || r.etd || r.eta;
-      d = raw ? parseDdMmmYyyy(raw) : null;
-    } else {
-      const raw = r.direction === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate);
-      d = raw ? new Date(raw) : null;
-    }
+    const raw = r.direction === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate);
+    const d = raw ? new Date(raw) : null;
     return d && d >= from && d <= to;
   });
 }
@@ -5098,26 +5091,9 @@ function getColumns(pageId) {
   return { cols, label, view };
 }
 
-function parseDdMmmYyyy(s) {
-  if (!s) return null;
-  const months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-  const m = String(s).match(/(\d{1,2})[\-\/]([A-Za-z]{3})[\-\/](\d{4})/);
-  if (!m) return null;
-  return new Date(parseInt(m[3]), months[m[2].toLowerCase()], parseInt(m[1]));
-}
-
 function getColKey(row, view) {
-  // WIP records use etdEta/etd/eta (dd-MMM-yyyy strings)
-  // SRR records use originEtd/destinationEta (ISO strings)
-  let raw, d;
-  if (row.chargeType !== undefined) {
-    // WIP record — use etdEta field
-    raw = row.etdEta || row.etd || row.eta;
-    d = raw ? parseDdMmmYyyy(raw) : null;
-  } else {
-    raw = row.direction === 'Import' ? (row.destinationEta || row.originEtd) : (row.originEtd || row.etdDate);
-    d = raw ? new Date(raw) : null;
-  }
+  const raw = row.direction === 'Import' ? (row.destinationEta || row.originEtd) : (row.originEtd || row.etdDate);
+  const d = raw ? new Date(raw) : null;
   if (!d) return null;
   if (view === 'weekly') {
     // Normalize to local midnight first — if the raw date carries a time-of-day
