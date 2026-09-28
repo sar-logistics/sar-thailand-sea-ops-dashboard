@@ -7298,7 +7298,13 @@ function updateDvFoot() {
   dvCols.forEach(c => { if (c.num && !c.pct) sums[c.key] = rows.reduce((a, r) => a + (Number(r[c.key]) || 0), 0); });
   tfoot.innerHTML = `<tr>${dvCols.map((c, i) => {
     const align = (c.num || c.pct) ? ' style="text-align:right"' : '';
-    if (i === 0) return `<td>TOTAL (${rows.length.toLocaleString()})</td>`;
+    if (i === 0) {
+      // For WIP pages show unique shipment count
+      const isWip = dvCols === DV_COLS_WIP_REVENUE || dvCols === DV_COLS_WIP_COST;
+      const count = isWip ? new Set(rows.map(r => r.shipmentId)).size : rows.length;
+      const label = isWip ? count + ' shipment' + (count !== 1 ? 's' : '') : count.toLocaleString();
+      return `<td>TOTAL (${label})</td>`;
+    }
     if (c.num && sums[c.key] !== undefined) {
       const n = sums[c.key];
       const isProfit = c.key === 'estimatedProfit' || c.key === 'actualProfit' ||
