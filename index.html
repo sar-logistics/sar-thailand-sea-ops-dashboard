@@ -5929,14 +5929,20 @@ function renderUnpostedCost() {
   const filtered   = filterByDate(allSRR, pageId);
   populateFilters(pageId, filtered);
   const filteredDD = applyAdditionalFilters(applyDropdownFilters(filtered, pageId), pageId);
-  const today = Date.now();
-  const flaggedDD  = filteredDD.filter(r => {
-    const sob = r.etdDate ? new Date(r.etdDate) : null;
-    if (!sob) return false;
-    const diffDays = (today - sob.getTime()) / 86400000;
-    return diffDays > 7 && (!r.recognizedCost || r.recognizedCost === 0);
+
+  // Use WIP data — flag shipments that have any accrual line !== 0 (include negatives)
+  const accrualByShipment = {};
+  (rawWIP || []).forEach(w => {
+    if (w.accrual !== 0 && w.accrual !== undefined && w.accrual !== null) {
+      if (!accrualByShipment[w.shipmentId]) accrualByShipment[w.shipmentId] = [];
+      accrualByShipment[w.shipmentId].push(w);
+    }
   });
-  _renderSRRFlagged(pageId, 'uc', 'Cost Not Posted', label, view, cols, filteredDD, flaggedDD);
+
+  // Flag shipments that have accrual !== 0
+  const flaggedDD = filteredDD.filter(r => accrualByShipment[r.shipmentId] && accrualByShipment[r.shipmentId].length > 0);
+
+  _renderSRRFlaggedWip(pageId, 'uc', 'Cost Not Posted', label, view, cols, filteredDD, flaggedDD, accrualByShipment);
 }
 
 // ── Shared JPA flagged report renderer ───────────────────────
