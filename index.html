@@ -432,6 +432,7 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .sk-wrap{
   display:none;flex-direction:column;gap:16px;padding:28px 28px;
   flex:1;overflow:hidden;
+  position:relative;
 }
 .sk-wrap.visible{display:flex}
 .sk-line{
@@ -465,13 +466,26 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 }
 .sk-title{font-size:13px;font-weight:600;color:rgba(181,212,244,.35);margin-bottom:4px}
 .sk-subtitle{font-size:11px;color:rgba(181,212,244,.2)}
+@keyframes sk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes sk-pulse-ring{0%{box-shadow:0 0 0 0 rgba(96,165,250,.35)}70%{box-shadow:0 0 0 16px rgba(96,165,250,0)}100%{box-shadow:0 0 0 0 rgba(96,165,250,0)}}
 .sk-lob-hint{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  flex:1;gap:12px;color:rgba(181,212,244,.2);text-align:center;padding:40px;
+  gap:12px;color:rgba(224,236,250,.75);text-align:center;padding:40px 48px;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(15,31,46,.72);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  box-shadow:0 12px 40px rgba(0,0,0,.35);
+  min-width:280px;
 }
-.sk-lob-hint i{font-size:40px;opacity:.2}
-.sk-lob-hint .sh-title{font-size:15px;font-weight:600;color:rgba(181,212,244,.3)}
-.sk-lob-hint .sh-sub{font-size:12px;color:rgba(181,212,244,.18);line-height:1.5}
+.sk-lob-hint i{
+  font-size:34px;color:#93c5fd;
+  animation:sk-float 2.6s ease-in-out infinite, sk-pulse-ring 2.6s ease-out infinite;
+  border-radius:50%;padding:14px;
+}
+.sk-lob-hint .sh-title{font-size:14.5px;font-weight:700;color:#fff}
+.sk-lob-hint .sh-sub{font-size:12px;color:rgba(224,236,250,.5);line-height:1.5}
 
 .sys-items-wrap{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;opacity:0}
 .sys-section:hover .sys-items-wrap,.sys-section.expanded .sys-items-wrap{max-height:200px;opacity:1}
@@ -1093,6 +1107,19 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
       <!-- PAGE: Summary -->
       <!-- LOB skeleton placeholder — shown before direction is selected -->
       <div class="sk-wrap" id="sk-lob-placeholder">
+        <div class="sk-kpi-row">
+          <div class="sk-kpi"></div>
+          <div class="sk-kpi"></div>
+          <div class="sk-kpi"></div>
+        </div>
+        <div class="sk-table">
+          <div class="sk-thead"></div>
+          <div class="sk-row"></div>
+          <div class="sk-row" style="animation-delay:.1s"></div>
+          <div class="sk-row" style="animation-delay:.2s"></div>
+          <div class="sk-row" style="animation-delay:.3s"></div>
+          <div class="sk-row" style="animation-delay:.4s"></div>
+        </div>
         <div class="sk-lob-hint">
           <i class="ti ti-anchor"></i>
           <div class="sh-title">Select a direction to get started</div>
