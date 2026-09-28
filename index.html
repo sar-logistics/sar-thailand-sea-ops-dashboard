@@ -588,16 +588,21 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
 /* Frozen first TWO columns */
 .dv-tbl thead th:nth-child(1),
 .dv-tbl thead th:nth-child(2),
+.dv-tbl thead th:nth-child(3),
 .dv-tbl tbody td:nth-child(1),
 .dv-tbl tbody td:nth-child(2),
+.dv-tbl tbody td:nth-child(3),
 .dv-tbl tfoot td:nth-child(1),
-.dv-tbl tfoot td:nth-child(2){
+.dv-tbl tfoot td:nth-child(2),
+.dv-tbl tfoot td:nth-child(3){
   position:sticky;z-index:15;background:#f8fafc;border-right:1px solid #e2e8f0;
 }
 .dv-tbl thead th:nth-child(1){ left:0;   z-index:26;min-width:140px }
 .dv-tbl thead th:nth-child(2){ left:140px;z-index:25 }
+.dv-tbl thead th:nth-child(3){ left:240px;z-index:24 }
 .dv-tbl tbody td:nth-child(1){ left:0;   background:#fff;font-weight:600;color:#0f172a;font-size:12px }
 .dv-tbl tbody td:nth-child(2){ left:140px;background:#fff }
+.dv-tbl tbody td:nth-child(3){ left:240px;background:#fff }
 .dv-tbl tfoot td:nth-child(1){ left:0;   z-index:21;background:#f1f5f9 }
 .dv-tbl tfoot td:nth-child(2){ left:140px;z-index:20;background:#f1f5f9 }
 .dv-tbl tbody tr:hover td:nth-child(1),
