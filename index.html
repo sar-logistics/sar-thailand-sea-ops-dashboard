@@ -1121,9 +1121,9 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="sk-row" style="animation-delay:.4s"></div>
         </div>
         <div class="sk-lob-hint">
-          <i class="ti ti-anchor"></i>
-          <div class="sh-title">Select a direction to get started</div>
-          <div class="sh-sub">Choose Export or Import<br>from the left panel</div>
+          <i class="ti ti-anchor" id="sk-hint-icon"></i>
+          <div class="sh-title" id="sk-hint-title">Select Sea to get started</div>
+          <div class="sh-sub" id="sk-hint-sub">Pick a line of business<br>from the left panel</div>
         </div>
       </div>
 
@@ -4586,6 +4586,16 @@ let currentLob = null; // null = state 1, 'sea'|'air' = state 2/3
   }
 })();
 
+// Show skeleton hint immediately on load (before any LOB is picked)
+document.addEventListener('DOMContentLoaded', () => {
+  const sk = document.getElementById('sk-lob-placeholder');
+  if (sk) sk.classList.add('visible');
+});
+if (document.readyState !== 'loading') {
+  const sk0 = document.getElementById('sk-lob-placeholder');
+  if (sk0) sk0.classList.add('visible');
+}
+
 function toggleLobRow(lob) {
   if (['road','wh'].includes(lob)) return; // disabled
 
@@ -4618,6 +4628,10 @@ function toggleLobRow(lob) {
   if (!currentDirection || !document.getElementById('main-nav-scroll') || document.getElementById('main-nav-scroll').style.display === 'none') {
     const skPlaceholder = document.getElementById('sk-lob-placeholder');
     if (skPlaceholder) skPlaceholder.classList.add('visible');
+    const t = document.getElementById('sk-hint-title');
+    const s = document.getElementById('sk-hint-sub');
+    if (t) t.textContent = 'Select a direction to get started';
+    if (s) s.innerHTML = 'Choose Export or Import<br>from the left panel';
   }
 }
 
@@ -4674,6 +4688,10 @@ function railExpand() {
   // Show skeleton placeholder again
   const skPlaceholder = document.getElementById('sk-lob-placeholder');
   if (skPlaceholder) skPlaceholder.classList.add('visible');
+  const t = document.getElementById('sk-hint-title');
+  const s = document.getElementById('sk-hint-sub');
+  if (t) t.textContent = 'Select a direction to get started';
+  if (s) s.innerHTML = 'Choose Export or Import<br>from the left panel';
 }
 
 function refreshForDirection(dir) {
