@@ -4996,12 +4996,6 @@ function fmtDate(d) {
 
 function initFilters(pageId) {
   const now = new Date();
-  // Reset view dropdown to monthly on init
-  const viewEl = document.getElementById('view-' + pageId);
-  if (viewEl && viewEl.value !== 'monthly') {
-    viewEl.value = 'monthly';
-    onViewChange(pageId);
-  }
   // Indian FY starts April — determine FY start year
   const fyStartYear = now.getFullYear();
 
@@ -5864,7 +5858,6 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
   const cRFl = {};
   // Use WIP lines for column bucketing
   (allFlaggedWipLines.length ? allFlaggedWipLines : flaggedDD).forEach(r => { const ck = colKeyFn(r); if (gtFl[ck] !== undefined) gtFl[ck]++; gtFlGrand++; if (!cRFl[ck]) cRFl[ck] = []; cRFl[ck].push(r); });
-  console.log('[WIP DEBUG] cols:', cols.map(c=>c.key), 'gtFl:', JSON.stringify(gtFl), 'gtFlGrand:', gtFlGrand, 'wipLines:', allFlaggedWipLines.length);
 
   const isSingle = cols.length === 1 && cols[0].single;
   const tblId = 'tbl-' + pageId;
@@ -5967,7 +5960,7 @@ function getColumnsFromRecords(records, pageId, view) {
 
 function renderUnbilledRev() {
   const pageId = 'unbilled-rev';
-  const { label, view } = getColumns(pageId);
+  const { cols, label, view } = getColumns(pageId);
   const _kpiRow = document.querySelector('#page-unbilled-rev .kpi-row');
   if (_kpiRow) _kpiRow.style.display = showScorecards(view) ? '' : 'none';
   const filtered   = filterByDate(allSRR, pageId);
@@ -5986,17 +5979,13 @@ function renderUnbilledRev() {
   // Flag shipments that have WIP > 0
   const flaggedDD = filteredDD.filter(r => wipByShipment[r.shipmentId] && wipByShipment[r.shipmentId].length > 0);
 
-  // Generate cols from WIP lines so date bucketing matches
-  const allWipLines = flaggedDD.flatMap(r => wipByShipment[r.shipmentId] || []);
-  const cols = getColumnsFromRecords(allWipLines.length ? allWipLines : filteredDD, pageId, view);
-
-  _renderSRRFlaggedWip(pageId, 'ur', 'Revenue Not Billed', label, view, cols, filteredDD, flaggedDD, wipByShipment, DV_COLS_WIP_REVENUE);
+  _renderSRRFlaggedWip(pageId, 'ur', 'Revenue Not Billed', label, view, getColumns(pageId).cols, filteredDD, flaggedDD, wipByShipment, DV_COLS_WIP_REVENUE);
 }
 
 // ── RENDER: Cost not posted within 7 days of SOB ────────────────────────
 function renderUnpostedCost() {
   const pageId = 'unposted-cost';
-  const { label, view } = getColumns(pageId);
+  const { cols, label, view } = getColumns(pageId);
   const _kpiRow = document.querySelector('#page-unposted-cost .kpi-row');
   if (_kpiRow) _kpiRow.style.display = showScorecards(view) ? '' : 'none';
   const filtered   = filterByDate(allSRR, pageId);
@@ -6015,11 +6004,7 @@ function renderUnpostedCost() {
   // Flag shipments that have accrual !== 0
   const flaggedDD = filteredDD.filter(r => accrualByShipment[r.shipmentId] && accrualByShipment[r.shipmentId].length > 0);
 
-  // Generate cols from WIP lines so date bucketing matches
-  const allWipLines = flaggedDD.flatMap(r => accrualByShipment[r.shipmentId] || []);
-  const cols = getColumnsFromRecords(allWipLines.length ? allWipLines : filteredDD, pageId, view);
-
-  _renderSRRFlaggedWip(pageId, 'uc', 'Cost Not Posted', label, view, cols, filteredDD, flaggedDD, accrualByShipment, DV_COLS_WIP_COST);
+  _renderSRRFlaggedWip(pageId, 'uc', 'Cost Not Posted', label, view, getColumns(pageId).cols, filteredDD, flaggedDD, accrualByShipment, DV_COLS_WIP_COST);
 }
 
 // ── Shared JPA flagged report renderer ───────────────────────
