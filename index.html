@@ -6096,7 +6096,7 @@ function renderLowProfit() {
   const filteredDD = applyAdditionalFilters(applyDropdownFilters(filtered, pageId), pageId);
   const flaggedDD  = filteredDD.filter(r => {
     const margin = r.derivedMargin !== undefined ? r.derivedMargin : r.marginPct;
-    if (margin === undefined || margin === null || margin === 0) return false;
+    if (margin === undefined || margin === null) return false;
     return margin < 3;
   });
 
