@@ -6744,7 +6744,7 @@ function openDrill(records, title, sub) {
     });
     dvCols = DV_COLS_JPA_ENRICHED;
   } else {
-    dvCols = (dvAllRecords[0] && dvAllRecords[0].chargeType !== undefined) ? DV_COLS_WIP : DV_COLS_SRR;
+    dvCols = (records[0] && records[0].chargeType !== undefined) ? DV_COLS_WIP : DV_COLS_SRR;
   }
 
   dvAllRecords = records;
