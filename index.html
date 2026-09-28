@@ -4545,10 +4545,16 @@ let currentLob = null; // null = state 1, 'sea'|'air' = state 2/3
   // Hide nav scroll initially
   const navScroll = document.getElementById('main-nav-scroll');
   if (navScroll) navScroll.style.display = 'none';
-  // Hide all pages, show skeleton instead
-  document.addEventListener('DOMContentLoaded', () => {
+  // Hide all pages, show skeleton instead — run immediately since DOMContentLoaded
+  // has likely already fired by the time this script executes (script is at page bottom)
+  const hidePages = () => {
     document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
-  });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hidePages);
+  } else {
+    hidePages();
+  }
 })();
 
 function toggleLobRow(lob) {
