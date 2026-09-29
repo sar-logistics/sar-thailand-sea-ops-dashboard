@@ -8836,10 +8836,9 @@ const SUMMARY_REPORTS = [
     color:   '#dc2626',
     okColor: '#16a34a',
     flag:    r => {
-      const rev = r.recognizedRevenue || 0;
-      const profit = r.jobProfit || 0;
-      if (rev === 0) return false;
-      return (profit / rev) < 0.03;
+      const margin = r.derivedMargin !== undefined ? r.derivedMargin : r.marginPct;
+      if (margin === undefined || margin === null) return false;
+      return margin < 3;
     },
   },
 ];
