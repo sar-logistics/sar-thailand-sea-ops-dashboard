@@ -404,14 +404,13 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .lob-row.disabled .lob-row-illus{opacity:.95}
 .lob-row.disabled .lob-row-icon-badge{opacity:.85}
 .lob-row.disabled .lob-row-name{opacity:.85}
-.lob-row.disabled .lob-row-head{position:relative}
-.lob-row.disabled .lob-row-head::before{
+.lob-row-head::before{
   content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
   background:linear-gradient(100deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);
   background-size:250% 100%;background-position:150% 0;
   opacity:0;transition:opacity .2s ease;
 }
-.lob-row.disabled .lob-row-head:hover::before{
+.lob-row-head:hover::before{
   opacity:1;
   animation:lob-shine .9s ease;
 }
