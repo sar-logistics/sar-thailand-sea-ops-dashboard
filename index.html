@@ -438,36 +438,32 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 /* Sub-items (Export/Import) — accordion expand */
 .lob-sub-wrap{
   max-height:0;overflow:hidden;
-  transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+  transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease, margin-top .3s ease;
   opacity:0;
-  display:flex;flex-direction:column;gap:0;
+  display:flex;flex-direction:column;gap:6px;
+  margin-top:0;
 }
 .lob-row.active .lob-sub-wrap{
   max-height:180px;
   opacity:1;
-  margin-top:0;
-  background:linear-gradient(180deg, rgba(31,58,110,.5) 0%, rgba(18,34,64,.6) 100%);
-  border-radius:0 0 16px 16px;
-  padding:6px 0 4px;
+  margin-top:8px;
 }
-.lob-row.active .lob-row-head{border-radius:16px 16px 0 0}
 .lob-sub-item{
   display:flex;align-items:center;gap:10px;
-  padding:9px 14px;
+  padding:9px 12px;
+  border-radius:12px;
   cursor:pointer;
   color:rgba(224,236,250,.65);
   transition:all .18s ease;
-  background:transparent;
+  background:rgba(255,255,255,.04);
   user-select:none;
-  border-top:1px solid rgba(255,255,255,.06);
 }
-.lob-sub-item:first-child{border-top:none}
 .lob-sub-item:hover{
-  background:rgba(255,255,255,.06);
+  background:rgba(255,255,255,.08);
   color:#fff;
 }
 .lob-sub-item.active{
-  background:rgba(96,165,250,.18);
+  background:rgba(96,165,250,.22);
   color:#fff;
 }
 .lob-sub-icon-badge{
@@ -8815,9 +8811,6 @@ const SUMMARY_REPORTS = [
     title:   'Revenue Not Billed within 3 Days of SOB',
     color:   '#dc2626',
     okColor: '#16a34a',
-    unit:    'currency',
-    wipTotalField: 'revenue',
-    wipFlagField:  'wip',
     flag:    r => {
       const sob = r.etdDate ? new Date(r.etdDate) : null;
       if (!sob) return false;
@@ -8830,9 +8823,6 @@ const SUMMARY_REPORTS = [
     title:   'Cost Not Posted within 7 Days of SOB',
     color:   '#dc2626',
     okColor: '#16a34a',
-    unit:    'currency',
-    wipTotalField: 'cost',
-    wipFlagField:  'accrual',
     flag:    r => {
       const sob = r.etdDate ? new Date(r.etdDate) : null;
       if (!sob) return false;
@@ -9373,19 +9363,6 @@ function renderSummary() {
 
   if (!cols.length) { container.innerHTML = '<div style="padding:40px;color:#94a3b8;text-align:center">No data for the selected period.</div>'; return; }
 
-  // ── WIP $ lookup by shipmentId, used by currency-based checkpoints ────────
-  const wipSumByShipment = {};
-  (rawWIP || []).forEach(w => {
-    const id = w.shipmentId;
-    if (!id) return;
-    if (!wipSumByShipment[id]) wipSumByShipment[id] = { revenue:0, wip:0, cost:0, accrual:0 };
-    wipSumByShipment[id].revenue += (w.revenue || 0);
-    wipSumByShipment[id].wip     += (w.wip     || 0);
-    wipSumByShipment[id].cost    += (w.cost    || 0);
-    wipSumByShipment[id].accrual += Math.abs(w.accrual || 0);
-  });
-  console.log('[Summary $] rawWIP records:', (rawWIP||[]).length, '| unique shipments matched:', Object.keys(wipSumByShipment).length);
-
   // ── Compute per-report stats ──────────────────────────────────────────────
   const reportStats = SUMMARY_REPORTS.map(report => {
     let data = filtered;
@@ -9393,32 +9370,20 @@ function renderSummary() {
     const colKeyFn = r => getColKey(r, view);
     const totals = {}, flags = {};
     cols.forEach(c => { totals[c.key] = 0; flags[c.key] = 0; });
-    if (report.unit === 'currency') {
-      data.forEach(r => {
-        const ck = colKeyFn(r);
-        if (!ck || totals[ck] === undefined) return;
-        const wipRec = wipSumByShipment[r.shipmentId];
-        totals[ck] += wipRec ? (wipRec[report.wipTotalField] || 0) : 0;
-        if (report.flag(r)) {
-          flags[ck] += wipRec ? (wipRec[report.wipFlagField] || 0) : 0;
-        }
-      });
-    } else {
-      data.forEach(r => {
-        const ck = colKeyFn(r);
-        if (!ck || totals[ck] === undefined) return;
-        totals[ck]++;
-        if (report.flag(r)) flags[ck]++;
-      });
-    }
+    data.forEach(r => {
+      const ck = colKeyFn(r);
+      if (!ck || totals[ck] === undefined) return;
+      totals[ck]++;
+      if (report.flag(r)) flags[ck]++;
+    });
     const totalFlagged = Object.values(flags).reduce((a,b) => a+b, 0);
     const totalAll     = Object.values(totals).reduce((a,b) => a+b, 0);
     const pct          = totalAll > 0 ? +((totalFlagged / totalAll) * 100).toFixed(1) : 0;
     return { report, totals, flags, totalFlagged, totalAll, pct };
   });
 
-  const grandTotal   = Math.max(...reportStats.filter(s => s.report.unit !== 'currency').map(s => s.totalAll));
-  const grandFlagged = reportStats.filter(s => s.report.unit !== 'currency').reduce((a,s) => a + s.totalFlagged, 0);
+  const grandTotal   = Math.max(...reportStats.map(s => s.totalAll));
+  const grandFlagged = reportStats.reduce((a,s) => a + s.totalFlagged, 0);
   const avgHealth    = reportStats.length ? (100 - reportStats.reduce((a,s) => a + s.pct, 0) / reportStats.length).toFixed(1) : '0.0';
   const redZones     = reportStats.filter(s => s.pct >= 50).length;
   const worst        = [...reportStats].sort((a,b) => b.pct - a.pct)[0];
@@ -9657,10 +9622,6 @@ function renderSummary() {
     });
 
     // build monthly bars from real totals/flags per col
-    const isCur = s.report.unit === 'currency';
-    const totalLbl = s.report.id === 'cost-not-posted' ? 'Total Cost' : s.report.id === 'revenue-not-billed' ? 'Total Revenue' : 'Total';
-    const flagWord  = s.report.id === 'cost-not-posted' ? 'not posted' : s.report.id === 'revenue-not-billed' ? 'not billed' : 'flagged';
-    const fmtVal = v => isCur ? fmtIndian(v) : v.toLocaleString();
     const maxMoVal = Math.max(...cols.map(c => s.totals[c.key]||0), 1);
     const moRows = cols.map(c => {
       const t   = s.totals[c.key] || 0;
@@ -9677,11 +9638,11 @@ function renderSummary() {
             <div style="width:${fRatio}%;background:#e8573a;height:100%;border-radius:20px 0 0 20px;min-width:${f>0?3:0}px;flex-shrink:0"></div>
             <div style="width:${cRatio}%;background:#2e9e6e;height:100%;border-radius:${fRatio<1?'20px':'0'} 20px 20px ${fRatio<1?'20px':'0'};min-width:${cl>0?3:0}px;flex-shrink:0"></div>
           </div>
-          <div style="font-size:10px;color:#f5a882;font-weight:600"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#C5533C;margin-right:4px;vertical-align:middle"></span>${fmtVal(f)} ${flagWord} · <span style="font-weight:700">${pct}%</span></div>
+          <div style="font-size:10px;color:#f5a882;font-weight:600"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#C5533C;margin-right:4px;vertical-align:middle"></span>${f.toLocaleString()} flagged · <span style="font-weight:700">${pct}%</span></div>
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;line-height:1">${fmtVal(t)}</div>
-          <div style="font-size:9px;color:#8ba3c7">${totalLbl}</div>
+          <div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;line-height:1">${t.toLocaleString()}</div>
+          <div style="font-size:9px;color:#8ba3c7">Total</div>
         </div>
       </div>`;
     }).join('');
@@ -9690,18 +9651,18 @@ function renderSummary() {
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.07)">
         <div style="flex:1;min-width:0;padding-right:12px">
           <div style="font-size:14px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:3px">${s.report.title}</div>
-          <div style="font-size:10px;color:#8ba3c7">Monthly breakdown · ${isCur ? (totalLbl.replace('Total ','').toLowerCase()+' '+flagWord+' vs billed') : 'flagged vs clear'}</div>
+          <div style="font-size:10px;color:#8ba3c7">Monthly breakdown · flagged vs clear</div>
         </div>
         <div style="flex-shrink:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 14px">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
             <span style="width:8px;height:8px;border-radius:2px;background:#2F7D5C;display:inline-block;flex-shrink:0"></span>
-            <span style="font-size:11px;color:#8ba3c7">${totalLbl}</span>
-            <strong style="font-size:12px;color:#fff;margin-left:2px">${fmtVal(s.totalAll)}</strong>
+            <span style="font-size:11px;color:#8ba3c7">Total</span>
+            <strong style="font-size:12px;color:#fff;margin-left:2px">${s.totalAll.toLocaleString()}</strong>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
             <span style="width:8px;height:8px;border-radius:2px;background:#C5533C;display:inline-block;flex-shrink:0"></span>
-            <span style="font-size:11px;color:#8ba3c7">${isCur ? (flagWord[0].toUpperCase()+flagWord.slice(1)) : 'Flagged'}</span>
-            <strong style="font-size:12px;color:#F0997B;margin-left:2px">${fmtVal(s.totalFlagged)}</strong>
+            <span style="font-size:11px;color:#8ba3c7">Flagged</span>
+            <strong style="font-size:12px;color:#F0997B;margin-left:2px">${s.totalFlagged.toLocaleString()}</strong>
             <span style="font-size:10px;color:#4a6a8a">(${s.pct}%)</span>
           </div>
         </div>
