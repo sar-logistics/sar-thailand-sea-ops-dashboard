@@ -9363,6 +9363,15 @@ function renderSummary() {
 
   if (!cols.length) { container.innerHTML = '<div style="padding:40px;color:#94a3b8;text-align:center">No data for the selected period.</div>'; return; }
 
+  // WIP-based flag lookups — same rule the actual Revenue Not Billed / Cost Not
+  // Posted pages use, so the Summary checkpoint counts match those pages exactly.
+  const wipRevFlagged = {};   // shipmentId -> true if any WIP line has wip > 0
+  const wipCostFlagged = {};  // shipmentId -> true if any WIP line has accrual !== 0
+  (rawWIP || []).forEach(w => {
+    if (w.wip > 0) wipRevFlagged[w.shipmentId] = true;
+    if (w.accrual !== 0 && w.accrual !== undefined && w.accrual !== null) wipCostFlagged[w.shipmentId] = true;
+  });
+
   // ── Compute per-report stats ──────────────────────────────────────────────
   const reportStats = SUMMARY_REPORTS.map(report => {
     let data = filtered;
@@ -9374,7 +9383,11 @@ function renderSummary() {
       const ck = colKeyFn(r);
       if (!ck || totals[ck] === undefined) return;
       totals[ck]++;
-      if (report.flag(r)) flags[ck]++;
+      let isFlagged;
+      if (report.id === 'revenue-not-billed') isFlagged = !!wipRevFlagged[r.shipmentId];
+      else if (report.id === 'cost-not-posted') isFlagged = !!wipCostFlagged[r.shipmentId];
+      else isFlagged = report.flag(r);
+      if (isFlagged) flags[ck]++;
     });
     const totalFlagged = Object.values(flags).reduce((a,b) => a+b, 0);
     const totalAll     = Object.values(totals).reduce((a,b) => a+b, 0);
