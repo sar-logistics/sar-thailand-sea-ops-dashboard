@@ -354,7 +354,14 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   transition:all .2s ease;
   color:rgba(224,236,250,.7);
   user-select:none;
+  position:relative;
+  overflow:hidden;
 }
+.lob-row-illus{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  width:64px;height:64px;opacity:.28;pointer-events:none;color:#fff;
+}
+.lob-row-illus svg{width:100%;height:100%}
 .lob-row-head:hover{
   background:rgba(255,255,255,.09);
   color:#fff;
@@ -389,6 +396,14 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .lob-row[data-lob="road"] .lob-row-icon-badge{background:rgba(52,211,153,.3)}
 .lob-row[data-lob="wh"] .lob-row-icon-badge{background:rgba(251,146,60,.3)}
 .lob-row.active[data-lob="sea"] .lob-row-icon-badge{background:rgba(96,165,250,.4)}
+
+.lob-row[data-lob="air"] .lob-row-head{background:linear-gradient(135deg, rgba(124,58,237,.35), rgba(124,58,237,.15))}
+.lob-row[data-lob="air"] .lob-row-head:hover{background:linear-gradient(135deg, rgba(124,58,237,.42), rgba(124,58,237,.2))}
+.lob-row[data-lob="road"] .lob-row-head{background:linear-gradient(135deg, rgba(16,185,129,.32), rgba(16,185,129,.13))}
+.lob-row[data-lob="road"] .lob-row-head:hover{background:linear-gradient(135deg, rgba(16,185,129,.4), rgba(16,185,129,.18))}
+.lob-row[data-lob="wh"] .lob-row-head{background:linear-gradient(135deg, rgba(180,83,9,.32), rgba(180,83,9,.13))}
+.lob-row[data-lob="wh"] .lob-row-head:hover{background:linear-gradient(135deg, rgba(180,83,9,.4), rgba(180,83,9,.18))}
+.lob-row.active[data-lob="sea"] .lob-row-head{background:linear-gradient(135deg, rgba(37,99,235,.55), rgba(37,99,235,.25))}
 
 .lob-row-soon{
   font-size:8px;background:rgba(255,255,255,.1);
@@ -941,6 +956,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
 
           <div class="lob-row" id="lob-row-sea" data-lob="sea">
             <div class="lob-row-head" onclick="toggleLobRow('sea')">
+              <div class="lob-row-illus"><i class="ti ti-ship" style="font-size:56px"></i></div>
               <div class="lob-row-icon-badge"><i class="ti ti-anchor"></i></div>
               <div class="lob-row-text">
                 <div class="lob-row-name">Sea</div>
@@ -956,6 +972,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
                   <div class="lob-sub-desc">Shipments leaving the country</div>
                 </div>
                 <span class="lob-sub-count" id="dir-exp-count">—</span>
+                <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.4)"></i>
               </div>
               <div class="lob-sub-item" id="dir-sub-import" onclick="event.stopPropagation();setDirection('Import')">
                 <div class="lob-sub-icon-badge"><i class="ti ti-arrow-down"></i></div>
@@ -964,40 +981,44 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
                   <div class="lob-sub-desc">Shipments arriving in the country</div>
                 </div>
                 <span class="lob-sub-count" id="dir-imp-count">—</span>
+                <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.4)"></i>
               </div>
             </div>
           </div>
 
           <div class="lob-row disabled" id="lob-row-air" data-lob="air">
             <div class="lob-row-head">
+              <div class="lob-row-illus"><i class="ti ti-plane" style="font-size:56px"></i></div>
               <div class="lob-row-icon-badge"><i class="ti ti-plane"></i></div>
               <div class="lob-row-text">
                 <div class="lob-row-name">Air</div>
                 <div class="lob-row-sub">Fast & global air cargo</div>
               </div>
-              <div class="lob-row-soon">Soon</div>
+              <div class="lob-row-soon">Soon</div><i class="ti ti-chevron-right" style="font-size:14px;color:rgba(255,255,255,.3);position:relative;z-index:1"></i>
             </div>
           </div>
 
           <div class="lob-row disabled" id="lob-row-road" data-lob="road">
             <div class="lob-row-head">
+              <div class="lob-row-illus"><i class="ti ti-truck" style="font-size:56px"></i></div>
               <div class="lob-row-icon-badge"><i class="ti ti-truck"></i></div>
               <div class="lob-row-text">
                 <div class="lob-row-name">Roadways</div>
                 <div class="lob-row-sub">Flexible & local delivery</div>
               </div>
-              <div class="lob-row-soon">Soon</div>
+              <div class="lob-row-soon">Soon</div><i class="ti ti-chevron-right" style="font-size:14px;color:rgba(255,255,255,.3);position:relative;z-index:1"></i>
             </div>
           </div>
 
           <div class="lob-row disabled" id="lob-row-wh" data-lob="wh">
             <div class="lob-row-head">
+              <div class="lob-row-illus"><i class="ti ti-building-warehouse" style="font-size:56px"></i></div>
               <div class="lob-row-icon-badge"><i class="ti ti-building-warehouse"></i></div>
               <div class="lob-row-text">
                 <div class="lob-row-name">Warehouse</div>
                 <div class="lob-row-sub">Storage & fulfillment</div>
               </div>
-              <div class="lob-row-soon">Soon</div>
+              <div class="lob-row-soon">Soon</div><i class="ti ti-chevron-right" style="font-size:14px;color:rgba(255,255,255,.3);position:relative;z-index:1"></i>
             </div>
           </div>
 
