@@ -4591,6 +4591,16 @@ if (document.readyState !== 'loading') {
 function toggleLobRow(lob) {
   if (['road','wh'].includes(lob)) return; // disabled
 
+  const rowEl = document.getElementById('lob-row-' + lob);
+  const isCurrentlyActive = rowEl?.classList.contains('active');
+
+  // Clicking an already-open row collapses it
+  if (isCurrentlyActive) {
+    rowEl.classList.remove('active');
+    currentLob = null;
+    return;
+  }
+
   currentLob = lob;
 
   // Make sure accordion is visible (in case rail was showing)
