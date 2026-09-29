@@ -4618,14 +4618,6 @@ function toggleLobRow(lob) {
     if (p.id !== 'sk-lob-placeholder') p.style.display = 'none';
   });
 
-  // Hide topbar filter controls (View dropdown, From/To, Filters, Refresh)
-  const filterRow0 = document.getElementById('tb-filter-row');
-  if (filterRow0) filterRow0.innerHTML = '';
-
-  // Reset topbar direction label
-  const dirLbl0 = document.getElementById('tb-direction-label');
-  if (dirLbl0) dirLbl0.textContent = '';
-
   // Close all rows, open the clicked one (accordion behavior)
   ['sea','air','road','wh'].forEach(l => {
     document.getElementById('lob-row-' + l)?.classList.toggle('active', l === lob);
@@ -4694,14 +4686,6 @@ function railExpand() {
   document.querySelectorAll('.page').forEach(p => {
     if (p.id !== 'sk-lob-placeholder') p.style.display = 'none';
   });
-
-  // Hide topbar filter controls (View dropdown, From/To, Filters, Refresh)
-  const filterRow = document.getElementById('tb-filter-row');
-  if (filterRow) filterRow.innerHTML = '';
-
-  // Reset topbar direction label
-  const dirLbl = document.getElementById('tb-direction-label');
-  if (dirLbl) dirLbl.textContent = '';
 
   // Show skeleton placeholder again
   const skPlaceholder = document.getElementById('sk-lob-placeholder');
