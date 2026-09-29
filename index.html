@@ -487,40 +487,77 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 /* ── Skeleton placeholder ─────────────────────────────────────────────── */
 @keyframes shimmer{0%{background-position:-700px 0}100%{background-position:700px 0}}
 .sk-wrap{
-  display:none;flex-direction:column;gap:16px;padding:28px 28px;
+  display:none;flex-direction:column;gap:12px;padding:20px 20px;
   flex:1;overflow:hidden;
   position:relative;
 }
 .sk-wrap.visible{display:flex}
+/* full-page diagonal shimmer sweep, on top of everything */
+.sk-wrap::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:5;
+  background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.55) 46%, rgba(255,255,255,.55) 54%, transparent 70%);
+  background-size:220% 100%;
+  animation:sk-sweep 3.2s ease-in-out infinite;
+  mix-blend-mode:soft-light;
+}
+@keyframes sk-sweep{0%{background-position:140% 0}100%{background-position:-40% 0}}
 .sk-line{
   border-radius:8px;height:14px;
-  background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.09) 50%,rgba(255,255,255,.04) 100%);
+  background:linear-gradient(90deg,rgba(15,31,46,.06) 0%,rgba(15,31,46,.13) 50%,rgba(15,31,46,.06) 100%);
   background-size:700px 100%;
   animation:shimmer 1.4s infinite linear;
 }
 .sk-card{
   border-radius:12px;padding:20px;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(255,255,255,.05);
+  background:rgba(15,31,46,.03);
+  border:1px solid var(--border);
   display:flex;flex-direction:column;gap:12px;
 }
+/* Hero row — mirrors the real Summary page's detail-panel + KPI/log grid */
+.sk-hero-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;min-height:270px}
+.sk-detail-panel{
+  border-radius:12px;padding:18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(150deg, rgba(31,58,110,.07) 0%, rgba(31,58,110,.035) 100%);
+  border:1px solid rgba(31,58,110,.1);
+}
+.sk-detail-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(90deg,rgba(31,58,110,.1) 0%,rgba(31,58,110,.2) 50%,rgba(31,58,110,.1) 100%);
+  background-size:700px 100%;
+  animation:shimmer 1.4s infinite linear, sk-float 2.6s ease-in-out infinite;
+}
+.sk-hero-right{display:flex;flex-direction:column;gap:10px;min-height:0}
 .sk-kpi-row{display:flex;gap:12px}
 .sk-kpi{
-  flex:1;border-radius:12px;height:90px;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(255,255,255,.05);
-  background:linear-gradient(90deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.03) 100%);
+  flex:1;border-radius:12px;height:78px;
+  border:1px solid var(--border);
+  background:linear-gradient(90deg,rgba(15,31,46,.035) 0%,rgba(15,31,46,.08) 50%,rgba(15,31,46,.035) 100%);
   background-size:700px 100%;
   animation:shimmer 1.4s infinite linear;
 }
-.sk-table{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.05)}
-.sk-thead{height:36px;background:rgba(255,255,255,.04)}
-.sk-row{
-  height:44px;border-top:1px solid rgba(255,255,255,.04);
-  background:linear-gradient(90deg,rgba(255,255,255,.02) 0%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.02) 100%);
+.sk-log-box{
+  flex:1;min-height:0;border-radius:12px;padding:12px 14px;
+  background:#fff;border:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sk-log-head{
+  width:150px;height:13px;border-radius:6px;margin-bottom:12px;flex-shrink:0;
+  background:linear-gradient(90deg,rgba(15,31,46,.05) 0%,rgba(15,31,46,.12) 50%,rgba(15,31,46,.05) 100%);
   background-size:700px 100%;
   animation:shimmer 1.4s infinite linear;
 }
+.sk-log-row{display:flex;align-items:center;gap:10px;height:30px;flex-shrink:0;border-top:1px solid #f0f2f5}
+.sk-log-row:first-of-type{border-top:none}
+.sk-log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:rgba(15,31,46,.1)}
+.sk-log-name{
+  flex:1;height:9px;border-radius:5px;max-width:65%;
+  background:linear-gradient(90deg,rgba(15,31,46,.04) 0%,rgba(15,31,46,.1) 50%,rgba(15,31,46,.04) 100%);
+  background-size:700px 100%;
+  animation:shimmer 1.4s infinite linear;
+}
+.sk-log-track{width:60px;height:6px;border-radius:3px;flex-shrink:0;background:rgba(15,31,46,.06)}
+.sk-log-pct{width:28px;height:9px;border-radius:5px;flex-shrink:0;background:rgba(15,31,46,.08)}
 .sk-title{font-size:13px;font-weight:600;color:rgba(181,212,244,.35);margin-bottom:4px}
 .sk-subtitle{font-size:11px;color:rgba(181,212,244,.2)}
 @keyframes sk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
@@ -1205,18 +1242,29 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
       <!-- PAGE: Summary -->
       <!-- LOB skeleton placeholder — shown before direction is selected -->
       <div class="sk-wrap" id="sk-lob-placeholder">
-        <div class="sk-kpi-row">
-          <div class="sk-kpi"></div>
-          <div class="sk-kpi"></div>
-          <div class="sk-kpi"></div>
-        </div>
-        <div class="sk-table">
-          <div class="sk-thead"></div>
-          <div class="sk-row"></div>
-          <div class="sk-row" style="animation-delay:.1s"></div>
-          <div class="sk-row" style="animation-delay:.2s"></div>
-          <div class="sk-row" style="animation-delay:.3s"></div>
-          <div class="sk-row" style="animation-delay:.4s"></div>
+        <div class="sk-hero-grid">
+          <div class="sk-detail-panel">
+            <div class="sk-detail-icon"></div>
+          </div>
+          <div class="sk-hero-right">
+            <div class="sk-kpi-row">
+              <div class="sk-kpi"></div>
+              <div class="sk-kpi" style="animation-delay:.08s"></div>
+              <div class="sk-kpi" style="animation-delay:.16s"></div>
+            </div>
+            <div class="sk-log-box">
+              <div class="sk-log-head"></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:0s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.05s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.1s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.15s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.2s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.25s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.3s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.35s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+              <div class="sk-log-row"><span class="sk-log-dot"></span><span class="sk-log-name" style="animation-delay:.4s"></span><span class="sk-log-track"></span><span class="sk-log-pct"></span></div>
+            </div>
+          </div>
         </div>
         <div class="sk-lob-hint">
           <span class="sk-bubble sk-bubble-1"></span>
