@@ -336,21 +336,21 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 }
 .lob-nav-title i{font-size:15px;color:#60a5fa}
 
-.lob-row-list{display:flex;flex-direction:column;gap:5px}
+.lob-row-list{display:flex;flex-direction:column;gap:8px}
 
 .lob-row{
   display:flex;flex-direction:column;
-  border-radius:10px;
+  border-radius:14px;
   overflow:hidden;
   transition:background .2s ease;
 }
 .lob-row-head{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 14px;
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;
   cursor:pointer;
   background:rgba(255,255,255,.05);
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   transition:all .2s ease;
   color:rgba(224,236,250,.7);
   user-select:none;
@@ -359,27 +359,40 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   background:rgba(255,255,255,.09);
   color:#fff;
 }
-.lob-row-head i.lob-row-icon{font-size:16px;width:18px;text-align:center;flex-shrink:0}
-.lob-row-name{font-size:12px;font-weight:700;letter-spacing:.02em;flex:1}
-.lob-row-chev{font-size:13px;color:rgba(224,236,250,.35);transition:transform .3s ease}
+.lob-row-icon-badge{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.14);
+}
+.lob-row-icon-badge i{font-size:17px;color:#fff}
+.lob-row-text{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+.lob-row-name{font-size:13px;font-weight:700;letter-spacing:.01em}
+.lob-row-sub{font-size:10px;color:rgba(224,236,250,.45);font-weight:500}
+.lob-row-chev{font-size:14px;color:rgba(224,236,250,.4);transition:transform .3s ease;flex-shrink:0}
 
 .lob-row.active .lob-row-head{
   background:#2c4a86;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.15), inset 0 -1px 0 rgba(0,0,0,.2);
   color:#fff;
 }
-.lob-row.active .lob-row-head i.lob-row-icon{color:#93c5fd}
-.lob-row.active .lob-row-chev{transform:rotate(180deg);color:#93c5fd}
+.lob-row.active .lob-row-icon-badge{background:rgba(255,255,255,.22)}
+.lob-row.active .lob-row-chev{transform:rotate(180deg);color:#fff}
 
-.lob-row.disabled .lob-row-head{cursor:not-allowed;opacity:.4}
+.lob-row.disabled .lob-row-head{cursor:not-allowed;opacity:.55}
 .lob-row.disabled .lob-row-head:hover{
-  background:rgba(255,255,255,.04);
-  border-color:rgba(255,255,255,.06);
+  background:rgba(255,255,255,.05);
   color:rgba(224,236,250,.7);
 }
+/* Per-LOB accent colors for the icon badge, disabled or not */
+.lob-row[data-lob="sea"] .lob-row-icon-badge{background:rgba(59,130,246,.35)}
+.lob-row[data-lob="air"] .lob-row-icon-badge{background:rgba(167,139,250,.3)}
+.lob-row[data-lob="road"] .lob-row-icon-badge{background:rgba(52,211,153,.3)}
+.lob-row[data-lob="wh"] .lob-row-icon-badge{background:rgba(251,146,60,.3)}
+.lob-row.active[data-lob="sea"] .lob-row-icon-badge{background:rgba(96,165,250,.4)}
+
 .lob-row-soon{
-  font-size:8px;background:rgba(255,255,255,.08);
-  color:rgba(224,236,250,.5);padding:2px 7px;
+  font-size:8px;background:rgba(255,255,255,.1);
+  color:rgba(224,236,250,.6);padding:3px 8px;
   border-radius:10px;flex-shrink:0;font-weight:600;
 }
 
@@ -388,36 +401,44 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   max-height:0;overflow:hidden;
   transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease, margin-top .3s ease;
   opacity:0;
-  display:flex;flex-direction:column;gap:4px;
+  display:flex;flex-direction:column;gap:6px;
   margin-top:0;
 }
 .lob-row.active .lob-sub-wrap{
-  max-height:120px;
+  max-height:180px;
   opacity:1;
-  margin-top:5px;
+  margin-top:8px;
 }
 .lob-sub-item{
   display:flex;align-items:center;gap:10px;
-  padding:9px 12px 9px 32px;
-  border-radius:8px;
+  padding:9px 12px;
+  border-radius:12px;
   cursor:pointer;
-  color:rgba(224,236,250,.55);
-  font-size:11.5px;font-weight:600;
+  color:rgba(224,236,250,.65);
   transition:all .18s ease;
-  background:rgba(255,255,255,.02);
+  background:rgba(255,255,255,.04);
   user-select:none;
 }
 .lob-sub-item:hover{
-  background:rgba(255,255,255,.06);
+  background:rgba(255,255,255,.08);
   color:#fff;
 }
 .lob-sub-item.active{
-  background:rgba(96,165,250,.18);
-  color:#93c5fd;
+  background:rgba(96,165,250,.22);
+  color:#fff;
 }
-.lob-sub-item i{font-size:13px;width:14px;text-align:center}
-.lob-sub-count{font-size:9px;color:rgba(224,236,250,.3);margin-left:auto;font-weight:500}
-.lob-sub-item.active .lob-sub-count{color:rgba(147,197,253,.6)}
+.lob-sub-icon-badge{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.14);
+}
+.lob-sub-item.active .lob-sub-icon-badge{background:rgba(96,165,250,.4)}
+.lob-sub-icon-badge i{font-size:12px;color:#fff}
+.lob-sub-text{display:flex;flex-direction:column;gap:0;flex:1;min-width:0}
+.lob-sub-name{font-size:11.5px;font-weight:700}
+.lob-sub-desc{font-size:9px;color:rgba(224,236,250,.4);font-weight:500}
+.lob-sub-count{font-size:9.5px;color:rgba(224,236,250,.4);font-weight:600;flex-shrink:0}
+.lob-sub-item.active .lob-sub-count{color:rgba(255,255,255,.75)}
 
 .lob-coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;color:rgba(181,212,244,.3);text-align:center;gap:8px}
 .lob-coming-soon i{font-size:32px;opacity:.4}
@@ -918,44 +939,64 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
       <div class="lob-nav-zone" id="lob-nav-zone">
         <div class="lob-row-list">
 
-          <div class="lob-row" id="lob-row-sea">
+          <div class="lob-row" id="lob-row-sea" data-lob="sea">
             <div class="lob-row-head" onclick="toggleLobRow('sea')">
-              <i class="ti ti-anchor lob-row-icon"></i>
-              <div class="lob-row-name">Sea</div>
+              <div class="lob-row-icon-badge"><i class="ti ti-anchor"></i></div>
+              <div class="lob-row-text">
+                <div class="lob-row-name">Sea</div>
+                <div class="lob-row-sub">Ocean freight & shipping</div>
+              </div>
               <i class="ti ti-chevron-down lob-row-chev"></i>
             </div>
             <div class="lob-sub-wrap">
               <div class="lob-sub-item" id="dir-sub-export" onclick="event.stopPropagation();setDirection('Export')">
-                <i class="ti ti-arrow-up"></i>Export
+                <div class="lob-sub-icon-badge"><i class="ti ti-arrow-up"></i></div>
+                <div class="lob-sub-text">
+                  <div class="lob-sub-name">Export</div>
+                  <div class="lob-sub-desc">Shipments leaving the country</div>
+                </div>
                 <span class="lob-sub-count" id="dir-exp-count">—</span>
               </div>
               <div class="lob-sub-item" id="dir-sub-import" onclick="event.stopPropagation();setDirection('Import')">
-                <i class="ti ti-arrow-down"></i>Import
+                <div class="lob-sub-icon-badge"><i class="ti ti-arrow-down"></i></div>
+                <div class="lob-sub-text">
+                  <div class="lob-sub-name">Import</div>
+                  <div class="lob-sub-desc">Shipments arriving in the country</div>
+                </div>
                 <span class="lob-sub-count" id="dir-imp-count">—</span>
               </div>
             </div>
           </div>
 
-          <div class="lob-row disabled" id="lob-row-air">
+          <div class="lob-row disabled" id="lob-row-air" data-lob="air">
             <div class="lob-row-head">
-              <i class="ti ti-plane lob-row-icon"></i>
-              <div class="lob-row-name">Air</div>
+              <div class="lob-row-icon-badge"><i class="ti ti-plane"></i></div>
+              <div class="lob-row-text">
+                <div class="lob-row-name">Air</div>
+                <div class="lob-row-sub">Fast & global air cargo</div>
+              </div>
               <div class="lob-row-soon">Soon</div>
             </div>
           </div>
 
-          <div class="lob-row disabled" id="lob-row-road">
+          <div class="lob-row disabled" id="lob-row-road" data-lob="road">
             <div class="lob-row-head">
-              <i class="ti ti-truck lob-row-icon"></i>
-              <div class="lob-row-name">Roadways</div>
+              <div class="lob-row-icon-badge"><i class="ti ti-truck"></i></div>
+              <div class="lob-row-text">
+                <div class="lob-row-name">Roadways</div>
+                <div class="lob-row-sub">Flexible & local delivery</div>
+              </div>
               <div class="lob-row-soon">Soon</div>
             </div>
           </div>
 
-          <div class="lob-row disabled" id="lob-row-wh">
+          <div class="lob-row disabled" id="lob-row-wh" data-lob="wh">
             <div class="lob-row-head">
-              <i class="ti ti-building-warehouse lob-row-icon"></i>
-              <div class="lob-row-name">Warehouse</div>
+              <div class="lob-row-icon-badge"><i class="ti ti-building-warehouse"></i></div>
+              <div class="lob-row-text">
+                <div class="lob-row-name">Warehouse</div>
+                <div class="lob-row-sub">Storage & fulfillment</div>
+              </div>
               <div class="lob-row-soon">Soon</div>
             </div>
           </div>
