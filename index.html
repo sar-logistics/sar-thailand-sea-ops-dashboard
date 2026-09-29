@@ -9365,9 +9365,13 @@ function renderSummary() {
   // WIP-based flag lookups — same rule the actual Revenue Not Billed / Cost Not
   // Posted pages use, so the Summary checkpoint counts match those pages exactly.
   const wipRevFlagged = {};   // shipmentId -> true if any WIP line has wip > 0
+  const wipRevAmount  = {};   // shipmentId -> sum of wip $ across its lines
   const wipCostFlagged = {};  // shipmentId -> true if any WIP line has accrual !== 0
   (rawWIP || []).forEach(w => {
-    if (w.wip > 0) wipRevFlagged[w.shipmentId] = true;
+    if (w.wip > 0) {
+      wipRevFlagged[w.shipmentId] = true;
+      wipRevAmount[w.shipmentId]  = (wipRevAmount[w.shipmentId] || 0) + w.wip;
+    }
     if (w.accrual !== 0 && w.accrual !== undefined && w.accrual !== null) wipCostFlagged[w.shipmentId] = true;
   });
 
@@ -9376,8 +9380,8 @@ function renderSummary() {
     let data = filtered;
     if (report.pre) data = data.filter(report.pre);
     const colKeyFn = r => getColKey(r, view);
-    const totals = {}, flags = {};
-    cols.forEach(c => { totals[c.key] = 0; flags[c.key] = 0; });
+    const totals = {}, flags = {}, flagAmounts = {};
+    cols.forEach(c => { totals[c.key] = 0; flags[c.key] = 0; flagAmounts[c.key] = 0; });
     data.forEach(r => {
       const ck = colKeyFn(r);
       if (!ck || totals[ck] === undefined) return;
@@ -9386,12 +9390,15 @@ function renderSummary() {
       if (report.id === 'revenue-not-billed') isFlagged = !!wipRevFlagged[r.shipmentId];
       else if (report.id === 'cost-not-posted') isFlagged = !!wipCostFlagged[r.shipmentId];
       else isFlagged = report.flag(r);
-      if (isFlagged) flags[ck]++;
+      if (isFlagged) {
+        flags[ck]++;
+        if (report.id === 'revenue-not-billed') flagAmounts[ck] += (wipRevAmount[r.shipmentId] || 0);
+      }
     });
     const totalFlagged = Object.values(flags).reduce((a,b) => a+b, 0);
     const totalAll     = Object.values(totals).reduce((a,b) => a+b, 0);
     const pct          = totalAll > 0 ? +((totalFlagged / totalAll) * 100).toFixed(1) : 0;
-    return { report, totals, flags, totalFlagged, totalAll, pct };
+    return { report, totals, flags, flagAmounts, totalFlagged, totalAll, pct };
   });
 
   const grandTotal   = Math.max(...reportStats.map(s => s.totalAll));
@@ -9634,15 +9641,20 @@ function renderSummary() {
     });
 
     // build monthly bars from real totals/flags per col
+    const isRevNotBilled = s.report.id === 'revenue-not-billed';
     const maxMoVal = Math.max(...cols.map(c => s.totals[c.key]||0), 1);
     const moRows = cols.map(c => {
       const t   = s.totals[c.key] || 0;
       const f   = s.flags[c.key]  || 0;
       const cl  = t - f;
       const pct = t > 0 ? ((f/t)*100).toFixed(1) : '0.0';
+      const amt = s.flagAmounts ? (s.flagAmounts[c.key] || 0) : 0;
       const barW = (t / maxMoVal) * 100;
       const fRatio = t > 0 ? (f/t)*100 : 0;
       const cRatio = t > 0 ? (cl/t)*100 : 0;
+      const rightSide = isRevNotBilled
+        ? `<span style="font-weight:700">${fmtIndian(amt)}</span> pending`
+        : `<span style="font-weight:700">${pct}%</span>`;
       return `<div style="background:rgba(255,255,255,.07);border-radius:8px;padding:7px 10px;margin-bottom:5px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
         <div style="font-size:12px;font-weight:700;color:#fff;width:62px;flex-shrink:0">${c.label}</div>
         <div style="flex:1;min-width:0">
@@ -9650,7 +9662,7 @@ function renderSummary() {
             <div style="width:${fRatio}%;background:#e8573a;height:100%;border-radius:20px 0 0 20px;min-width:${f>0?3:0}px;flex-shrink:0"></div>
             <div style="width:${cRatio}%;background:#2e9e6e;height:100%;border-radius:${fRatio<1?'20px':'0'} 20px 20px ${fRatio<1?'20px':'0'};min-width:${cl>0?3:0}px;flex-shrink:0"></div>
           </div>
-          <div style="font-size:10px;color:#f5a882;font-weight:600"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#C5533C;margin-right:4px;vertical-align:middle"></span>${f.toLocaleString()} flagged · <span style="font-weight:700">${pct}%</span></div>
+          <div style="font-size:10px;color:#f5a882;font-weight:600"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#C5533C;margin-right:4px;vertical-align:middle"></span>${f.toLocaleString()} flagged · ${rightSide}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;line-height:1">${t.toLocaleString()}</div>
