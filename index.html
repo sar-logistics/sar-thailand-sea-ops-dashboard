@@ -559,6 +559,18 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .sk-log-track{width:60px;height:6px;border-radius:3px;flex-shrink:0;background:rgba(15,31,46,.06)}
 .sk-log-pct{width:28px;height:9px;border-radius:5px;flex-shrink:0;background:rgba(15,31,46,.08)}
 .sk-title{font-size:13px;font-weight:600;color:rgba(181,212,244,.35);margin-bottom:4px}
+
+/* ── Per-page table loading skeleton + empty state (used across all report tables) ── */
+.tbl-skel-row td{padding:11px 16px}
+.tbl-skel-bar{
+  height:13px;border-radius:6px;max-width:520px;
+  background:linear-gradient(90deg,rgba(15,31,46,.05) 0%,rgba(15,31,46,.13) 50%,rgba(15,31,46,.05) 100%);
+  background-size:700px 100%;
+  animation:shimmer 1.4s infinite linear;
+}
+.tbl-empty{display:flex;flex-direction:column;align-items:center;gap:8px}
+.tbl-empty-icon{font-size:26px;color:var(--text3);opacity:.4}
+.tbl-empty-text{font-size:13px;font-weight:600;color:var(--text3)}
 .sk-subtitle{font-size:11px;color:rgba(181,212,244,.2)}
 @keyframes sk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
@@ -1001,14 +1013,12 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
             </div>
             <div class="lob-sub-wrap">
               <div class="lob-sub-item" id="dir-sub-export" onclick="event.stopPropagation();setDirection('Export')">
-                <div class="lob-sub-icon-badge"><i class="ti ti-arrow-up"></i></div>
-                <div class="lob-sub-name" style="flex:1">Export</div>
+                <div class="lob-sub-name" style="flex:1">Sea Export</div>
                 <span class="lob-sub-count" id="dir-exp-count">—</span>
                 <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.4)"></i>
               </div>
               <div class="lob-sub-item" id="dir-sub-import" onclick="event.stopPropagation();setDirection('Import')">
-                <div class="lob-sub-icon-badge"><i class="ti ti-arrow-down"></i></div>
-                <div class="lob-sub-name" style="flex:1">Import</div>
+                <div class="lob-sub-name" style="flex:1">Sea Import</div>
                 <span class="lob-sub-count" id="dir-imp-count">—</span>
                 <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.4)"></i>
               </div>
@@ -1476,7 +1486,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:220px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-unlinked"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-unlinked"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1599,7 +1609,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:220px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-open-jobs"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-open-jobs"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1704,7 +1714,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:260px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-total-jobs"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-total-jobs"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1832,7 +1842,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:260px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-unbilled-rev"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-unbilled-rev"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1959,7 +1969,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:260px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-unposted-cost"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-unposted-cost"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -2084,7 +2094,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:260px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-mbl-col-hbl-pre"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-mbl-col-hbl-pre"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -2209,7 +2219,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:260px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-mbl-col-hbl-col"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-mbl-col-hbl-col"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -2334,7 +2344,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:260px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-mbl-pre-hbl-pre"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-mbl-pre-hbl-pre"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -2459,7 +2469,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <th style="min-width:260px">Branch / Job Owner</th>
               <th class="col-grand">Grand Total</th>
             </tr></thead>
-            <tbody id="tbody-mbl-pre-hbl-col"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-mbl-pre-hbl-col"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -2556,7 +2566,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-hbl-not-released"><thead><tr id="thead-hbl-not-released">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-hbl-not-released"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-hbl-not-released"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- PAGE: MBL Not Released > 7 Days of SOB -->
@@ -2651,7 +2661,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-mbl-not-released"><thead><tr id="thead-mbl-not-released">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-mbl-not-released"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-mbl-not-released"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- PAGE: Pre-Alert Not Sent > 10 Days of SOB -->
@@ -2746,7 +2756,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-pre-alert-delay"><thead><tr id="thead-pre-alert-delay">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-pre-alert-delay"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-pre-alert-delay"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- PAGE: MBL Type Blank (Business Dimension not filled completely) -->
@@ -2841,7 +2851,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-mbl-type-blank"><thead><tr id="thead-mbl-type-blank">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-mbl-type-blank"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-mbl-type-blank"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- PAGE: HBL Type Blank (IncoTerm not filled) -->
@@ -2936,7 +2946,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-hbl-type-blank"><thead><tr id="thead-hbl-type-blank">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-hbl-type-blank"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-hbl-type-blank"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- PAGE: First OL > 7 Days of SOB (Performance) -->
@@ -3033,7 +3043,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="tbl-wrap">
             <table id="tbl-perf-ol" class="perf-table">
               <thead><tr id="thead-perf-ol"><th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-              <tbody id="tbody-perf-ol"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+              <tbody id="tbody-perf-ol"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -3132,7 +3142,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="tbl-wrap">
             <table id="tbl-perf-hbl" class="perf-table">
               <thead><tr id="thead-perf-hbl"><th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-              <tbody id="tbody-perf-hbl"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+              <tbody id="tbody-perf-hbl"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -3231,7 +3241,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="tbl-wrap">
             <table id="tbl-perf-mbl" class="perf-table">
               <thead><tr id="thead-perf-mbl"><th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-              <tbody id="tbody-perf-mbl"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+              <tbody id="tbody-perf-mbl"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -3330,7 +3340,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="tbl-wrap">
             <table id="tbl-perf-prealert" class="perf-table">
               <thead><tr id="thead-perf-prealert"><th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-              <tbody id="tbody-perf-prealert"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+              <tbody id="tbody-perf-prealert"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -3429,7 +3439,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="tbl-wrap">
             <table id="tbl-perf-inv" class="perf-table">
               <thead><tr id="thead-perf-inv"><th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-              <tbody id="tbody-perf-inv"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+              <tbody id="tbody-perf-inv"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -3528,7 +3538,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="tbl-wrap">
             <table id="tbl-perf-si" class="perf-table">
               <thead><tr id="thead-perf-si"><th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-              <tbody id="tbody-perf-si"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+              <tbody id="tbody-perf-si"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -3627,7 +3637,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="tbl-wrap">
             <table id="tbl-perf-vendor-payment" class="perf-table">
               <thead><tr id="thead-perf-vendor-payment"><th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-              <tbody id="tbody-perf-vendor-payment"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+              <tbody id="tbody-perf-vendor-payment"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
             </table>
           </div>
         </div>
@@ -3724,7 +3734,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-si-not-submitted"><thead><tr id="thead-si-not-submitted">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-si-not-submitted"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-si-not-submitted"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- PAGE: Vendor Payment Request within 3 Days of ETD -->
@@ -3819,7 +3829,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-vendor-payment-delay"><thead><tr id="thead-vendor-payment-delay">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-vendor-payment-delay"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-vendor-payment-delay"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- PAGE: SOB Date not filled -->
@@ -3914,7 +3924,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-sob-blank"><thead><tr id="thead-sob-blank">
             <th style="min-width:260px">Branch / Job Owner</th><th class="col-grand">Grand Total</th>
-          </tr></thead><tbody id="tbody-sob-blank"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody></table>
+          </tr></thead><tbody id="tbody-sob-blank"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody></table>
         </div>
       </div>
       <!-- Placeholder pages -->
@@ -4026,7 +4036,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-ol-delay">
             <thead><tr id="thead-ol-delay"><th style="min-width:220px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-            <tbody id="tbody-ol-delay"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-ol-delay"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -4138,7 +4148,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-low-profit">
             <thead><tr id="thead-low-profit"><th style="min-width:220px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-            <tbody id="tbody-low-profit"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-low-profit"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -4250,7 +4260,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-inv-delay">
             <thead><tr id="thead-inv-delay"><th style="min-width:220px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-            <tbody id="tbody-inv-delay"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-inv-delay"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -4364,7 +4374,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tbl-wrap">
           <table id="tbl-ams">
             <thead><tr id="thead-ams"><th style="min-width:220px">Branch / Job Owner</th><th class="col-grand">Grand Total</th></tr></thead>
-            <tbody id="tbody-ams"><tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">Loading data…</td></tr></tbody>
+            <tbody id="tbody-ams"><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:92%;animation-delay:0.0s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:78%;animation-delay:0.08s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:88%;animation-delay:0.16s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:65%;animation-delay:0.24s"></div></td></tr><tr class="tbl-skel-row"><td colspan="99"><div class="tbl-skel-bar" style="width:82%;animation-delay:0.32s"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -5923,7 +5933,7 @@ function renderJobUnlinked() {
     });
   });
 
-  if (!sortedBranches.length) h = '<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No data for this period.</td></tr>';
+  if (!sortedBranches.length) h = '<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   document.getElementById('tbody-unlinked').innerHTML = h;
 }
 
@@ -6026,7 +6036,7 @@ function renderTotalJobs() {
     });
   });
 
-  if (!Object.keys(totalMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No data for this period.</td></tr>';
+  if (!Object.keys(totalMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody = document.getElementById('tbody-total-jobs'); if (tbody) tbody.innerHTML = h;
 }
 function renderOpenJobs() {
@@ -6103,7 +6113,7 @@ function renderOpenJobs() {
     });
   });
 
-  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No open jobs for this period. ✅</td></tr>';
+  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody=document.getElementById('tbody-open-jobs'); if(tbody)tbody.innerHTML=h;
 }
 function renderOLDelay() {
@@ -6197,7 +6207,7 @@ function renderOLDelay() {
     });
   });
 
-  if (!Object.keys(flaggedMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No flagged jobs for this period.</td></tr>';
+  if (!Object.keys(flaggedMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody = document.getElementById('tbody-ol-delay');
   if (tbody) tbody.innerHTML = h;
 }
@@ -6315,7 +6325,7 @@ function renderAMS() {
       h+=`<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jF}${colCells(owC,owFRecs,cols,colKeyFn,safeOw+' — Flagged',label)}</tr>`;
     });
   });
-  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No flagged jobs for this period.</td></tr>';
+  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody=document.getElementById('tbody-ams'); if(tbody)tbody.innerHTML=h;
 }
 
@@ -6395,7 +6405,7 @@ function renderInvDelay() {
       h+=`<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jF}${colCells(owC,owFRecs,cols,colKeyFn,safeOw+' — Flagged',label)}</tr>`;
     });
   });
-  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No flagged jobs for this period.</td></tr>';
+  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody=document.getElementById('tbody-inv-delay'); if(tbody)tbody.innerHTML=h;
 }
 
@@ -6490,7 +6500,7 @@ function _renderSRRFlaggedWip(pageId, s, flagLabel, label, view, cols, filteredD
     });
   });
 
-  if (!Object.keys(flaggedMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No unbilled revenue for this period. ✅</td></tr>';
+  if (!Object.keys(flaggedMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody = document.getElementById('tbody-' + pageId); if (tbody) tbody.innerHTML = h;
 }
 
@@ -6657,7 +6667,7 @@ function _renderJPAFlaggedReport(pageId, s, flagLabel, label, view, cols, filter
     });
   });
 
-  if (!Object.keys(flaggedMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No flagged jobs for this period.</td></tr>';
+  if (!Object.keys(flaggedMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody = document.getElementById('tbody-' + pageId); if (tbody) tbody.innerHTML = h;
 }
 
@@ -6745,7 +6755,7 @@ function renderLowProfit() {
     });
   });
 
-  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No flagged jobs for this period.</td></tr>';
+  if(!Object.keys(flaggedMap).length) h='<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody=document.getElementById('tbody-low-profit'); if(tbody)tbody.innerHTML=h;
 }
 
@@ -8966,7 +8976,7 @@ function _renderPerf(pageId, title, isOnTime, excludeFn, notDueYetFn) {
     });
   });
 
-  if (!Object.keys(brMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No data for this period.</td></tr>';
+  if (!Object.keys(brMap).length) h = '<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>';
   const tbody = document.getElementById('tbody-' + pageId); if (tbody) tbody.innerHTML = h;
 
 }
@@ -9157,7 +9167,7 @@ function _renderSRRFlagged(pageId, s, flagLabel, label, view, cols, filteredDD, 
       h+=`<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${jFtd}${colCells(owCols,owFRecs,cols,colKeyFn,safeOw+' — '+flagLabel,label)}</tr>`;
     });
   });
-  if (!Object.keys(flaggedMap).length) h=`<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No flagged jobs for this period.</td></tr>`;
+  if (!Object.keys(flaggedMap).length) h=`<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>`;
   const tbody=document.getElementById('tbody-'+pageId); if(tbody) tbody.innerHTML=h;
 }
 
@@ -9319,7 +9329,7 @@ function _renderMblHbl(pageId, title, mblVal, hblVal) {
       h += `<tr class="jo-row r-br-${bKey} r-hidden" data-grp="${bKey}"><td>${oav}${ow} <span style="font-size:10px;color:var(--text3);margin-left:4px">(Job Owner)</span></td>${oTd}${colCells(owCols, owRecs, cols, colKeyFn, safeOw, label, 'DV_COLS_TOTAL_JOBS')}</tr>`;
     });
   });
-  if (!Object.keys(totalMap).length) h = `<tr><td colspan="99" style="text-align:center;padding:32px;color:var(--text3)">No shipments with ${title} for this period.</td></tr>`;
+  if (!Object.keys(totalMap).length) h = `<tr><td colspan="99" style="text-align:center;padding:40px 20px"><div class="tbl-empty"><i class="ti ti-file-off tbl-empty-icon"></i><div class="tbl-empty-text">No data present</div></div></td></tr>`;
   const tbody = document.getElementById('tbody-' + pageId); if (tbody) tbody.innerHTML = h;
 }
 
