@@ -525,24 +525,68 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .sk-subtitle{font-size:11px;color:rgba(181,212,244,.2)}
 @keyframes sk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes sk-pulse-ring{0%{box-shadow:0 0 0 0 rgba(96,165,250,.35)}70%{box-shadow:0 0 0 16px rgba(96,165,250,0)}100%{box-shadow:0 0 0 0 rgba(96,165,250,0)}}
+@keyframes sk-hint-in{0%{opacity:0;transform:translate(-50%,-50%) scale(.9) translateY(8px)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) translateY(0)}}
+@keyframes sk-ring-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes sk-icon-bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-4px) rotate(4deg)}}
+@keyframes sk-bubble-drift{
+  0%{transform:translateY(0) translateX(0) scale(1);opacity:.5}
+  50%{transform:translateY(-14px) translateX(4px) scale(1.15);opacity:.9}
+  100%{transform:translateY(0) translateX(0) scale(1);opacity:.5}
+}
+@keyframes sk-nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
 .sk-lob-hint{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;color:rgba(224,236,250,.75);text-align:center;padding:40px 48px;
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(15,31,46,.72);
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:18px;
-  box-shadow:0 12px 40px rgba(0,0,0,.35);
-  min-width:280px;
+  gap:12px;color:rgba(224,236,250,.75);text-align:center;padding:44px 52px;
+  position:absolute;top:50%;left:50%;
+  background:linear-gradient(160deg, rgba(24,44,74,.82) 0%, rgba(13,26,44,.82) 100%);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  box-shadow:0 20px 55px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
+  min-width:300px;
+  overflow:hidden;
+  animation:sk-hint-in .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.sk-bubble{
+  position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 35%, rgba(147,197,253,.5), rgba(147,197,253,0) 70%);
+  animation:sk-bubble-drift 5s ease-in-out infinite;
+}
+.sk-bubble-1{width:26px;height:26px;left:14px;top:22px;animation-delay:0s}
+.sk-bubble-2{width:16px;height:16px;right:22px;top:38px;animation-delay:1.1s;animation-duration:4.2s}
+.sk-bubble-3{width:20px;height:20px;left:30px;bottom:26px;animation-delay:2s;animation-duration:5.6s}
+.sk-bubble-4{width:12px;height:12px;right:38px;bottom:44px;animation-delay:.6s;animation-duration:3.8s}
+.sk-hint-icon-wrap{position:relative;width:82px;height:82px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.sk-icon-ring-spin{
+  position:absolute;inset:0;border-radius:50%;
+  border:1.5px dashed rgba(147,197,253,.35);
+  animation:sk-ring-spin 12s linear infinite;
+}
+.sk-icon-ring-pulse{
+  position:absolute;width:56px;height:56px;border-radius:50%;
+  background:rgba(96,165,250,.14);
+  animation:sk-pulse-ring 2.6s ease-out infinite;
+}
+.sk-icon-badge{
+  position:relative;width:56px;height:56px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg, rgba(96,165,250,.28), rgba(59,130,246,.12));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2);
 }
 .sk-lob-hint i{
-  font-size:34px;color:#93c5fd;
-  animation:sk-float 2.6s ease-in-out infinite, sk-pulse-ring 2.6s ease-out infinite;
-  border-radius:50%;padding:14px;
+  font-size:26px;color:#93c5fd;
+  animation:sk-icon-bob 2.6s ease-in-out infinite;
+  display:inline-block;
 }
-.sk-lob-hint .sh-title{font-size:14.5px;font-weight:700;color:#fff}
-.sk-lob-hint .sh-sub{font-size:12px;color:rgba(224,236,250,.5);line-height:1.5}
+.sk-lob-hint .sh-title{font-size:15px;font-weight:700;color:#fff;position:relative}
+.sk-lob-hint .sh-sub{font-size:12px;color:rgba(224,236,250,.55);line-height:1.55;position:relative}
+.sk-nudge{
+  display:flex;align-items:center;gap:6px;margin-top:6px;
+  font-size:10.5px;font-weight:600;letter-spacing:.02em;
+  color:rgba(147,197,253,.65);text-transform:uppercase;
+  position:relative;
+}
+.sk-nudge i{font-size:13px;animation:sk-nudge 1.6s ease-in-out infinite;color:rgba(147,197,253,.65)}
 
 .sys-items-wrap{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;opacity:0}
 .sys-section:hover .sys-items-wrap,.sys-section.expanded .sys-items-wrap{max-height:200px;opacity:1}
@@ -1175,9 +1219,18 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
           <div class="sk-row" style="animation-delay:.4s"></div>
         </div>
         <div class="sk-lob-hint">
-          <i class="ti ti-anchor" id="sk-hint-icon"></i>
+          <span class="sk-bubble sk-bubble-1"></span>
+          <span class="sk-bubble sk-bubble-2"></span>
+          <span class="sk-bubble sk-bubble-3"></span>
+          <span class="sk-bubble sk-bubble-4"></span>
+          <div class="sk-hint-icon-wrap">
+            <span class="sk-icon-ring-spin"></span>
+            <span class="sk-icon-ring-pulse"></span>
+            <div class="sk-icon-badge"><i class="ti ti-anchor" id="sk-hint-icon"></i></div>
+          </div>
           <div class="sh-title" id="sk-hint-title">Select Sea to get started</div>
           <div class="sh-sub" id="sk-hint-sub">Pick a line of business<br>from the left panel</div>
+          <div class="sk-nudge"><i class="ti ti-arrow-left"></i><span>over here</span></div>
         </div>
       </div>
 
