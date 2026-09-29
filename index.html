@@ -9367,12 +9367,16 @@ function renderSummary() {
   const wipRevFlagged = {};   // shipmentId -> true if any WIP line has wip > 0
   const wipRevAmount  = {};   // shipmentId -> sum of wip $ across its lines
   const wipCostFlagged = {};  // shipmentId -> true if any WIP line has accrual !== 0
+  const wipCostAmount  = {};  // shipmentId -> sum of |accrual| $ across its lines
   (rawWIP || []).forEach(w => {
     if (w.wip > 0) {
       wipRevFlagged[w.shipmentId] = true;
       wipRevAmount[w.shipmentId]  = (wipRevAmount[w.shipmentId] || 0) + w.wip;
     }
-    if (w.accrual !== 0 && w.accrual !== undefined && w.accrual !== null) wipCostFlagged[w.shipmentId] = true;
+    if (w.accrual !== 0 && w.accrual !== undefined && w.accrual !== null) {
+      wipCostFlagged[w.shipmentId] = true;
+      wipCostAmount[w.shipmentId]  = (wipCostAmount[w.shipmentId] || 0) + Math.abs(w.accrual);
+    }
   });
 
   // ── Compute per-report stats ──────────────────────────────────────────────
@@ -9393,6 +9397,7 @@ function renderSummary() {
       if (isFlagged) {
         flags[ck]++;
         if (report.id === 'revenue-not-billed') flagAmounts[ck] += (wipRevAmount[r.shipmentId] || 0);
+        else if (report.id === 'cost-not-posted') flagAmounts[ck] += (wipCostAmount[r.shipmentId] || 0);
       }
     });
     const totalFlagged = Object.values(flags).reduce((a,b) => a+b, 0);
@@ -9641,7 +9646,8 @@ function renderSummary() {
     });
 
     // build monthly bars from real totals/flags per col
-    const isRevNotBilled = s.report.id === 'revenue-not-billed';
+    const isRevNotBilled   = s.report.id === 'revenue-not-billed';
+    const isCostNotPosted  = s.report.id === 'cost-not-posted';
     const maxMoVal = Math.max(...cols.map(c => s.totals[c.key]||0), 1);
     const moRows = cols.map(c => {
       const t   = s.totals[c.key] || 0;
@@ -9654,6 +9660,8 @@ function renderSummary() {
       const cRatio = t > 0 ? (cl/t)*100 : 0;
       const rightSide = isRevNotBilled
         ? `<span style="font-weight:700">${fmtIndian(amt)}</span> pending`
+        : isCostNotPosted
+        ? `<span style="font-weight:700">${fmtIndian(amt)}</span> unposted`
         : `<span style="font-weight:700">${pct}%</span>`;
       return `<div style="background:rgba(255,255,255,.07);border-radius:8px;padding:7px 10px;margin-bottom:5px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
         <div style="font-size:12px;font-weight:700;color:#fff;width:62px;flex-shrink:0">${c.label}</div>
