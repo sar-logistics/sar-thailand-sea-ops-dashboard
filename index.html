@@ -447,17 +447,20 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 
 /* Sub-items (Export/Import) — accordion expand */
 .lob-sub-wrap{
-  max-height:0;overflow:hidden;
-  transition:max-height .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1), opacity .25s ease;
   opacity:0;
+  background:linear-gradient(180deg, rgba(31,58,110,.5) 0%, rgba(18,34,64,.6) 100%);
+  border-radius:0 0 16px 16px;
+}
+.lob-sub-inner{
+  min-height:0;overflow:hidden;
   display:flex;flex-direction:column;gap:0;
 }
 .lob-row.active .lob-sub-wrap{
-  max-height:180px;
+  grid-template-rows:1fr;
   opacity:1;
   margin-top:0;
-  background:linear-gradient(180deg, rgba(31,58,110,.5) 0%, rgba(18,34,64,.6) 100%);
-  border-radius:0 0 16px 16px;
   padding:6px 0 4px;
 }
 .lob-row.active .lob-row-head{border-radius:16px 16px 0 0}
@@ -951,7 +954,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <div class="lob-row-name" style="flex:1">Sea</div>
               <i class="ti ti-chevron-down lob-row-chev"></i>
             </div>
-            <div class="lob-sub-wrap">
+            <div class="lob-sub-wrap"><div class="lob-sub-inner">
               <div class="lob-sub-item" id="dir-sub-export" onclick="event.stopPropagation();setDirection('Export')">
                 <div class="lob-sub-name" style="flex:1">Sea Export</div>
                 <span class="lob-sub-count" id="dir-exp-count">—</span>
@@ -962,7 +965,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
                 <span class="lob-sub-count" id="dir-imp-count">—</span>
                 <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.4)"></i>
               </div>
-            </div>
+            </div></div>
           </div>
 
           <div class="lob-row" id="lob-row-air" data-lob="air">
@@ -972,7 +975,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <div class="lob-row-name" style="flex:1">Air</div>
               <i class="ti ti-chevron-down lob-row-chev"></i>
             </div>
-            <div class="lob-sub-wrap">
+            <div class="lob-sub-wrap"><div class="lob-sub-inner">
               <div class="lob-sub-item" id="dir-sub-air-export" onclick="event.stopPropagation();setDirection('Export')">
                 <div class="lob-sub-name" style="flex:1">Air Export</div>
                 <span class="lob-sub-count" id="dir-air-exp-count">—</span>
@@ -983,7 +986,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
                 <span class="lob-sub-count" id="dir-air-imp-count">—</span>
                 <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.4)"></i>
               </div>
-            </div>
+            </div></div>
           </div>
 
           <div class="lob-row" id="lob-row-road" data-lob="road">
@@ -993,7 +996,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
               <div class="lob-row-name" style="flex:1">Roadways</div>
               <i class="ti ti-chevron-down lob-row-chev"></i>
             </div>
-            <div class="lob-sub-wrap">
+            <div class="lob-sub-wrap"><div class="lob-sub-inner">
               <div class="lob-sub-item" id="dir-sub-road-export" onclick="event.stopPropagation();setDirection('Export')">
                 <div class="lob-sub-name" style="flex:1">Roadways Export</div>
                 <span class="lob-sub-count" id="dir-road-exp-count">—</span>
@@ -1004,7 +1007,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
                 <span class="lob-sub-count" id="dir-road-imp-count">—</span>
                 <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.4)"></i>
               </div>
-            </div>
+            </div></div>
           </div>
 
           <div class="lob-row disabled" id="lob-row-wh" data-lob="wh">
