@@ -53,8 +53,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text1);font-size:1
 #appShell{flex:1;overflow:hidden;display:none;flex-direction:column}
 
 /* TOPBAR — full width */
-.topbar{height:var(--topbar);background:#FFFFFF;position:relative;display:flex;align-items:center;padding:0 16px 0 0;gap:8px;flex-shrink:0;z-index:10;box-shadow:var(--shadow-sm);border-bottom:1px solid var(--border)}
-.topbar::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg, rgba(29,78,115,.35) 0%, rgba(29,78,115,.12) 40%, transparent 75%)}
+.topbar{height:var(--topbar);background:#FFFFFF;position:relative;display:flex;align-items:center;padding:0 16px 0 0;gap:8px;flex-shrink:0;z-index:10;box-shadow:none;border-bottom:none}
+.topbar::after{content:none}
 .tb-logo-wrap{display:none}
 .tb-divider{display:none}
 .tb-title-wrap{display:flex;flex-direction:column;justify-content:center}
