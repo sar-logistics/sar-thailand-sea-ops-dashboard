@@ -505,6 +505,7 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   position:relative;
 }
 .sk-wrap.visible{display:flex}
+@keyframes sk-text-pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
 .sys-items-wrap{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;opacity:0}
 .sys-section:hover .sys-items-wrap,.sys-section.expanded .sys-items-wrap{max-height:200px;opacity:1}
@@ -1147,8 +1148,10 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
       <!-- PAGE: Summary -->
       <!-- LOB skeleton placeholder — shown before direction is selected -->
       <div class="sk-wrap" id="sk-lob-placeholder">
-        <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0">
-          <div id="lottie-sk-panel" style="width:100%;height:100%;max-width:560px;max-height:560px"></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;min-height:0;position:relative">
+          <div style="position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle, rgba(31,58,110,.05) 0%, transparent 70%);pointer-events:none"></div>
+          <div id="lottie-sk-panel" style="width:min(92%, 1180px);aspect-ratio:1440/896;position:relative"></div>
+          <div style="font-size:13px;font-weight:600;color:#5b6f82;letter-spacing:.02em;position:relative;animation:sk-text-pulse 2s ease-in-out infinite">Loading your dashboard…</div>
         </div>
       </div>
 
