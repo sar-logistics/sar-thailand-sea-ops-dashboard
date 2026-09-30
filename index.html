@@ -537,6 +537,8 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 
 /* CONTENT */
 .content{flex:1;overflow-y:auto;padding:20px 20px;background:var(--bg)}
+body.dashboard-blurred .content,body.dashboard-blurred .sidebar{filter:blur(4px);transition:filter .18s ease;pointer-events:none}
+.content,.sidebar{transition:filter .18s ease}
 .page{display:none}
 .page.active{display:block;animation:pageFadeIn .35s cubic-bezier(.4,0,.2,1) both}
 @keyframes pageFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -5076,6 +5078,14 @@ function activateMetric(el) {
 })();
 
 // ── USER MENU TOGGLE ────────────────────────────────────────
+function syncDashboardBlur() {
+  const anyOpen =
+    document.querySelector('.add-filters-panel.open, .ms-dropdown.open, .tb-user-dropdown.open, .cs-list.open') ||
+    Array.from(document.querySelectorAll('.mp-dropdown, .dp-dropdown')).some(d => !d.classList.contains('hidden'));
+  document.body.classList.toggle('dashboard-blurred', !!anyOpen);
+}
+document.addEventListener('click', () => setTimeout(syncDashboardBlur, 0));
+
 function toggleUserMenu() {
   const dd = document.getElementById('userDropdown');
   const btn = document.getElementById('userMenuBtn');
