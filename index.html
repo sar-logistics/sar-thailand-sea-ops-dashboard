@@ -92,11 +92,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text1);font-size:1
 .fb-success-title{font-size:16px;font-weight:700;color:#0f172a}
 .fb-success-sub{font-size:13px;color:#64748b}
 .tb-hamburger-menu{position:relative}
-.tb-icon-row{display:flex;align-items:center;gap:6px}
-.tb-icon-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:9px;cursor:pointer;font-size:16px;color:#E6F1FB;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);box-shadow:0 1px 4px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.06);transition:background .15s,border-color .15s}
-.tb-icon-btn:hover{background:rgba(255,255,255,.16)}
-.tb-icon-btn.disabled{color:rgba(230,241,251,.35);background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.07);box-shadow:none;cursor:not-allowed}
-.tb-icon-btn.disabled:hover{background:rgba(255,255,255,.03)}
+.tb-filter-placeholder{opacity:.45;pointer-events:none}
+.tb-filter-placeholder .disabled-pill{filter:grayscale(1)}
 .tb-hamburger-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:9px;cursor:pointer;font-size:16px;color:#E6F1FB;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);box-shadow:0 1px 4px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.06);transition:background .15s,border-color .15s}
 .tb-hamburger-btn i{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
 .tb-hamburger-menu:has(.tb-user-dropdown.open) .tb-hamburger-btn i{transform:rotate(90deg)}
@@ -1130,12 +1127,15 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
     <div class="tb-divider"></div>
     <div id="tb-filter-row" style="display:flex;align-items:center;gap:8px;flex:1"><!-- filters injected here --></div>
     <div class="tb-spacer"></div>
-    <div class="tb-icon-row">
-      <button class="tb-icon-btn" onclick="loadData()" title="Refresh data" aria-label="Refresh data"><i class="ti ti-refresh"></i></button>
-      <button class="tb-icon-btn disabled" disabled title="Search (coming soon)" aria-label="Search, coming soon"><i class="ti ti-search"></i></button>
-      <button class="tb-icon-btn disabled" disabled title="Notifications (coming soon)" aria-label="Notifications, coming soon"><i class="ti ti-bell"></i></button>
-      <button class="tb-icon-btn disabled" disabled title="Export (coming soon)" aria-label="Export, coming soon"><i class="ti ti-download"></i></button>
-      <button class="tb-icon-btn disabled" disabled title="Print (coming soon)" aria-label="Print, coming soon"><i class="ti ti-printer"></i></button>
+    <div class="filter-bar tb-filter-placeholder" id="tb-filter-placeholder">
+      <span class="filter-label">Report View</span>
+      <div class="filter-select disabled-pill" style="display:flex;align-items:center;gap:6px;cursor:not-allowed">Monthly View <i class="ti ti-chevron-down" style="font-size:12px"></i></div>
+      <span class="filter-label">From</span>
+      <div class="mp-trigger disabled-pill" style="cursor:not-allowed"><i class="ti ti-calendar-event"></i><span>Jan 2026</span></div>
+      <span class="filter-label">To</span>
+      <div class="mp-trigger disabled-pill" style="cursor:not-allowed"><i class="ti ti-calendar-event"></i><span>Sep 2026</span></div>
+      <button class="add-filters-btn disabled-pill" disabled><i class="ti ti-adjustments-horizontal" style="font-size:13px"></i> Filters</button>
+      <button class="dv-btn disabled-pill" disabled style="display:inline-flex;align-items:center;gap:5px"><i class="ti ti-refresh" style="font-size:13px"></i> Refresh</button>
     </div>
     <div class="tb-hamburger-menu">
       <button class="tb-hamburger-btn" onclick="toggleUserMenu()" id="userMenuBtn">
@@ -4734,11 +4734,15 @@ function hideTopbarFilters() {
     if (prevPage) prevPage.insertBefore(prev, prevPage.firstChild);
   }
   filterRow.style.display = 'none';
+  const placeholder = document.getElementById('tb-filter-placeholder');
+  if (placeholder) placeholder.style.display = '';
 }
 
 function showTopbarFilters() {
   const filterRow = document.getElementById('tb-filter-row');
   if (filterRow) filterRow.style.display = '';
+  const placeholder = document.getElementById('tb-filter-placeholder');
+  if (placeholder) placeholder.style.display = 'none';
 }
 
 function toggleLobRow(lob) {
