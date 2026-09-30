@@ -303,7 +303,7 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   flex-shrink:0;
   border-bottom:1px solid rgba(255,255,255,.07);
   transition:max-height .3s cubic-bezier(.4,0,.2,1), opacity .25s ease, padding .3s ease;
-  max-height:400px;
+  max-height:560px;
   overflow:hidden;
   padding:10px 10px 8px;
 }
@@ -344,6 +344,14 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .lob-nav-title i{font-size:15px;color:#60a5fa}
 
 .lob-row-list{display:flex;flex-direction:column;gap:9px;padding-top:14px}
+.sidebar-footer-tiles{display:flex;flex-direction:column;gap:8px;padding-top:14px}
+.sf-tile{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px}
+.sf-status-dot{width:7px;height:7px;border-radius:50%;background:#97C459;box-shadow:0 0 6px rgba(151,196,89,.6);flex-shrink:0;animation:blink 2s infinite}
+.sf-status-title{font-size:11.5px;font-weight:500;color:#C0DD97;line-height:1.3}
+.sf-status-sub{font-size:10px;color:rgba(224,236,250,.45);line-height:1.3;margin-top:1px}
+.sf-user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3d70cc,#1F3A6E);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sf-user-name{font-size:12px;font-weight:600;color:#F0F6FC;line-height:1.3}
+.sf-user-role{font-size:10px;color:#93c5fd;line-height:1.3;margin-top:1px;font-weight:500;letter-spacing:.02em;text-transform:uppercase}
 
 .lob-row{
   display:flex;flex-direction:column;
@@ -1019,6 +1027,22 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
             </div>
           </div>
 
+        </div>
+        <div class="sidebar-footer-tiles">
+          <div class="sf-tile sf-status">
+            <span class="sf-status-dot"></span>
+            <div>
+              <div class="sf-status-title">Live data connected</div>
+              <div class="sf-status-sub">Updated just now</div>
+            </div>
+          </div>
+          <div class="sf-tile sf-user">
+            <div class="sf-user-avatar">HR</div>
+            <div>
+              <div class="sf-user-name">Harshvardhan Rawat</div>
+              <div class="sf-user-role">Admin</div>
+            </div>
+          </div>
         </div>
       </div>
 
