@@ -1138,17 +1138,6 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
       </div>
       </div><!-- /sys-items-wrap -->
     </div>
-
-    <!-- User card for report pages — separate from the landing page's own footer card -->
-    <div class="sf-tile" id="sidebar-footer-report" style="display:none;margin:8px 10px 8px">
-      <div class="sf-user-row">
-        <div class="sf-user-avatar">HR</div>
-        <div>
-          <div class="sf-user-name">Harshvardhan Rawat</div>
-          <div class="sf-user-role">Admin</div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="main">
@@ -4728,8 +4717,6 @@ function updateRailActive() {
     document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
     const sysSec = document.getElementById('sys-section');
     if (sysSec) sysSec.style.display = 'none';
-    const footerReport = document.getElementById('sidebar-footer-report');
-    if (footerReport) footerReport.style.display = 'none';
     const filterRow = document.getElementById('tb-filter-row');
     if (filterRow) filterRow.style.display = 'none';
   };
@@ -4852,8 +4839,6 @@ function setDirection(dir) {
 
     const sysSec = document.getElementById('sys-section');
     if (sysSec) sysSec.style.display = '';
-    const footerReport = document.getElementById('sidebar-footer-report');
-    if (footerReport) footerReport.style.display = '';
 
     document.querySelectorAll('.page').forEach(p => {
       if (p.id !== 'sk-lob-placeholder') p.style.display = '';
@@ -4887,8 +4872,6 @@ function railExpand() {
   if (navScroll) navScroll.style.display = 'none';
   const sysSec = document.getElementById('sys-section');
   if (sysSec) sysSec.style.display = 'none';
-  const footerReport = document.getElementById('sidebar-footer-report');
-  if (footerReport) footerReport.style.display = 'none';
   document.querySelectorAll('.page').forEach(p => {
     if (p.id !== 'sk-lob-placeholder') p.style.display = 'none';
   });
