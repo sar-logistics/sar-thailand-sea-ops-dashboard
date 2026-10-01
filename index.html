@@ -5094,7 +5094,7 @@ function syncDashboardBlur() {
     document.activeElement?.matches?.('select.filter-select');
   document.body.classList.toggle('dashboard-blurred', !!anyOpen);
 }
-document.addEventListener('click', () => setTimeout(syncDashboardBlur, 0));
+document.addEventListener('click', () => setTimeout(syncDashboardBlur, 0), true);
 document.addEventListener('mousedown', e => {
   if (e.target.matches('select.filter-select')) {
     selectPopupOpen = true;
