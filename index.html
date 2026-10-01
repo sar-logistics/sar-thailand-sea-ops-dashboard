@@ -288,11 +288,11 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
 .rail-btn{
   width:34px;height:34px;border-radius:9px;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:rgba(224,236,250,.4);
+  cursor:pointer;color:#93c5fd;
   transition:all .2s ease;flex-shrink:0;
-  font-size:16px;
+  font-size:16px;opacity:.8;
 }
-.rail-btn:hover{background:rgba(255,255,255,.07);color:rgba(224,236,250,.8)}
+.rail-btn:hover{background:rgba(255,255,255,.07);color:#F0F6FC;opacity:1}
 .rail-btn.active{background:rgba(59,130,246,.22);color:#93c5fd;box-shadow:0 0 0 1px rgba(96,165,250,.4)}
 .rail-btn.disabled{opacity:.25;cursor:not-allowed}
 .rail-sep{width:24px;height:1px;background:rgba(255,255,255,.08);margin:4px 0;flex-shrink:0}
@@ -1102,6 +1102,17 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
       </div><!-- /sidebar-body-row -->
 
     </div><!-- /sidebar-inner -->
+
+    <!-- User card for report pages — separate from the landing page's own footer card -->
+    <div class="sf-tile" id="sidebar-footer-report" style="display:none;margin:0 10px 8px">
+      <div class="sf-user-row">
+        <div class="sf-user-avatar">HR</div>
+        <div>
+          <div class="sf-user-name">Harshvardhan Rawat</div>
+          <div class="sf-user-role">Admin</div>
+        </div>
+      </div>
+    </div>
 
     <!-- System items — outside sidebar-inner so hover is not clipped -->
     <div class="sys-section" id="sys-section" style="display:none">
@@ -4697,6 +4708,8 @@ function updateRailActive() {
     document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
     const sysSec = document.getElementById('sys-section');
     if (sysSec) sysSec.style.display = 'none';
+    const footerReport = document.getElementById('sidebar-footer-report');
+    if (footerReport) footerReport.style.display = 'none';
     const filterRow = document.getElementById('tb-filter-row');
     if (filterRow) filterRow.style.display = 'none';
   };
@@ -4819,6 +4832,8 @@ function setDirection(dir) {
 
     const sysSec = document.getElementById('sys-section');
     if (sysSec) sysSec.style.display = '';
+    const footerReport = document.getElementById('sidebar-footer-report');
+    if (footerReport) footerReport.style.display = '';
 
     document.querySelectorAll('.page').forEach(p => {
       if (p.id !== 'sk-lob-placeholder') p.style.display = '';
@@ -4852,6 +4867,8 @@ function railExpand() {
   if (navScroll) navScroll.style.display = 'none';
   const sysSec = document.getElementById('sys-section');
   if (sysSec) sysSec.style.display = 'none';
+  const footerReport = document.getElementById('sidebar-footer-report');
+  if (footerReport) footerReport.style.display = 'none';
   document.querySelectorAll('.page').forEach(p => {
     if (p.id !== 'sk-lob-placeholder') p.style.display = 'none';
   });
