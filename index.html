@@ -5083,21 +5083,29 @@ function activateMetric(el) {
 })();
 
 // ── USER MENU TOGGLE ────────────────────────────────────────
+let selectPopupOpen = false;
 function syncDashboardBlur() {
   const anyOpen =
     document.querySelector('.add-filters-panel.open, .ms-dropdown.open, .tb-user-dropdown.open, .cs-list.open') ||
     Array.from(document.querySelectorAll('.mp-dropdown, .dp-dropdown')).some(d => !d.classList.contains('hidden')) ||
+    selectPopupOpen ||
     document.activeElement?.matches?.('select.filter-select');
   document.body.classList.toggle('dashboard-blurred', !!anyOpen);
 }
 document.addEventListener('click', () => setTimeout(syncDashboardBlur, 0));
 document.addEventListener('mousedown', e => {
-  if (e.target.matches('select.filter-select')) document.body.classList.add('dashboard-blurred');
+  if (e.target.matches('select.filter-select')) {
+    selectPopupOpen = true;
+    document.body.classList.add('dashboard-blurred');
+  }
 });
 document.addEventListener('focusin', () => setTimeout(syncDashboardBlur, 0));
-document.addEventListener('focusout', () => setTimeout(syncDashboardBlur, 0));
+document.addEventListener('focusout', e => {
+  if (e.target.matches('select.filter-select')) selectPopupOpen = false;
+  setTimeout(syncDashboardBlur, 0);
+});
 document.addEventListener('change', e => {
-  if (e.target.matches('select.filter-select')) setTimeout(syncDashboardBlur, 0);
+  if (e.target.matches('select.filter-select')) { selectPopupOpen = false; setTimeout(syncDashboardBlur, 0); }
 });
 
 function toggleUserMenu() {
