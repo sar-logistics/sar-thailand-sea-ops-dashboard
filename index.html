@@ -5091,6 +5091,9 @@ function syncDashboardBlur() {
   document.body.classList.toggle('dashboard-blurred', !!anyOpen);
 }
 document.addEventListener('click', () => setTimeout(syncDashboardBlur, 0));
+document.addEventListener('mousedown', e => {
+  if (e.target.matches('select.filter-select')) document.body.classList.add('dashboard-blurred');
+});
 document.addEventListener('focusin', () => setTimeout(syncDashboardBlur, 0));
 document.addEventListener('focusout', () => setTimeout(syncDashboardBlur, 0));
 document.addEventListener('change', e => {
