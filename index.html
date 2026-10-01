@@ -4887,10 +4887,13 @@ function updateDirCounts() {
 }
 
 function updateTopbarLabel() {
-  const lobNames = {sea:'Sea Ops', air:'Air Ops', road:'Roadways', wh:'Warehousing'};
-  const label = document.getElementById('tb-direction-label') || document.querySelector('.tb-subtitle');
-  if (label && currentLob) {
-    label.textContent = lobNames[currentLob] + ' · ' + currentDirection;
+  const lobTitles = {sea:'Sea', air:'Air', road:'Roadways', wh:'Warehouse'};
+  const lobTaglines = {sea:'Ocean freight operations', air:'Air freight operations', road:'Overland freight operations', wh:'Warehouse operations'};
+  const titleEl = document.querySelector('.tb-title');
+  const subEl = document.getElementById('tb-direction-label') || document.querySelector('.tb-subtitle');
+  if (currentLob) {
+    if (titleEl) titleEl.textContent = (lobTitles[currentLob] || currentLob) + ' ' + currentDirection;
+    if (subEl) subEl.textContent = lobTaglines[currentLob] || '';
   }
 }
 
