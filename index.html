@@ -4704,10 +4704,12 @@ function updateRailActive() {
 document.addEventListener('DOMContentLoaded', () => {
   const sk = document.getElementById('sk-lob-placeholder');
   if (sk) sk.classList.add('visible');
+  convertAllSelects();
 });
 if (document.readyState !== 'loading') {
   const sk0 = document.getElementById('sk-lob-placeholder');
   if (sk0) sk0.classList.add('visible');
+  convertAllSelects();
 }
 
 // Safely hide the topbar filter row without destroying the moved filter-bar element —
