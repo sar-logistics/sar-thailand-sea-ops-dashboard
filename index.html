@@ -526,8 +526,11 @@ body.sidebar-hidden .sidebar-reveal{opacity:1;pointer-events:all}
   display:none;flex-direction:column;gap:12px;padding:20px 20px;
   flex:1;overflow:hidden;
   position:relative;
+  opacity:1;transition:opacity .22s ease;
 }
 .sk-wrap.visible{display:flex}
+.sk-wrap.fading-out{opacity:0}
+.sk-wrap.pre-fade{opacity:0}
 
 .sys-items-wrap{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;opacity:0}
 .sys-section:hover .sys-items-wrap,.sys-section.expanded .sys-items-wrap{max-height:200px;opacity:1}
@@ -4805,26 +4808,36 @@ function setDirection(dir) {
   const rail = document.getElementById('lob-icon-rail');
   if (rail) rail.classList.add('visible');
 
-  // Hide skeleton, show nav pages
+  // Fade the landing illustration out smoothly, then reveal the report page
+  // content once the fade completes, instead of an instant hard swap
   const skPlaceholder = document.getElementById('sk-lob-placeholder');
-  if (skPlaceholder) skPlaceholder.classList.remove('visible');
+  const finishSwap = () => {
+    if (skPlaceholder) skPlaceholder.classList.remove('visible', 'fading-out');
 
-  const navScroll = document.getElementById('main-nav-scroll');
-  if (navScroll) navScroll.style.display = '';
+    const navScroll = document.getElementById('main-nav-scroll');
+    if (navScroll) navScroll.style.display = '';
 
-  const sysSec = document.getElementById('sys-section');
-  if (sysSec) sysSec.style.display = '';
+    const sysSec = document.getElementById('sys-section');
+    if (sysSec) sysSec.style.display = '';
 
-  document.querySelectorAll('.page').forEach(p => {
-    if (p.id !== 'sk-lob-placeholder') p.style.display = '';
-  });
-  showTopbarFilters();
+    document.querySelectorAll('.page').forEach(p => {
+      if (p.id !== 'sk-lob-placeholder') p.style.display = '';
+    });
+    showTopbarFilters();
 
-  refreshForDirection(dir);
-  updateTopbarLabel();
+    refreshForDirection(dir);
+    updateTopbarLabel();
 
-  const summaryNav = document.getElementById('nav-summary');
-  if (summaryNav) setPage('summary', 'Summary', 'Summary', summaryNav);
+    const summaryNav = document.getElementById('nav-summary');
+    if (summaryNav) setPage('summary', 'Summary', 'Summary', summaryNav);
+  };
+
+  if (skPlaceholder && skPlaceholder.classList.contains('visible')) {
+    skPlaceholder.classList.add('fading-out');
+    setTimeout(finishSwap, 220);
+  } else {
+    finishSwap();
+  }
 }
 
 // Clicking the rail's Sea icon re-expands the accordion so the user can switch direction
@@ -4844,9 +4857,12 @@ function railExpand() {
   });
   hideTopbarFilters();
 
-  // Show skeleton placeholder again
+  // Show skeleton placeholder again, with a smooth fade-in instead of an instant pop
   const skPlaceholder = document.getElementById('sk-lob-placeholder');
-  if (skPlaceholder) skPlaceholder.classList.add('visible');
+  if (skPlaceholder) {
+    skPlaceholder.classList.add('visible', 'pre-fade');
+    requestAnimationFrame(() => requestAnimationFrame(() => skPlaceholder.classList.remove('pre-fade')));
+  }
   const t = document.getElementById('sk-hint-title');
   const s = document.getElementById('sk-hint-sub');
   if (t) t.textContent = 'Select a direction to get started';
