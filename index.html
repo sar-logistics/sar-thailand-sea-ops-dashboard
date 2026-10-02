@@ -1116,7 +1116,7 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
     </div><!-- /sidebar-inner -->
 
     <!-- System items — outside sidebar-inner so hover is not clipped -->
-    <div class="sys-section expanded" id="sys-section" style="display:none">
+    <div class="sys-section expanded" id="sys-section">
       <div class="sys-section-label">System <i class="ti ti-chevron-up"></i></div>
       <div class="sys-items-wrap">
       <div class="sys-item usage" id="sys-usage" onclick="setPage('usage','Usage Analytics','System',this)">
@@ -4707,8 +4707,6 @@ function updateRailActive() {
   // has likely already fired by the time this script executes (script is at page bottom)
   const hidePages = () => {
     document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
-    const sysSec = document.getElementById('sys-section');
-    if (sysSec) sysSec.style.display = 'none';
     const filterRow = document.getElementById('tb-filter-row');
     if (filterRow) filterRow.style.display = 'none';
   };
@@ -4776,11 +4774,9 @@ function toggleLobRow(lob) {
   const rail = document.getElementById('lob-icon-rail');
   if (rail) rail.classList.remove('visible');
 
-  // Hide pages/System again so focus returns to LOB/direction selection
+  // Hide pages again so focus returns to LOB/direction selection
   const navScroll0 = document.getElementById('main-nav-scroll');
   if (navScroll0) navScroll0.style.display = 'none';
-  const sysSec0 = document.getElementById('sys-section');
-  if (sysSec0) sysSec0.style.display = 'none';
   document.querySelectorAll('.page').forEach(p => {
     if (p.id !== 'sk-lob-placeholder') p.style.display = 'none';
   });
@@ -4862,8 +4858,6 @@ function railExpand() {
   // Hide pages and System section again to focus on LOB/direction selection
   const navScroll = document.getElementById('main-nav-scroll');
   if (navScroll) navScroll.style.display = 'none';
-  const sysSec = document.getElementById('sys-section');
-  if (sysSec) sysSec.style.display = 'none';
   document.querySelectorAll('.page').forEach(p => {
     if (p.id !== 'sk-lob-placeholder') p.style.display = 'none';
   });
