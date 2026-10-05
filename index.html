@@ -7429,6 +7429,12 @@ const DV_COLS_WIP = [
   { key:'cost',          label:'Cost',         num:true             },
   { key:'accrual',       label:'Accrual',      num:true             },
   { key:'jobProfit',     label:'Job Profit',   num:true             },
+  { key:'totalRevenueRU', label:'Total Revenue (Recognized+Unrecognized)', num:true, calc: r => (Number(r.revenue) || 0) },
+  { key:'totalWipRU',     label:'Total WIP (Recognized+Unrecognized)',     num:true, calc: r => (Number(r.wip) || 0) },
+  { key:'totalIncomeRU',  label:'Total Income (Recognized+Unrecognized REV+WIP)', num:true, calc: r => (Number(r.revenue) || 0) + (Number(r.wip) || 0) },
+  { key:'totalCostRU',    label:'Total Cost (Recognized+Unrecognized)',    num:true, calc: r => (Number(r.cost) || 0) },
+  { key:'totalAccrualRU', label:'Total Accrual (Recognized+Unrecognized)', num:true, calc: r => (Number(r.accrual) || 0) },
+  { key:'totalExpenseRU', label:'Total Expense (Recognized+Unrecognized CST+ACR)', num:true, calc: r => (Number(r.cost) || 0) + (Number(r.accrual) || 0) },
   { key:'etd',           label:'ETD',          date:true            },
   { key:'eta',           label:'ETA',          date:true            },
   { key:'lob',           label:'LOB'                                },
@@ -7560,7 +7566,7 @@ function formatDvDate(v) {
 }
 
 function formatDvCell(r, c) {
-  const v = r[c.key];
+  const v = c.calc ? c.calc(r) : r[c.key];
   const empty = v === null || v === undefined || v === '';
   if (c.flag) {
     if (empty) return '<span class="dv-badge-gray">—</span>';
@@ -7712,8 +7718,10 @@ function applyDvAll() {
   // 3. Sort
   if (dvSort.key) {
     const k = dvSort.key;
+    const sortCol = dvCols.find(c => c.key === k);
     dvFiltered.sort((a, b) => {
-      let av = a[k], bv = b[k];
+      let av = sortCol && sortCol.calc ? sortCol.calc(a) : a[k];
+      let bv = sortCol && sortCol.calc ? sortCol.calc(b) : b[k];
       if (av == null) av = ''; if (bv == null) bv = '';
       if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dvSort.dir;
       return String(av).localeCompare(String(bv)) * dvSort.dir;
@@ -7955,7 +7963,7 @@ function updateDvFoot() {
   const tfoot = document.getElementById('dvTfoot');
   const rows = dvFiltered;
   const sums = {};
-  dvCols.forEach(c => { if (c.num && !c.pct) sums[c.key] = rows.reduce((a, r) => a + (Number(r[c.key]) || 0), 0); });
+  dvCols.forEach(c => { if (c.num && !c.pct) sums[c.key] = rows.reduce((a, r) => a + (c.calc ? c.calc(r) : (Number(r[c.key]) || 0)), 0); });
   tfoot.innerHTML = `<tr>${dvCols.map((c, i) => {
     const align = (c.num || c.pct) ? ' style="text-align:right"' : '';
     if (i === 0) {
