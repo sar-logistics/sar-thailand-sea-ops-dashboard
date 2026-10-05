@@ -5386,7 +5386,11 @@ function setPage(pageId, title, group, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   // Map Thailand page IDs to existing div IDs
   const divId = pageIdMap[pageId] || pageId;
-  document.getElementById('page-' + divId).classList.add('active');
+  const targetPage = document.getElementById('page-' + divId);
+  targetPage.classList.add('active');
+  // Clear any stale inline display:none left over from hidePages()/railExpand(),
+  // which would otherwise override the .page.active CSS rule and keep it hidden
+  targetPage.style.display = '';
   document.getElementById('tbTitle').textContent = title;
   document.getElementById('tbGroup').textContent = group;
   if (pageId === 'admin') loadAdminPanel();
