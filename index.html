@@ -5335,6 +5335,11 @@ function initGroups() {
 }
 
 function setPage(pageId, title, group, el) {
+  // Hide the landing illustration if it's still showing (e.g. a System item
+  // clicked directly from the home page, before any LOB/direction was picked)
+  const skPlaceholder = document.getElementById('sk-lob-placeholder');
+  if (skPlaceholder) skPlaceholder.classList.remove('visible', 'fading-out');
+
   // Map Thailand page IDs to existing HTML div IDs
   const pageIdMap = {
     'revenue-not-billed': 'unbilled-rev',
