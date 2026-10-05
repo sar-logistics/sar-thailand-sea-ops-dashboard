@@ -1153,14 +1153,14 @@ tr:hover td:first-child,tr:hover td.col-grand{background:#f8fbff}
         <div class="tb-ud-item" style="flex-direction:column;align-items:flex-start;gap:8px;padding:12px 16px">
           <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text3);text-transform:uppercase">Currency</div>
           <div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;gap:2px;width:100%">
-            <button id="cur-thb" onclick="setCurrency('THB');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:#2a78d6;color:#fff;transition:all .15s">฿ THB</button>
-            <button id="cur-usd" onclick="setCurrency('USD');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s">$ USD</button>
+            <button id="cur-thb" onclick="setCurrency('THB');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s">฿ THB</button>
+            <button id="cur-usd" onclick="setCurrency('USD');toggleUserMenu()" style="flex:1;font-size:11px;font-weight:700;padding:5px 0;border-radius:6px;border:none;cursor:pointer;background:#2a78d6;color:#fff;transition:all .15s">$ USD</button>
           </div>
           <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
             <span style="font-size:10px;color:var(--text3)">1 USD = ฿</span>
-            <input id="usd-rate-input" type="number" value="34" min="1" step="0.01"
+            <input id="usd-rate-input" type="number" value="32.5" min="1" step="0.01"
               style="width:70px;font-size:11px;padding:3px 6px;border-radius:5px;border:1px solid var(--border);background:#fff;color:var(--text1);outline:none"
-              oninput="manualRate=parseFloat(this.value)||34;renderPage(document.querySelector('.page.active')?.id.replace('page-',''))" />
+              oninput="manualRate=parseFloat(this.value)||32.5;const admInput=document.getElementById('admin-usd-rate-input');if(admInput)admInput.value=this.value;renderPage(document.querySelector('.page.active')?.id.replace('page-',''))" />
           </div>
         </div>
         <div class="tb-ud-divider"></div>
@@ -7538,11 +7538,11 @@ let dvActiveLob   = 'ALL';
 
 const DV_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-let currentCurrency = 'THB'; // THB or USD
-let manualRate = 34; // manual USD rate set by user
+let currentCurrency = 'USD'; // THB or USD
+let manualRate = 32.5; // manual USD rate set by admin
 
 function getExchangeRate() {
-  if (currentCurrency === 'USD') return manualRate || 34;
+  if (currentCurrency === 'USD') return manualRate || 32.5;
   return 1;
 }
 
@@ -8603,6 +8603,17 @@ async function loadAdminPanel() {
           style="width:100%;box-sizing:border-box;border:1px solid #e2e8f0;border-radius:8px;padding:7px 12px 7px 32px;font-size:13px;color:#0f172a;outline:none;background:#fff">
       </div>
       <span id="adminUserCount" style="font-size:13px;color:#64748b">${users.length} of ${users.length} users</span>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e8ecf0;border-radius:12px;padding:14px 16px;margin-bottom:24px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:.08em;text-transform:uppercase">Exchange Rate</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:12px;color:#64748b">1 USD = ฿</span>
+        <input id="admin-usd-rate-input" type="number" value="${manualRate}" min="1" step="0.01"
+          style="width:80px;font-size:13px;padding:5px 8px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;color:#0f172a;outline:none"
+          oninput="manualRate=parseFloat(this.value)||32.5;const tbInput=document.getElementById('usd-rate-input');if(tbInput)tbInput.value=this.value;renderPage(document.querySelector('.page.active')?.id.replace('page-',''))" />
+      </div>
+      <div style="font-size:11px;color:#94a3b8">Applies to all USD amounts across the dashboard</div>
     </div>`;
 
   // Render role groups
