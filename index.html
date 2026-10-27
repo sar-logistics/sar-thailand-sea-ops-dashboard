@@ -3239,7 +3239,7 @@ function getDateRange(pageId) {
       label = MONTHS[fromState.selected.month] + ' ' + fromState.selected.year + ' → ' + MONTHS[toState.selected.month] + ' ' + toState.selected.year;
     } else {
       // Auto-detect from actual data (ignore invalid pre-2000 dates)
-      const dates = allSRR.map(r => { const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate); return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
+      const dates = allSRR.map(r => { const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.jobOpenedDate) : (r.originEtd || r.jobOpenedDate); return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
       if (dates.length) {
         const minD = new Date(Math.min(...dates.map(d => d.getTime())));
         const maxD = new Date(Math.max(...dates.map(d => d.getTime())));
@@ -3274,7 +3274,7 @@ function getDateRange(pageId) {
   } else if (view === 'quarterly') {
     const qVal = Number(document.getElementById('quarter-' + pageId).value || 1);
     // Span all data so all FY columns are shown
-    const dates = allSRR.map(r => { const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate); return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
+    const dates = allSRR.map(r => { const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.jobOpenedDate) : (r.originEtd || r.jobOpenedDate); return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
     if (dates.length) {
       const minD = new Date(Math.min(...dates.map(d => d.getTime())));
       const maxD = new Date(Math.max(...dates.map(d => d.getTime())));
@@ -3288,7 +3288,7 @@ function getDateRange(pageId) {
     label = qNames[qVal-1];
   } else if (view === 'yearly') {
     // Auto-detect FY range from actual data
-    const dates = allSRR.map(r => { const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate); return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
+    const dates = allSRR.map(r => { const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.jobOpenedDate) : (r.originEtd || r.jobOpenedDate); return raw ? new Date(raw) : null; }).filter(d => d && d.getFullYear() > 2000);
     if (dates.length) {
       const minD = new Date(Math.min(...dates.map(d => d.getTime())));
       const maxD = new Date(Math.max(...dates.map(d => d.getTime())));
@@ -3370,7 +3370,7 @@ function filterByDate(data, pageId) {
       const raw = r.etdEta || r.etd || r.eta;
       d = raw ? parseDdMmmYyyy(raw) : null;
     } else {
-      const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.originEtd) : (r.originEtd || r.etdDate);
+      const raw = getRecordDirection(r) === 'Import' ? (r.destinationEta || r.jobOpenedDate) : (r.originEtd || r.jobOpenedDate);
       d = raw ? new Date(raw) : null;
     }
     return d && d >= from && d <= to;
@@ -3443,7 +3443,7 @@ function getColKey(row, view) {
     raw = row.etdEta || row.etd || row.eta;
     d = raw ? parseDdMmmYyyy(raw) : null;
   } else {
-    raw = getRecordDirection(row) === 'Import' ? (row.destinationEta || row.originEtd) : (row.originEtd || row.etdDate);
+    raw = getRecordDirection(row) === 'Import' ? (row.destinationEta || row.jobOpenedDate) : (row.originEtd || row.jobOpenedDate);
     d = raw ? new Date(raw) : null;
   }
   if (!d) return null;
