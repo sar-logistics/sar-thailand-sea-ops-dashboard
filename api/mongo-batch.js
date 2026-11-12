@@ -25,8 +25,43 @@ async function buildCache(db) {
   // (FES/FIS/FEA/FIA/FER/FIR) and a direction derived from it on the
   // dashboard side (getRecordDirection()), matching existing filtering
   const crossTradeDocs = await db.collection('th_ops_crosstrade').find({}).toArray();
-  const allDocs  = [...expDocs, ...impDocs, ...crossTradeDocs];
-  console.log(`[TH-OPS] Total docs: ${allDocs.length} (exp: ${expDocs.length}, imp: ${impDocs.length}, crossTrade: ${crossTradeDocs.length}), users: ${userDocs.length}`);
+  // The Cross Trade sheet names some columns differently from the Export/Import
+  // sheets (e.g. "Job Operator" -> jobOperator instead of operator). Copy them
+  // to the standard names so drill-downs, owner grouping/filters and row-level
+  // access treat Cross Trade jobs like every other job (same as Indonesia).
+  const CROSS_TRADE_FIELD_MAP = {
+    jobOperator:  'operator',
+    jobSalesRep:  'salesRep',
+    jobOpened:    'jobOpenedDate',
+    etdFirstLoad: 'etdDate',
+    inner:        'innerPkgs',
+    outer:        'outerPkgs',
+  };
+  const empty = v => v === undefined || v === null || v === '';
+  for (const d of crossTradeDocs) {
+    for (const [from, to] of Object.entries(CROSS_TRADE_FIELD_MAP)) {
+      if (empty(d[to]) && !empty(d[from])) d[to] = d[from];
+    }
+  }
+  // Jobs in the Cross Trade sheet are usually also in the Export or Import sheet,
+  // which made the dashboard count them twice (and double their WIP). Keep one
+  // record per job: the Export/Import copy (it carries Job Owner / Sales Rep),
+  // labelled "Other/Cross Trade" so it still shows as a cross trade job; the
+  // Cross Trade copy is dropped. Its LOB is untouched, so it stays on the same page.
+  const ship = d => String(d.shipmentId || '').trim().toUpperCase();
+  const expImpById = new Map();
+  for (const d of [...expDocs, ...impDocs]) if (ship(d) && !expImpById.has(ship(d))) expImpById.set(ship(d), d);
+  const hasLob = d => /^.[EI]/i.test(String(d.lob || ''));
+  let dropped = 0;
+  const crossTradeKept = crossTradeDocs.filter(d => {
+    const twin = ship(d) && expImpById.get(ship(d));
+    if (!twin) return true;
+    if (hasLob(twin)) twin.direction = d.direction || 'Other/Cross Trade';
+    dropped++;
+    return false;
+  });
+  const allDocs  = [...expDocs, ...impDocs, ...crossTradeKept];
+  console.log(`[TH-OPS] Total docs: ${allDocs.length} (exp: ${expDocs.length}, imp: ${impDocs.length}, crossTrade: ${crossTradeDocs.length}, duplicates dropped: ${dropped}), users: ${userDocs.length}`);
   // Records are re-inserted on every sheet sync, so the newest ObjectId's
   // timestamp is when the data was last synced into the database
   const newest = allDocs.reduce((max, d) => {
